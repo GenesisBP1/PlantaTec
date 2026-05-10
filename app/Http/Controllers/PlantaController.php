@@ -69,4 +69,10 @@ class PlantaController extends Controller
         return redirect()->route('plantas.index')
             ->with('success', 'Planta eliminada correctamente.');
     }
+
+    public function destacadas()
+{
+    $destacadas = Planta::latest()->take(3)->get();
+    return response()->json($destacadas);
+}
 }

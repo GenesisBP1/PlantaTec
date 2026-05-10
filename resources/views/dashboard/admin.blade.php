@@ -3,11 +3,11 @@
         {{-- Header enriquecido --}}
         <div class="flex items-center justify-between">
             <div>
-                <p class="text-xs font-semibold uppercase tracking-widest text-green-600 mb-0.5">Panel de Control</p>
-                <h2 class="text-2xl font-bold text-gray-900 leading-tight">
+                <p class="text-xs font-semibold uppercase tracking-widest text-green-600 dark:text-green-400 mb-0.5">Panel de Control</p>
+                <h2 class="text-2xl font-bold text-gray-900 dark:text-white leading-tight">
                     Bienvenido, {{ Auth::user()->name }} 🌿
                 </h2>
-                <p class="text-sm text-gray-500 mt-0.5">Resumen general del sistema · {{ now()->format('d M Y') }}</p>
+                <p class="text-sm text-gray-500 dark:text-gray-400 mt-0.5">Resumen general del sistema · {{ now()->format('d M Y') }}</p>
             </div>
             <div class="hidden md:flex items-center gap-3">
                 <a href="{{ route('plantas.create') }}"

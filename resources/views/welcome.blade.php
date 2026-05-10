@@ -26,8 +26,6 @@
             --green-700: #15803d;
             --green-800: #166534;
             --green-900: #14532d;
-            --earth-300: #e9bb6a;
-            --earth-400: #dda03a;
             --gray-50:  #f9fafb;
             --gray-100: #f3f4f6;
             --gray-200: #e5e7eb;
@@ -36,6 +34,19 @@
             --gray-700: #374151;
             --gray-800: #1f2937;
             --gray-900: #111827;
+        }
+
+        /* Modo oscuro - variables */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --gray-50: #1f2937;
+                --gray-100: #374151;
+                --gray-200: #4b5563;
+                --gray-600: #9ca3af;
+                --gray-700: #d1d5db;
+                --gray-800: #f3f4f6;
+                --gray-900: #ffffff;
+            }
         }
 
         html { scroll-behavior: smooth; }
@@ -50,19 +61,27 @@
 
         .font-display { font-family: 'DM Serif Display', serif; }
 
-        /* ── NAV (ya existente) ── */
+        /* Modo oscuro para body */
+        @media (prefers-color-scheme: dark) {
+            body { background: #111827; }
+        }
+
+        /* ── NAV ── */
         nav {
             position: fixed; top: 0; left: 0; right: 0; z-index: 50;
             display: flex; align-items: center; justify-content: space-between;
             padding: 0 2rem; height: 64px;
-            background: rgba(250,250,249,.85);
+            background: rgba(250,250,249,.95);
             backdrop-filter: blur(12px);
             border-bottom: 1px solid rgba(0,0,0,.06);
         }
 
+        @media (prefers-color-scheme: dark) {
+            nav { background: rgba(17,24,39,.95); border-bottom-color: rgba(255,255,255,.1); }
+        }
+
         .nav-logo {
             display: flex; align-items: center; gap: 8px;
-            font-family: 'DM Sans', sans-serif;
             font-weight: 600; font-size: 1.125rem;
             color: var(--green-800); text-decoration: none;
         }
@@ -86,26 +105,34 @@
         }
         .btn-primary-nav:hover { background: var(--green-700); }
 
-        /* ── HERO (sin cambios) ── */
-        .hero { /* ... mantén el CSS original de la hero ... */
+        /* ── HERO ── */
+        .hero {
             padding-top: 120px;
             padding-bottom: 80px;
             min-height: 100vh;
-            display: flex; align-items: center; justify-content: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             position: relative;
-            background:
-                radial-gradient(ellipse 70% 60% at 80% 30%, rgba(187,247,208,.4) 0%, transparent 65%),
-                radial-gradient(ellipse 50% 40% at 10% 80%, rgba(220,252,231,.3) 0%, transparent 55%),
-                #fafaf9;
+            background: radial-gradient(ellipse 70% 60% at 80% 30%, rgba(187,247,208,.4) 0%, transparent 65%),
+                        radial-gradient(ellipse 50% 40% at 10% 80%, rgba(220,252,231,.3) 0%, transparent 55%),
+                        #fafaf9;
             overflow: hidden;
         }
+
+        @media (prefers-color-scheme: dark) {
+            .hero { background: radial-gradient(ellipse 70% 60% at 80% 30%, rgba(34,197,94,.15) 0%, transparent 65%),
+                        radial-gradient(ellipse 50% 40% at 10% 80%, rgba(34,197,94,.1) 0%, transparent 55%),
+                        #111827; }
+        }
+
         .hero-deco {
-            position: absolute; pointer-events: none; user-select: none;
+            position: absolute; pointer-events: none;
             border-radius: 9999px;
             background: linear-gradient(135deg, rgba(134,239,172,.2), rgba(74,222,128,.1));
         }
         .hero-deco-1 { width: 500px; height: 500px; top: -100px; right: -100px; border-radius: 60% 40% 70% 30% / 50% 60% 40% 50%; }
-        .hero-deco-2 { width: 300px; height: 300px; bottom: -50px; left: -80px; border-radius: 40% 60% 30% 70% / 60% 40% 60% 40%; background: linear-gradient(135deg, rgba(217,249,157,.2), rgba(134,239,172,.1)); }
+        .hero-deco-2 { width: 300px; height: 300px; bottom: -50px; left: -80px; border-radius: 40% 60% 30% 70% / 60% 40% 60% 40%; }
         .hero-inner {
             max-width: 1100px; width: 100%;
             padding: 0 2rem;
@@ -153,17 +180,38 @@
             text-decoration: none; transition: all .2s;
             box-shadow: 0 4px 14px rgba(22,163,74,.3);
         }
-        .btn-hero-primary:hover { background: var(--green-700); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(22,163,74,.4); }
+        .btn-hero-primary:hover { background: var(--green-700); transform: translateY(-1px); }
+
+        /* Botón secundario - MODO CLARO */
         .btn-hero-secondary {
             display: inline-flex; align-items: center; gap: 8px;
             padding: 13px 28px; border-radius: 14px;
             font-weight: 600; font-size: .9375rem;
-            background: #fff; color: var(--gray-700);
+            background: #ffffff;
+            color: #374151;
             text-decoration: none; transition: all .2s;
-            border: 1.5px solid var(--gray-200);
-            box-shadow: 0 1px 4px rgba(0,0,0,.06);
+            border: 1.5px solid #e5e7eb;
         }
-        .btn-hero-secondary:hover { border-color: var(--gray-300); transform: translateY(-1px); }
+
+        .btn-hero-secondary:hover { 
+            border-color: #d1d5db; 
+            transform: translateY(-1px); 
+            background: #f9fafb;
+        }
+
+        /* Botón secundario - MODO OSCURO */
+        @media (prefers-color-scheme: dark) { 
+            .btn-hero-secondary { 
+                background: #1f2937;
+                color: #ffffff;
+                border-color: #4b5563;
+            }
+            .btn-hero-secondary:hover { 
+                background: #374151;
+                border-color: #6b7280;
+            }
+        }
+
         .hero-visual {
             display: flex; justify-content: center; align-items: center;
             position: relative;
@@ -173,7 +221,7 @@
             border-radius: 50%;
             background: linear-gradient(135deg, #bbf7d0 0%, #86efac 40%, #4ade80 100%);
             display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 30px 80px rgba(22,163,74,.2), 0 0 0 1px rgba(22,163,74,.1);
+            box-shadow: 0 30px 80px rgba(22,163,74,.2);
             position: relative;
             animation: float 8s ease-in-out infinite;
         }
@@ -194,6 +242,9 @@
             white-space: nowrap;
             border: 1px solid rgba(0,0,0,.05);
         }
+        @media (prefers-color-scheme: dark) {
+            .float-card { background: #1f2937; color: #ffffff; border-color: #374151; }
+        }
         .float-card-1 { top: 5%; left: -8%; animation: float2 7s ease-in-out infinite; }
         .float-card-2 { bottom: 10%; right: -10%; animation: float2 9s ease-in-out infinite reverse; }
         .float-card-3 { top: 45%; right: -15%; animation: float2 6s ease-in-out infinite 1s; }
@@ -201,11 +252,14 @@
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-8px); }
         }
-        /* ── FEATURES (sin cambios) ── */
+
+        /* ── FEATURES ── */
         .features {
             padding: 100px 2rem;
             background: #fff;
         }
+        @media (prefers-color-scheme: dark) { .features { background: #1f2937; } }
+
         .section-label {
             text-align: center;
             font-size: .75rem; font-weight: 700;
@@ -231,15 +285,10 @@
             border: 1.5px solid var(--gray-100);
             transition: all .2s;
             position: relative; overflow: hidden;
+            background: white;
         }
-        .feature-card::before {
-            content: ''; position: absolute;
-            inset: 0; opacity: 0;
-            background: linear-gradient(135deg, var(--green-50), transparent);
-            transition: opacity .3s;
-        }
+        @media (prefers-color-scheme: dark) { .feature-card { background: #374151; border-color: #4b5563; } }
         .feature-card:hover { border-color: var(--green-200); transform: translateY(-3px); box-shadow: 0 12px 40px rgba(22,163,74,.08); }
-        .feature-card:hover::before { opacity: 1; }
         .feature-icon {
             width: 48px; height: 48px; border-radius: 14px;
             display: flex; align-items: center; justify-content: center;
@@ -253,17 +302,12 @@
             font-size: .9375rem; line-height: 1.65;
             color: var(--gray-600);
         }
-        /* ── STATS (sin cambios) ── */
+
+        /* ── STATS ── */
         .stats {
             padding: 80px 2rem;
             background: linear-gradient(160deg, var(--green-900) 0%, var(--green-700) 100%);
             position: relative; overflow: hidden;
-        }
-        .stats::before {
-            content: '';
-            position: absolute; top: -50%; right: -10%;
-            width: 600px; height: 600px; border-radius: 50%;
-            background: rgba(255,255,255,.04);
         }
         .stats-grid {
             max-width: 900px; margin: 0 auto;
@@ -281,141 +325,194 @@
             letter-spacing: .05em;
         }
 
-        /* ── NUEVO: CARRUSEL DE PLANTAS DESTACADAS ── */
+        /* ── PLANTAS DESTACADAS (3 CARDS) ── */
         .featured-plants {
             padding: 100px 2rem;
             background: #fefcf8;
         }
+        @media (prefers-color-scheme: dark) { 
+            .featured-plants { background: #111827; } 
+        }
 
-        .carousel-container {
+        .plants-grid {
             max-width: 1100px;
             margin: 0 auto;
-            position: relative;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+        }
+
+        /* Card - MODO CLARO */
+        .plant-card {
+            background: #ffffff;
+            border-radius: 24px;
             overflow: hidden;
-            border-radius: 32px;
-            box-shadow: 0 20px 40px -12px rgba(0,0,0,.15);
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
         }
 
-        .carousel-track {
-            display: flex;
-            transition: transform 0.5s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+        /* Card - MODO OSCURO */
+        @media (prefers-color-scheme: dark) { 
+            .plant-card { 
+                background: #1f2937;
+                border-color: #374151;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            }
         }
 
-        .carousel-slide {
-            flex: 0 0 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            background: white;
-            padding: 2rem;
+        .plant-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 16px 32px rgba(0, 0, 0, 0.12);
         }
 
-        .carousel-slide img {
+        .plant-card img {
             width: 100%;
-            max-height: 420px;
+            height: 200px;
             object-fit: cover;
-            border-radius: 28px;
-            box-shadow: 0 12px 28px rgba(0,0,0,.12);
-            margin-bottom: 1.5rem;
         }
 
-        .carousel-slide h3 {
+        .plant-card-body {
+            padding: 1.25rem;
+        }
+
+        /* Título - MODO CLARO */
+        .plant-card-body h3 {
             font-family: 'DM Serif Display', serif;
-            font-size: 1.75rem;
-            color: var(--gray-800);
+            font-size: 1.25rem;
+            color: #111827;
             margin-bottom: 0.5rem;
+            font-weight: 700;
         }
 
-        .carousel-slide p {
-            color: var(--gray-600);
-            max-width: 500px;
-            margin-bottom: 1.5rem;
-            line-height: 1.6;
+        /* Título - MODO OSCURO */
+        @media (prefers-color-scheme: dark) { 
+            .plant-card-body h3 { 
+                color: #ffffff;
+            }
         }
 
-        .btn-outline {
-            padding: 8px 24px;
-            border-radius: 40px;
+        /* Badge - MODO CLARO */
+        .zona-badge {
+            display: inline-block;
+            background: #16a34a;
+            color: #ffffff;
+            font-size: 0.7rem;
             font-weight: 600;
-            background: white;
-            border: 1.5px solid var(--green-600);
-            color: var(--green-600);
-            transition: all .2s;
-            text-decoration: none;
+            padding: 4px 12px;
+            border-radius: 40px;
+            margin-bottom: 0.75rem;
+        }
+
+        /* Badge - MODO OSCURO */
+        @media (prefers-color-scheme: dark) { 
+            .zona-badge { 
+                background: #059669;
+                color: #ffffff;
+            }
+        }
+
+        /* Descripción - MODO CLARO */
+        .plant-card-body p {
+            color: #374151;
+            font-size: 0.875rem;
+            line-height: 1.5;
+            margin-bottom: 1rem;
+        }
+
+        /* Descripción - MODO OSCURO */
+        @media (prefers-color-scheme: dark) { 
+            .plant-card-body p { 
+                color: #cbd5e1;
+            }
+        }
+
+        /* Botón outline - MODO CLARO */
+        .btn-outline {
             display: inline-flex;
             align-items: center;
-            gap: 6px;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            background: transparent;
+            border: 1.5px solid #16a34a;
+            color: #16a34a;
+            padding: 10px 16px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 0.875rem;
+            text-decoration: none;
+            transition: all 0.2s;
         }
 
         .btn-outline:hover {
-            background: var(--green-600);
+            background: #16a34a;
             color: white;
             transform: translateY(-2px);
         }
 
-        .carousel-button {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background: white;
-            border: none;
-            width: 44px;
-            height: 44px;
-            border-radius: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            box-shadow: 0 4px 12px rgba(0,0,0,.15);
-            transition: all .2s;
-            z-index: 5;
+        /* Botón outline - MODO OSCURO */
+        @media (prefers-color-scheme: dark) { 
+            .btn-outline { 
+                border-color: #4ade80;
+                color: #4ade80;
+            }
+            .btn-outline:hover { 
+                background: #4ade80;
+                color: #111827;
+            }
         }
 
-        .carousel-button:hover {
-            background: var(--green-600);
-            color: white;
-            transform: translateY(-50%) scale(1.05);
+        .loading-spinner {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 3rem;
         }
 
-        .carousel-button-left { left: 20px; }
-        .carousel-button-right { right: 20px; }
-
-        .carousel-dots {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-top: 24px;
-        }
-
-        .dot {
-            width: 10px;
-            height: 10px;
+        .spinner {
+            width: 48px;
+            height: 48px;
+            border: 3px solid #dcfce7;
+            border-top-color: #16a34a;
             border-radius: 50%;
-            background: #ccc;
-            transition: all .2s;
-            cursor: pointer;
+            margin: 0 auto 1rem;
+            animation: spin 0.8s linear infinite;
         }
 
-        .dot.active {
-            background: var(--green-600);
-            width: 24px;
-            border-radius: 8px;
+        @media (prefers-color-scheme: dark) {
+            .spinner {
+                border-color: #374151;
+                border-top-color: #4ade80;
+            }
         }
 
-        /* ── CTA y FOOTER (sin cambios) ── */
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .error-message {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 2rem;
+            color: #b91c1c;
+            background: #fee2e2;
+            border-radius: 16px;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .error-message {
+                color: #fca5a5;
+                background: #7f1d1d;
+            }
+        }
+
+        /* ── CTA ── */
         .cta-section {
             padding: 100px 2rem; text-align: center;
-            background: var(--green-50);
+            background: #75f3a35e;
             position: relative; overflow: hidden;
         }
-        .cta-section::before {
-            content: ''; position: absolute;
-            top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 800px; height: 400px; border-radius: 50%;
-            background: radial-gradient(ellipse, rgba(134,239,172,.3), transparent 70%);
-            pointer-events: none;
-        }
+        @media (prefers-color-scheme: dark) { .cta-section { background: #064e3b; } }
         .cta-title {
             font-family: 'DM Serif Display', serif;
             font-size: clamp(2rem, 4vw, 3rem);
@@ -426,11 +523,29 @@
             font-size: 1.0625rem; color: var(--gray-600);
             margin-bottom: 2rem; position: relative; z-index: 1;
         }
+        @media (prefers-color-scheme: dark) {
+            .cta-text { color: #d1d5db; }
+        }
+
+        /* ── FOOTER ── */
         footer {
             padding: 2rem; text-align: center;
             font-size: .875rem; color: var(--gray-400);
             background: #fff;
             border-top: 1px solid var(--gray-100);
+        }
+        @media (prefers-color-scheme: dark) { 
+            footer { 
+                background: #1f2937; 
+                border-top-color: #374151;
+                color: #9ca3af;
+            } 
+        }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 900px) {
+            .plants-grid { grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+            .features-grid { grid-template-columns: repeat(2, 1fr); }
         }
 
         @media (max-width: 768px) {
@@ -439,10 +554,14 @@
             .hero-visual { display: none; }
             .features-grid { grid-template-columns: 1fr; }
             .stats-grid { grid-template-columns: 1fr; gap: 2.5rem; }
-            .carousel-button { width: 36px; height: 36px; }
-            .carousel-button-left { left: 10px; }
-            .carousel-button-right { right: 10px; }
-            .carousel-slide img { max-height: 280px; }
+        }
+
+        @media (max-width: 600px) {
+            .plants-grid { grid-template-columns: 1fr; gap: 1.5rem; }
+            .featured-plants { padding: 60px 1rem; }
+            nav { padding: 0 1rem; }
+            .nav-links { gap: 4px; }
+            .btn-ghost-nav, .btn-primary-nav { padding: 4px 12px; font-size: 0.75rem; }
         }
     </style>
 </head>
@@ -471,7 +590,7 @@
         </div>
     </nav>
 
-    {{-- ══ HERO (sin modificar) ══ --}}
+    {{-- ══ HERO ══ --}}
     <section class="hero">
         <div class="hero-deco hero-deco-1"></div>
         <div class="hero-deco hero-deco-2"></div>
@@ -522,7 +641,7 @@
         </div>
     </section>
 
-    {{-- ══ FEATURES (sin cambios) ══ --}}
+    {{-- ══ FEATURES ══ --}}
     <section class="features">
         <p class="section-label">¿Qué ofrece PlantaTec?</p>
         <h2 class="section-title">Todo lo que tu jardín necesita</h2>
@@ -530,17 +649,17 @@
         <div class="features-grid">
             @php
             $features = [
-                ['icon' => 'M4 6h16M4 10h16M4 14h16M4 18h16', 'bg' => '#dcfce7', 'color' => '#16a34a', 'name' => 'Catálogo de plantas', 'text' => 'Explora cientos de especies con fichas detalladas. Filtra por tipo, tamaño, cuidado y encuentra la planta perfecta para tu espacio.'],
-                ['icon' => 'M4.318 6.318a4.5 4.5 0 016.364 0L12 7.636l1.318-1.318a4.5 4.5 0 116.364 6.364L12 20.364l-7.682-7.682a4.5 4.5 0 010-6.364z', 'bg' => '#fce7f3', 'color' => '#be185d', 'name' => 'Adopciones', 'text' => 'Adopta plantas y llévalas a casa. Gestiona todas tus adopciones en un solo lugar, con historial completo de cada una.'],
-                ['icon' => 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4', 'bg' => '#dbeafe', 'color' => '#1d4ed8', 'name' => 'Registro de cuidados', 'text' => 'Anota cada riego, poda o fertilización con fotos y notas. Consulta el historial completo de cualquier planta en segundos.'],
-                ['icon' => 'M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z', 'bg' => '#fef9c3', 'color' => '#a16207', 'name' => 'Recomendaciones IA', 'text' => 'El sistema genera automáticamente recomendaciones de cuidado personalizadas según la especie, temporada y el estado observado.'],
-                ['icon' => 'M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6 6 0 10-12 0v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9', 'bg' => '#fee2e2', 'color' => '#b91c1c', 'name' => 'Notificaciones', 'text' => 'Recibe alertas cuando una planta necesita atención. Las notificaciones se marcan como leídas automáticamente al registrar el cuidado.'],
-                ['icon' => 'M17.657 16.657L13.414 20.9a2 2 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z M15 11a3 3 0 11-6 0 3 3 0 016 0z', 'bg' => '#e0f2fe', 'color' => '#0369a1', 'name' => 'Gestión por ubicación', 'text' => 'Organiza tus plantas por ubicación — balcón, sala, jardín — y recibe recomendaciones ajustadas a cada microambiente.'],
+                ['icon' => 'M4 6h16M4 10h16M4 14h16M4 18h16', 'color' => '#16a34a', 'name' => 'Catálogo de plantas', 'text' => 'Explora cientos de especies con fichas detalladas.'],
+                ['icon' => 'M4.318 6.318a4.5 4.5 0 016.364 0L12 7.636l1.318-1.318a4.5 4.5 0 116.364 6.364L12 20.364l-7.682-7.682a4.5 4.5 0 010-6.364z', 'color' => '#be185d', 'name' => 'Adopciones', 'text' => 'Adopta plantas y llévalas a casa.'],
+                ['icon' => 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4', 'color' => '#1d4ed8', 'name' => 'Registro de cuidados', 'text' => 'Anota cada riego, poda o fertilización.'],
+                ['icon' => 'M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z', 'color' => '#a16207', 'name' => 'Recomendaciones IA', 'text' => 'Recomendaciones personalizadas según la especie.'],
+                ['icon' => 'M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6 6 0 10-12 0v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9', 'color' => '#b91c1c', 'name' => 'Notificaciones', 'text' => 'Recibe alertas cuando una planta necesita atención.'],
+                ['icon' => 'M17.657 16.657L13.414 20.9a2 2 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z M15 11a3 3 0 11-6 0 3 3 0 016 0z', 'color' => '#0369a1', 'name' => 'Gestión por ubicación', 'text' => 'Organiza tus plantas por ubicación.'],
             ];
             @endphp
             @foreach($features as $f)
             <div class="feature-card">
-                <div class="feature-icon" style="background:{{ $f['bg'] }}">
+                <div class="feature-icon" style="background:{{ $f['color'] }}20">
                     <svg width="24" height="24" fill="none" stroke="{{ $f['color'] }}" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="{{ $f['icon'] }}"/>
                     </svg>
@@ -552,7 +671,7 @@
         </div>
     </section>
 
-    {{-- ══ STATS (sin cambios) ══ --}}
+    {{-- ══ STATS ══ --}}
     <section class="stats">
         <div class="stats-grid">
             <div><p class="stat-number">+500</p><p class="stat-label">Especies disponibles</p></div>
@@ -561,45 +680,26 @@
         </div>
     </section>
 
-    {{-- ══ NUEVA SECCIÓN: CARRUSEL DE PLANTAS DESTACADAS ══ --}}
+    {{-- ══ PLANTAS DESTACADAS (3 CARDS RESPONSIVAS) ══ --}}
     <section class="featured-plants">
         <p class="section-label">Inspírate</p>
         <h2 class="section-title">Plantas destacadas para adoptar</h2>
         <p class="section-desc">Descubre algunas de nuestras especies más queridas. Todas listas para dar vida a tu hogar.</p>
 
-        <div class="carousel-container" x-data="carousel()">
-            <div class="carousel-track" :style="'transform: translateX(-' + (currentIndex * 100) + '%)'">
-                <template x-for="(plant, idx) in plants" :key="idx">
-                    <div class="carousel-slide">
-                        <img :src="plant.image" :alt="plant.name">
-                        <h3 x-text="plant.name"></h3>
-                        <p x-text="plant.description"></p>
-                        <a href="{{ route('catalogo.plantas') }}" class="btn-outline">
-                            Adoptar
-                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
-                            </svg>
-                        </a>
-                    </div>
-                </template>
+        <div class="plants-grid" id="plantas-destacadas">
+            <div class="loading-spinner">
+                <div class="spinner"></div>
+                <p>Cargando plantas destacadas...</p>
             </div>
+        </div>
 
-            <button class="carousel-button carousel-button-left" @click="prev()" aria-label="Anterior">
-                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
-                </svg>
-            </button>
-            <button class="carousel-button carousel-button-right" @click="next()" aria-label="Siguiente">
-                <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <div style="text-align: center; margin-top: 3rem;">
+            <a href="{{ route('catalogo.plantas') }}" class="btn-outline" style="width: auto; padding: 12px 32px;">
+                Ver todo el catálogo
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
                 </svg>
-            </button>
-
-            <div class="carousel-dots">
-                <template x-for="(_, idx) in plants" :key="idx">
-                    <div class="dot" :class="{ 'active': currentIndex === idx }" @click="goTo(idx)"></div>
-                </template>
-            </div>
+            </a>
         </div>
     </section>
 
@@ -622,58 +722,44 @@
         &copy; {{ date('Y') }} PlantaTec &nbsp;·&nbsp; Hecho con 🌿 &nbsp;·&nbsp; Todos los derechos reservados
     </footer>
 
-    {{-- Alpine.js + lógica del carrusel --}}
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.5/dist/cdn.min.js"></script>
     <script>
-        function carousel() {
-            return {
-                currentIndex: 0,
-                plants: [
-                    {
-                        name: 'Monstera Deliciosa',
-                        description: 'Fácil de cuidar, purifica el aire y sus hojas enormes dan un toque tropical a cualquier espacio.',
-                        image: 'https://images.unsplash.com/photo-1614594977920-4cfd74bff5ef?w=800&auto=format'
-                    },
-                    {
-                        name: 'Lavanda',
-                        description: 'Aroma relajante, flores violetas y resistencia a la sequía. Perfecta para principiantes.',
-                        image: 'https://images.unsplash.com/photo-1592921870789-04563d55041c?w=800&auto=format'
-                    },
-                    {
-                        name: 'Sansevieria (Lengua de suegra)',
-                        description: 'Ideal para interiores con poca luz; absorbe toxinas y necesita muy poco riego.',
-                        image: 'https://images.unsplash.com/photo-1593482892290-f54927ae9aa5?w=800&auto=format'
-                    },
-                    {
-                        name: 'Suculenta Echeveria',
-                        description: 'Hermosas rosetas, colores pastel y apenas requiere agua. Decora tu escritorio.',
-                        image: 'https://images.unsplash.com/photo-1636318547402-404fe467a541?w=800&auto=format'
-                    },
-                    {
-                        name: 'Helecho Nido de Ave',
-                        description: 'Follaje rizado y vibrante, perfecto para baños o cocinas con humedad natural.',
-                        image: 'https://images.unsplash.com/photo-1593697821252-0c9137d9fc45?w=800&auto=format'
+        document.addEventListener('DOMContentLoaded', function() {
+            fetch('/plantas-destacadas')
+                .then(response => response.json())
+                .then(data => {
+                    const container = document.getElementById('plantas-destacadas');
+                    
+                    if (!data || data.length === 0) {
+                        container.innerHTML = '<div class="error-message">🌿 No hay plantas disponibles por el momento.</div>';
+                        return;
                     }
-                ],
-                next() {
-                    if (this.currentIndex < this.plants.length - 1) {
-                        this.currentIndex++;
-                    } else {
-                        this.currentIndex = 0; // ciclo infinito
-                    }
-                },
-                prev() {
-                    if (this.currentIndex > 0) {
-                        this.currentIndex--;
-                    } else {
-                        this.currentIndex = this.plants.length - 1;
-                    }
-                },
-                goTo(index) {
-                    this.currentIndex = index;
-                }
-            }
-        }
+
+                    const cardsHtml = data.map(planta => `
+                        <div class="plant-card">
+                            <img src="${planta.imagen || 'https://images.unsplash.com/photo-1592150621744-aca64f48394a?w=400&auto=format'}" 
+                                 alt="${planta.nombre}">
+                            <div class="plant-card-body">
+                                <h3>${planta.nombre}</h3>
+                                <span class="zona-badge">${planta.tipo_zona || 'Interior'}</span>
+                                <p>${planta.descripcion || 'Una hermosa planta para tu hogar.'}</p>
+                                <a href="{{ route('catalogo.plantas') }}" class="btn-outline">
+                                    Adoptar
+                                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                    `).join('');
+
+                    container.innerHTML = cardsHtml;
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    const container = document.getElementById('plantas-destacadas');
+                    container.innerHTML = '<div class="error-message">⚠️ Error al cargar las plantas. Por favor, intenta más tarde.</div>';
+                });
+        });
     </script>
 </body>
 </html>

@@ -14,7 +14,6 @@ class DashboardController extends Controller
     public function index()
     {
         if (auth()->user()->rol === 'admin') {
-
             $totalPlantas = Planta::count();
             $totalUsuarios = User::where('rol', 'usuario')->count();
             $totalAdopciones = Adopcion::count();
@@ -28,6 +27,7 @@ class DashboardController extends Controller
             ));
         }
 
+        // Para usuarios normales
         $misPlantas = Adopcion::where('id_usuario', auth()->id())
             ->where('estado_adopcion', 'activa')
             ->count();
@@ -44,11 +44,25 @@ class DashboardController extends Controller
             $q->where('id_usuario', auth()->id());
         })->where('estado', 'pendiente')->count();
 
+        // Últimas plantas adoptadas (3 cards)
+        $ultimasPlantas = Adopcion::where('id_usuario', auth()->id())
+            ->with('planta')
+            ->latest()
+            ->take(3)
+            ->get();
+
+        // Actividad reciente (últimos cuidados)
+        $actividadReciente = RegistroCuidado::whereHas('adopcion', function ($q) {
+            $q->where('id_usuario', auth()->id());
+        })->with('adopcion.planta')->latest()->take(5)->get();
+
         return view('dashboard.usuario', compact(
             'misPlantas',
             'misNotificaciones',
             'misCuidados',
-            'misRecomendaciones'
+            'misRecomendaciones',
+            'ultimasPlantas',
+            'actividadReciente'
         ));
     }
 }
