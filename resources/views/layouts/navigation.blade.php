@@ -20,40 +20,40 @@
                 <!-- Navigation Links (escritorio) -->
                 <div class="hidden space-x-1 sm:-my-px sm:ms-8 sm:flex sm:items-center">
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" class="px-3 py-2 rounded-lg transition">
-                        🏠 Dashboard
+                        Dashboard
                     </x-nav-link>
 
                     @if(auth()->user()->rol === 'admin')
                         <x-nav-link :href="route('plantas.index')" :active="request()->routeIs('plantas.*')" class="px-3 py-2 rounded-lg transition">
-                            🌿 Plantas
+                             Plantas
                         </x-nav-link>
                         <x-nav-link :href="route('adopciones.index')" :active="request()->routeIs('adopciones.*')" class="px-3 py-2 rounded-lg transition">
-                            🤝 Adopciones
+                             Adopciones
                         </x-nav-link>
                         <x-nav-link :href="route('catalogo.plantas')" :active="request()->routeIs('catalogo.plantas')" class="px-3 py-2 rounded-lg transition">
-                            📚 Catálogo
+                             Catálogo
                         </x-nav-link>
-                        <x-nav-link :href="route('ubicaciones.index')" :active="request()->routeIs('ubicaciones.*')" class="px-3 py-2 rounded-lg transition">
-                            📍 Ubicaciones
+                        <x-nav-link :href="route('recomendaciones-zona.index')" :active="request()->routeIs('recomendaciones-zona.*')" class="px-3 py-2 rounded-lg transition">
+                            Zonas
                         </x-nav-link>
                         <x-nav-link :href="route('cuidados.index')" :active="request()->routeIs('cuidados.*')" class="px-3 py-2 rounded-lg transition">
-                            💧 Cuidados
+                             Cuidados
                         </x-nav-link>
                         <x-nav-link :href="route('planta-cuidados.index')" :active="request()->routeIs('planta-cuidados.*')" class="px-3 py-2 rounded-lg transition">
-                            🔗 Asignar cuidados
+                             Asignar cuidados
                         </x-nav-link>
                         <x-nav-link :href="route('recomendaciones-cuidado.index')" :active="request()->routeIs('recomendaciones-cuidado.*')" class="px-3 py-2 rounded-lg transition">
-                            ⭐ Recomendaciones
+                             Recomendaciones
                         </x-nav-link>
                     @else
                         <x-nav-link :href="route('catalogo.plantas')" :active="request()->routeIs('catalogo.plantas')" class="px-3 py-2 rounded-lg transition">
-                            📚 Catálogo
+                             Catálogo
                         </x-nav-link>
                         <x-nav-link :href="route('adopciones.index')" :active="request()->routeIs('adopciones.*')" class="px-3 py-2 rounded-lg transition">
-                            🌱 Mis adopciones
+                             Mis adopciones
                         </x-nav-link>
                         <x-nav-link :href="route('notificaciones.index')" :active="request()->routeIs('notificaciones.*')" class="px-3 py-2 rounded-lg transition relative">
-                            🔔 Notificaciones
+                             Notificaciones
                             @php
                                 $pendientes = \App\Models\Notificacion::where('id_usuario', auth()->id())
                                     ->where('leida', false)
@@ -134,7 +134,7 @@
                 <x-responsive-nav-link :href="route('plantas.index')" :active="request()->routeIs('plantas.*')">🌿 Plantas</x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('adopciones.index')" :active="request()->routeIs('adopciones.*')">🤝 Adopciones</x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('catalogo.plantas')" :active="request()->routeIs('catalogo.plantas')">📚 Catálogo</x-responsive-nav-link>
-                <x-responsive-nav-link :href="route('ubicaciones.index')" :active="request()->routeIs('ubicaciones.*')">📍 Ubicaciones</x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('recomendaciones-zona.index')" :active="request()->routeIs('recomendaciones-zona.*')">📍 Zonas</x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('cuidados.index')" :active="request()->routeIs('cuidados.*')">💧 Cuidados</x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('planta-cuidados.index')" :active="request()->routeIs('planta-cuidados.*')">🔗 Asignar cuidados</x-responsive-nav-link>
                 <x-responsive-nav-link :href="route('recomendaciones-cuidado.index')" :active="request()->routeIs('recomendaciones-cuidado.*')">⭐ Recomendaciones</x-responsive-nav-link>

@@ -2,63 +2,64 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\RecomendacionZona;
 use Illuminate\Http\Request;
 
 class RecomendacionZonaController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $zonas = RecomendacionZona::latest()->paginate(10);
+        return view('recomendaciones-zona.index', compact('zonas'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
+        return view('recomendaciones-zona.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'nombre_lugar' => 'required|string|max:255',
+            'tipo_zona'    => 'nullable|string|max:255',
+            'indicaciones' => 'nullable|string',
+            'latitud'      => 'nullable|numeric',
+            'longitud'     => 'nullable|numeric',
+            'descripcion'  => 'nullable|string',
+        ]);
+
+        RecomendacionZona::create($request->all());
+        return redirect()->route('recomendaciones-zona.index')
+            ->with('success', 'Zona agregada correctamente.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function edit(RecomendacionZona $recomendaciones_zona)
     {
-        //
+        $zona = $recomendaciones_zona;
+        return view('recomendaciones-zona.edit', compact('zona'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function update(Request $request, RecomendacionZona $recomendaciones_zona)
     {
-        //
+        $request->validate([
+            'nombre_lugar' => 'required|string|max:255',
+            'tipo_zona'    => 'nullable|string|max:255',
+            'indicaciones' => 'nullable|string',
+            'latitud'      => 'nullable|numeric',
+            'longitud'     => 'nullable|numeric',
+            'descripcion'  => 'nullable|string',
+        ]);
+
+        $recomendaciones_zona->update($request->all());
+        return redirect()->route('recomendaciones-zona.index')
+            ->with('success', 'Zona actualizada.');
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function destroy(RecomendacionZona $recomendaciones_zona)
     {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        $recomendaciones_zona->delete();
+        return redirect()->route('recomendaciones-zona.index')
+            ->with('success', 'Zona eliminada.');
     }
 }
