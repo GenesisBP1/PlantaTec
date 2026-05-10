@@ -56,4 +56,10 @@ class CatalogoPlantaController extends Controller
         return redirect()->route('adopciones.index')
             ->with('success', 'Planta adoptada correctamente.');
     }
+    public function destacadas()
+{
+    // Lógica para obtener plantas destacadas (ej. más adoptadas, o un campo 'destacada' en la tabla)
+    $plantas = Planta::where('destacada', true)->get(); // Asumiendo que agregaste una columna 'destacada'
+    return view('catalogo.destacadas', compact('plantas'));
+}
 }

@@ -195,16 +195,20 @@
                         <div class="group">
                             <div class="rounded-xl overflow-hidden bg-gray-50 border border-gray-100 hover:shadow-md transition">
                                 <img src="{{ $adopcion->planta->imagen ?? 'https://images.unsplash.com/photo-1592150621744-aca64f48394a?w=400&h=250&fit=crop' }}" 
-                                     alt="{{ $adopcion->planta->nombre }}"
+                                     alt="{{ $adopcion->planta->nombre ?? 'Planta' }}"
                                      class="w-full h-40 object-cover group-hover:scale-105 transition duration-300">
                                 <div class="p-4">
-                                    <h4 class="font-semibold text-gray-900">{{ $adopcion->planta->nombre }}</h4>
+                                    <h4 class="font-semibold text-gray-900">{{ $adopcion->planta->nombre ?? 'Planta sin nombre' }}</h4>
                                     <p class="text-xs text-gray-500 mt-1">Adoptada el {{ $adopcion->created_at->format('d/m/Y') }}</p>
                                     <div class="mt-3 flex items-center justify-between">
                                         <span class="text-xs px-2 py-1 bg-green-100 text-green-700 rounded-full">
                                             {{ $adopcion->planta->tipo_zona ?? 'Interior' }}
                                         </span>
-                                        <a href="{{ route('catalogo.plantas.show', $adopcion->planta_id) }}" class="text-sm text-green-600 hover:text-green-700 font-medium">Ver detalles →</a>
+                                        @if($adopcion->planta)
+                                            <a href="{{ route('catalogo.plantas.show', $adopcion->planta->id) }}" class="text-sm text-green-600 hover:text-green-700 font-medium">Ver detalles →</a>
+                                        @else
+                                            <span class="text-xs text-gray-400">Sin detalles</span>
+                                        @endif
                                     </div>
                                 </div>
                             </div>
@@ -225,6 +229,7 @@
                 <div class="p-6">
                     <div class="space-y-4">
                         @foreach($actividadReciente as $cuidado)
+                        @php $planta = $cuidado->adopcion->planta ?? null; @endphp
                         <div class="flex items-center gap-4 p-3 bg-gray-50 rounded-xl">
                             <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
                                 <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -233,7 +238,7 @@
                             </div>
                             <div class="flex-1">
                                 <p class="text-sm text-gray-800">
-                                    Cuidaste <span class="font-semibold">{{ $cuidado->adopcion->planta->nombre }}</span>
+                                    Cuidaste <span class="font-semibold">{{ $planta->nombre ?? 'una planta' }}</span>
                                 </p>
                                 <p class="text-xs text-gray-500">{{ $cuidado->created_at->diffForHumans() }}</p>
                             </div>

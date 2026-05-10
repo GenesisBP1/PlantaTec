@@ -13,15 +13,19 @@ use Illuminate\Support\Facades\DB;
 class RegistroCuidadoController extends Controller
 {
     public function create(Request $request)
-    {
-        $adopcion = Adopcion::with('planta.plantaCuidados.cuidado')
-            ->where('id_usuario', auth()->id())
-            ->findOrFail($request->adopcion_id);
+{
+    $adopcion = Adopcion::with('planta.plantaCuidados.cuidado')
+        ->where('id_usuario', auth()->id())
+        ->findOrFail($request->adopcion_id);
 
-        $cuidados = $adopcion->planta->plantaCuidados;
+    $cuidados = $adopcion->planta->plantaCuidados;
 
-        return view('registro_cuidados.create', compact('adopcion', 'cuidados'));
-    }
+    $selectedCuidadoId = $request->cuidado_id; // Nuevo parámetro
+
+    return view('registro_cuidados.create', compact('adopcion', 'cuidados', 'selectedCuidadoId'));
+}
+
+    
 
     public function store(Request $request)
     {
@@ -84,4 +88,6 @@ class RegistroCuidadoController extends Controller
                 ->withInput();
         }
     }
+
+    
 }

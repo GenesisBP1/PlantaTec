@@ -27,42 +27,43 @@ class DashboardController extends Controller
             ));
         }
 
-        // Para usuarios normales
-        $misPlantas = Adopcion::where('id_usuario', auth()->id())
-            ->where('estado_adopcion', 'activa')
-            ->count();
+       // En el método index(), dentro del else (usuario normal)
 
-        $misNotificaciones = Notificacion::where('id_usuario', auth()->id())
-            ->where('leida', false)
-            ->count();
+$misPlantas = Adopcion::where('id_usuario', auth()->id())
+    ->where('estado_adopcion', 'activa')
+    ->count();
 
-        $misCuidados = RegistroCuidado::whereHas('adopcion', function ($q) {
-            $q->where('id_usuario', auth()->id());
-        })->count();
+$misNotificaciones = Notificacion::where('id_usuario', auth()->id())
+    ->where('leida', false)
+    ->count();
 
-        $misRecomendaciones = RecomendacionCuidado::whereHas('adopcion', function ($q) {
-            $q->where('id_usuario', auth()->id());
-        })->where('estado', 'pendiente')->count();
+$misCuidados = RegistroCuidado::whereHas('adopcion', function ($q) {
+    $q->where('id_usuario', auth()->id());
+})->count();
 
-        // Últimas plantas adoptadas (3 cards)
-        $ultimasPlantas = Adopcion::where('id_usuario', auth()->id())
-            ->with('planta')
-            ->latest()
-            ->take(3)
-            ->get();
+$misRecomendaciones = RecomendacionCuidado::whereHas('adopcion', function ($q) {
+    $q->where('id_usuario', auth()->id());
+})->where('estado', 'pendiente')->count();
 
-        // Actividad reciente (últimos cuidados)
-        $actividadReciente = RegistroCuidado::whereHas('adopcion', function ($q) {
-            $q->where('id_usuario', auth()->id());
-        })->with('adopcion.planta')->latest()->take(5)->get();
+// Últimas 3 plantas adoptadas (para mostrar en el dashboard)
+$ultimasPlantas = Adopcion::where('id_usuario', auth()->id())
+    ->with('planta')
+    ->latest()
+    ->take(3)
+    ->get();
 
-        return view('dashboard.usuario', compact(
-            'misPlantas',
-            'misNotificaciones',
-            'misCuidados',
-            'misRecomendaciones',
-            'ultimasPlantas',
-            'actividadReciente'
-        ));
+// Actividad reciente (últimos cuidados)
+$actividadReciente = RegistroCuidado::whereHas('adopcion', function ($q) {
+    $q->where('id_usuario', auth()->id());
+})->with('adopcion.planta')->latest()->take(5)->get();
+
+return view('dashboard.usuario', compact(
+    'misPlantas',
+    'misNotificaciones',
+    'misCuidados',
+    'misRecomendaciones',
+    'ultimasPlantas',
+    'actividadReciente'
+));
     }
 }

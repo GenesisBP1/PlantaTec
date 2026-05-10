@@ -16,12 +16,13 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CatalogoPlantaController;
 use App\Http\Controllers\PlantaCuidadoController;
 use App\Http\Controllers\ReporteProblemaController;
-
+use App\Models\Adopcion;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
+// Rutas protegidas por autenticación
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
@@ -33,29 +34,31 @@ Route::middleware(['auth'])->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    Route::get('/plantas-destacadas', [CatalogoPlantaController::class, 'destacadas'])
-    ->name('plantas.destacadas');
+    // Catálogo de plantas
+    Route::get('/catalogo-plantas', [CatalogoPlantaController::class, 'index'])->name('catalogo.plantas');
+    Route::get('/catalogo-plantas/{planta}', [CatalogoPlantaController::class, 'show'])->name('catalogo.plantas.show');
+    Route::post('/catalogo-plantas/{planta}/adoptar', [CatalogoPlantaController::class, 'adoptar'])->name('catalogo.plantas.adoptar');
 
-    Route::get('/catalogo-plantas', [CatalogoPlantaController::class, 'index'])
-    ->name('catalogo.plantas');
+    // Reporte de problemas
+    Route::get('/reporte-problemas/create', [ReporteProblemaController::class, 'create'])->name('reporte-problemas.create');
+    Route::post('/reporte-problemas', [ReporteProblemaController::class, 'store'])->name('reporte-problemas.store');
+    Route::get('/reporte-problemas/{reporteProblema}', [ReporteProblemaController::class, 'show'])->name('reporte-problemas.show');
 
-    Route::get('/catalogo-plantas/{planta}', [CatalogoPlantaController::class, 'show'])
-    ->name('catalogo.plantas.show');
-
-    Route::post('/catalogo-plantas/{planta}/adoptar', [CatalogoPlantaController::class, 'adoptar'])
-    ->name('catalogo.plantas.adoptar');
-
-Route::get('/reporte-problemas/create', [ReporteProblemaController::class, 'create'])
-    ->name('reporte-problemas.create');
-
-Route::post('/reporte-problemas', [ReporteProblemaController::class, 'store'])
-    ->name('reporte-problemas.store');
-
-Route::get('/reporte-problemas/{reporteProblema}', [ReporteProblemaController::class, 'show'])
-    ->name('reporte-problemas.show');
-    
+    // API para obtener cuidados de una adopción (usado en el modal de la vista de adopciones)
+    Route::get('/api/plantas-cuidados/{adopcionId}', function ($adopcionId) {
+        $adopcion = Adopcion::findOrFail($adopcionId);
+        $cuidados = $adopcion->planta->plantaCuidados()->with('cuidado')->get()->map(function($pc) {
+            return [
+                'id' => $pc->id,
+                'nombre' => $pc->cuidado->nombre,
+                'frecuencia' => $pc->frecuencia
+            ];
+        });
+        return response()->json($cuidados);
+    })->name('api.plantas-cuidados');
 });
 
+// Rutas exclusivas para administradores
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::resource('plantas', PlantaController::class);
     Route::resource('ubicaciones', UbicacionController::class);
@@ -65,10 +68,8 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::resource('tratamientos', TratamientoController::class);
     Route::resource('recomendaciones-zona', RecomendacionZonaController::class);
     Route::resource('recomendaciones-cuidado', RecomendacionCuidadoController::class);
-    Route::get('/reportes-problemas', [ReporteProblemaController::class, 'index'])
-    ->name('reporte-problemas.index');
-    Route::put('/reportes-problemas/{reporteProblema}/resolver', [ReporteProblemaController::class, 'resolver'])
-    ->name('reporte-problemas.resolver');
+    Route::get('/reportes-problemas', [ReporteProblemaController::class, 'index'])->name('reporte-problemas.index');
+    Route::put('/reportes-problemas/{reporteProblema}/resolver', [ReporteProblemaController::class, 'resolver'])->name('reporte-problemas.resolver');
 });
 
 require __DIR__.'/auth.php';
