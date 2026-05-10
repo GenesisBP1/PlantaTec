@@ -1,0 +1,149 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── Variables globales (fácilmente modificables) ── */
+@layer base {
+    :root {
+        --color-brand:  #16a34a;   /* verde principal */
+        --color-brand-dark: #15803d;
+        --color-earth:  #dda03a;    /* acento tierra */
+        --color-earth-dark: #c8851c;
+        --radius-card:  1rem;
+        --shadow-card:  0 1px 3px 0 rgb(0 0 0 / 0.07),
+                        0 1px 2px -1px rgb(0 0 0 / 0.07);
+        --shadow-card-hover: 0 10px 15px -3px rgb(0 0 0 / 0.08),
+                             0 4px 6px -2px rgb(0 0 0 / 0.05);
+    }
+
+    /* Fondo general de la aplicación (gris muy claro, neutro) */
+    body {
+        @apply bg-gray-50 text-gray-800;
+    }
+
+    /* Tipografías */
+    h1, h2, h3, h4, h5, h6 {
+        @apply font-bold tracking-tight;
+    }
+
+    /* Focus ring accesible usando la variable brand */
+    *:focus-visible {
+        @apply outline-none ring-2 ring-offset-2;
+        ring-color: var(--color-brand);
+    }
+}
+
+/* ── Componentes reutilizables ───────────────────── */
+@layer components {
+    /* Contenedor principal (ancho máximo y centrado) */
+    .container-custom {
+        @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+    }
+
+    /* Tarjeta estándar (para adoptions, plantas, etc.) */
+    .card {
+        @apply bg-white border border-gray-100 rounded-2xl shadow-sm
+               transition-shadow duration-200 hover:shadow-md;
+    }
+
+    /* Encabezado de sección (con espacio y alineación responsive) */
+    .section-header {
+        @apply flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-6;
+    }
+    .section-title {
+        @apply text-xl font-bold text-gray-800;
+    }
+    .section-subtitle {
+        @apply text-sm text-gray-500 mt-0.5;
+    }
+
+    /* Badges (estados, prioridades) */
+    .badge {
+        @apply inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-full;
+    }
+    .badge-success { @apply badge bg-green-100 text-green-800; }
+    .badge-warning { @apply badge bg-amber-100 text-amber-800; }
+    .badge-danger  { @apply badge bg-red-100 text-red-800;   }
+    .badge-neutral { @apply badge bg-gray-100 text-gray-700; }
+    .badge-info    { @apply badge bg-blue-100 text-blue-800; }
+
+    /* Prioridades para recomendaciones */
+    .badge-urgente { @apply badge bg-red-100 text-red-800; }
+    .badge-alta    { @apply badge bg-orange-100 text-orange-800; }
+    .badge-media   { @apply badge bg-yellow-100 text-yellow-800; }
+
+    /* Botones coherentes */
+    .btn {
+        @apply inline-flex items-center gap-2 font-medium text-sm
+               px-4 py-2 rounded-xl transition-all duration-150
+               focus:outline-none focus:ring-2 focus:ring-offset-2
+               disabled:opacity-50 disabled:cursor-not-allowed;
+    }
+    .btn-primary {
+        @apply btn text-white shadow-sm;
+        background-color: var(--color-brand);
+        &:hover { background-color: var(--color-brand-dark); }
+        &:focus { ring-color: var(--color-brand); }
+    }
+    .btn-secondary {
+        @apply btn bg-white text-gray-700 border border-gray-200
+               hover:bg-gray-50 focus:ring-gray-300;
+    }
+    .btn-danger {
+        @apply btn bg-red-600 text-white hover:bg-red-700 focus:ring-red-500;
+    }
+    .btn-ghost {
+        @apply btn text-gray-600 hover:bg-gray-100 focus:ring-gray-300;
+    }
+
+    /* Inputs y selects consistentes */
+    .input {
+        @apply w-full rounded-xl border-gray-200 shadow-sm text-sm
+               focus:border-green-400 focus:ring-green-400
+               placeholder:text-gray-400;
+    }
+
+    /* Tablas responsivas (para admin) */
+    .table-responsive {
+        @apply w-full overflow-x-auto;
+    }
+    .table {
+        @apply min-w-full divide-y divide-gray-200;
+    }
+    .table th {
+        @apply px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50;
+    }
+    .table td {
+        @apply px-4 py-3 text-sm text-gray-700 whitespace-nowrap;
+    }
+
+    /* Skeleton loader (para estados de carga) */
+    .skeleton {
+        @apply bg-gray-200 rounded-lg animate-pulse;
+    }
+    .skeleton-text {
+        @apply skeleton h-4 w-full;
+    }
+    .skeleton-circle {
+        @apply skeleton rounded-full h-10 w-10;
+    }
+}
+
+/* ── Utilidades extra y animaciones ───────────────── */
+@layer utilities {
+    .animate-fade-in {
+        animation: fadeIn 0.3s ease-out both;
+    }
+    .animate-slide-up {
+        animation: slideUp 0.35s ease-out both;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to   { opacity: 1; }
+    }
+    @keyframes slideUp {
+        from { opacity: 0; transform: translateY(8px); }
+        to   { opacity: 1; transform: translateY(0);   }
+    }
+}
