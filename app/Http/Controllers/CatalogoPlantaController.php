@@ -18,58 +18,56 @@ class CatalogoPlantaController extends Controller
 
     public function show(Planta $planta)
     {
-        // Obtener todas las zonas recomendadas (para el select público)
         $zonasRecomendadas = RecomendacionZona::all();
+    
         return view('catalogo.show', compact('planta', 'zonasRecomendadas'));
     }
 
     public function adoptar(Request $request, Planta $planta)
     {
-        $ubicacionId = null;
+        $request->validate([
+            'tipo' => 'required|in:publico,privado',
+        ]);
 
-        // Validar que si envía tipo debe enviar también nombre_lugar
-        if ($request->filled('tipo')) {
+        if ($request->tipo === 'publico') {
             $request->validate([
-                'tipo'         => 'required|string|in:publico,privado',
-                'nombre_lugar' => 'required|string|max:255',
-                'descripcion'  => 'nullable|string',
-                'latitud'      => 'nullable|numeric',
-                'longitud'     => 'nullable|numeric',
+                'id_recomendacion_zona' => 'required|exists:recomendaciones_zona,id',
             ]);
 
-            // Si es público, latitud y longitud son obligatorios (vienen del select)
-            if ($request->tipo === 'publico') {
-                $request->validate([
-                    'latitud'  => 'required|numeric',
-                    'longitud' => 'required|numeric',
-                ]);
-            }
+            $zona = RecomendacionZona::findOrFail($request->id_recomendacion_zona);
 
             $ubicacion = Ubicacion::create([
-                'tipo'         => $request->tipo,
-                'nombre_lugar' => $request->nombre_lugar,
-                'descripcion'  => $request->descripcion,
-                'latitud'      => $request->latitud,
-                'longitud'     => $request->longitud,
+                'tipo' => 'publico',
+                'nombre_lugar' => $zona->nombre_lugar,
+                'descripcion' => $zona->descripcion,
+                'latitud' => $zona->latitud,
+                'longitud' => $zona->longitud,
+            ]);
+        }
+
+        if ($request->tipo === 'privado') {
+            $request->validate([
+                'nombre_lugar_privado' => 'required|string|max:255',
+                'descripcion_privada' => 'nullable|string',
             ]);
 
-            $ubicacionId = $ubicacion->id;
+            $ubicacion = Ubicacion::create([
+                'tipo' => 'privado',
+                'nombre_lugar' => $request->nombre_lugar_privado,
+                'descripcion' => $request->descripcion_privada,
+                'latitud' => null,
+                'longitud' => null,
+            ]);
         }
 
         Adopcion::create([
-            'id_usuario'      => auth()->id(),
-            'id_planta'       => $planta->id,
-            'id_ubicacion'    => $ubicacionId,
+            'id_usuario' => auth()->id(),
+            'id_planta' => $planta->id,
+            'id_ubicacion' => $ubicacion->id,
             'estado_adopcion' => 'activa',
         ]);
 
         return redirect()->route('adopciones.index')
             ->with('success', 'Planta adoptada correctamente.');
-    }
-
-    public function destacadas()
-    {
-        $plantas = Planta::where('destacada', true)->get();
-        return view('catalogo.destacadas', compact('plantas'));
     }
 }

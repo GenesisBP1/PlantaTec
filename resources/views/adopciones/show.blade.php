@@ -251,15 +251,22 @@
                     @forelse($adopcion->registrosCuidados as $registro)
                         <div class="border-b border-gray-100 py-3 flex flex-wrap gap-3 items-start">
                             <div class="flex-1">
-                                <p><strong>{{ $registro->plantaCuidado->cuidado->nombre }}</strong> – {{ $registro->fecha->format('d/m/Y H:i') }}</p>
+                                {{-- CORRECIÓN 1: parse() para evitar error si fecha es string --}}
+                                <p>
+                                    <strong>{{ $registro->plantaCuidado->cuidado->nombre }}</strong>
+                                    – {{ \Carbon\Carbon::parse($registro->fecha)->format('d/m/Y H:i') }}
+                                </p>
                                 <p class="text-gray-600 text-sm">{{ $registro->descripcion ?? 'Sin descripción' }}</p>
                                 @if($registro->estado_observado)
                                     <p class="text-xs text-gray-500">Estado observado: {{ $registro->estado_observado }}</p>
                                 @endif
                             </div>
                             @if($registro->imagen)
+                                {{-- CORRECCIÓN 2: asset en lugar de Storage::url --}}
                                 <div>
-                                    <img src="{{ Storage::url($registro->imagen) }}" class="w-24 h-24 object-cover rounded-lg shadow">
+                                    <img src="{{ asset('storage/' . $registro->imagen) }}"
+                                         class="w-24 h-24 object-cover rounded-lg shadow"
+                                         alt="Imagen del cuidado">
                                 </div>
                             @endif
                         </div>
@@ -277,8 +284,9 @@
                 <div class="card-body">
                     @forelse($adopcion->reportesProblemas as $reporte)
                         <div class="border-b border-gray-100 py-3">
-                            <p><strong>{{ $reporte->problema->nombre }}</strong> 
-                                <span class="badge-estado 
+                            <p>
+                                <strong>{{ $reporte->problema->nombre }}</strong>
+                                <span class="badge-estado
                                     @if($reporte->estado === 'activo') badge-activo
                                     @elseif($reporte->estado === 'en_revision') badge-revision
                                     @else badge-resuelto @endif">
