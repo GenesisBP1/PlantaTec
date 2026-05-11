@@ -8,13 +8,24 @@ use Illuminate\Http\Request;
 class NotificacionController extends Controller
 {
     public function index()
-    {
-        $notificaciones = Notificacion::where('id_usuario', auth()->id())
-            ->latest()
-            ->get();
+{
+    $notificacionesPendientes = Notificacion::with('recomendacionCuidado.adopcion.planta')
+        ->where('id_usuario', auth()->id())
+        ->where('leida', false)
+        ->latest()
+        ->get();
 
-        return view('notificaciones.index', compact('notificaciones'));
-    }
+    $notificacionesLeidas = Notificacion::with('recomendacionCuidado.adopcion.planta')
+        ->where('id_usuario', auth()->id())
+        ->where('leida', true)
+        ->latest()
+        ->get();
+
+    return view('notificaciones.index', compact(
+        'notificacionesPendientes',
+        'notificacionesLeidas'
+    ));
+}
 
     public function update(Request $request, Notificacion $notificacione)
     {

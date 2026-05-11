@@ -8,6 +8,8 @@ use App\Models\Adopcion;
 use App\Models\Notificacion;
 use App\Models\RegistroCuidado;
 use App\Models\RecomendacionCuidado;
+use App\Models\ReporteProblema;
+use Carbon\Carbon;
 
 class DashboardController extends Controller
 {
@@ -17,53 +19,107 @@ class DashboardController extends Controller
             $totalPlantas = Planta::count();
             $totalUsuarios = User::where('rol', 'usuario')->count();
             $totalAdopciones = Adopcion::count();
-            $recomendacionesPendientes = RecomendacionCuidado::where('estado', 'pendiente')->count();
+            $problemasActivos = ReporteProblema::whereIn('estado', ['activo', 'en_revision'])->count();
+            $plantaMasAdoptada = Planta::withCount('adopciones')
+                ->orderByDesc('adopciones_count')
+                ->first();
 
             return view('dashboard.admin', compact(
                 'totalPlantas',
                 'totalUsuarios',
                 'totalAdopciones',
-                'recomendacionesPendientes'
+                'problemasActivos',
+                'plantaMasAdoptada'
             ));
         }
 
-       // En el método index(), dentro del else (usuario normal)
+        $misAdopciones = Adopcion::with([
+                'planta.plantaCuidados.cuidado',
+                'registrosCuidados',
+                'reportesProblemas'
+            ])
+            ->where('id_usuario', auth()->id())
+            ->where('estado_adopcion', 'activa')
+            ->get();
 
-$misPlantas = Adopcion::where('id_usuario', auth()->id())
-    ->where('estado_adopcion', 'activa')
-    ->count();
+        $misPlantas = $misAdopciones->count();
 
-$misNotificaciones = Notificacion::where('id_usuario', auth()->id())
-    ->where('leida', false)
-    ->count();
+        $misNotificaciones = Notificacion::where('id_usuario', auth()->id())
+            ->where('leida', false)
+            ->count();
 
-$misCuidados = RegistroCuidado::whereHas('adopcion', function ($q) {
-    $q->where('id_usuario', auth()->id());
-})->count();
+        $misCuidados = RegistroCuidado::whereHas('adopcion', function ($q) {
+            $q->where('id_usuario', auth()->id());
+        })->count();
 
-$misRecomendaciones = RecomendacionCuidado::whereHas('adopcion', function ($q) {
-    $q->where('id_usuario', auth()->id());
-})->where('estado', 'pendiente')->count();
+        $misRecomendaciones = RecomendacionCuidado::whereHas('adopcion', function ($q) {
+            $q->where('id_usuario', auth()->id());
+        })->where('estado', 'pendiente')->count();
 
-// Últimas 3 plantas adoptadas (para mostrar en el dashboard)
-$ultimasPlantas = Adopcion::where('id_usuario', auth()->id())
-    ->with('planta')
-    ->latest()
-    ->take(3)
-    ->get();
+        $problemasActivos = ReporteProblema::whereHas('adopcion', function ($q) {
+            $q->where('id_usuario', auth()->id());
+        })
+            ->whereIn('estado', ['activo', 'en_revision'])
+            ->count();
 
-// Actividad reciente (últimos cuidados)
-$actividadReciente = RegistroCuidado::whereHas('adopcion', function ($q) {
-    $q->where('id_usuario', auth()->id());
-})->with('adopcion.planta')->latest()->take(5)->get();
+        $ultimasPlantas = Adopcion::where('id_usuario', auth()->id())
+            ->with('planta')
+            ->latest()
+            ->take(3)
+            ->get();
 
-return view('dashboard.usuario', compact(
-    'misPlantas',
-    'misNotificaciones',
-    'misCuidados',
-    'misRecomendaciones',
-    'ultimasPlantas',
-    'actividadReciente'
-));
+        $actividadReciente = RegistroCuidado::whereHas('adopcion', function ($q) {
+            $q->where('id_usuario', auth()->id());
+        })
+            ->with('adopcion.planta')
+            ->latest()
+            ->take(5)
+            ->get();
+
+        $proximosCuidados = [];
+
+        foreach ($misAdopciones as $adopcion) {
+            foreach ($adopcion->planta->plantaCuidados as $plantaCuidado) {
+                $ultimoRegistro = RegistroCuidado::where('id_adopcion', $adopcion->id)
+                    ->where('id_planta_cuidado', $plantaCuidado->id)
+                    ->latest('fecha')
+                    ->first();
+
+                $fechaBase = $ultimoRegistro
+                    ? Carbon::parse($ultimoRegistro->fecha)
+                    : Carbon::parse($adopcion->fecha_adopcion);
+
+                $proximaFecha = $fechaBase->copy()->addDays($plantaCuidado->frecuencia);
+
+                $proximosCuidados[] = [
+                    'planta' => $adopcion->planta->nombre,
+                    'cuidado' => $plantaCuidado->cuidado->nombre,
+                    'fecha' => $proximaFecha,
+                ];
+            }
+        }
+
+        $proximosCuidados = collect($proximosCuidados)
+            ->sortBy('fecha');
+
+        $cuidadosPendientesHoy = $proximosCuidados
+            ->filter(function ($cuidado) {
+                return Carbon::parse($cuidado['fecha'])->isToday();
+            })
+            ->count();
+
+        $proximosCuidados = $proximosCuidados->take(5);
+
+        return view('dashboard.usuario', compact(
+            'misPlantas',
+            'misNotificaciones',
+            'misCuidados',
+            'misRecomendaciones',
+            'problemasActivos',
+            'cuidadosPendientesHoy',
+            'ultimasPlantas',
+            'actividadReciente',
+            'proximosCuidados'
+        ));
     }
 }

@@ -9,6 +9,8 @@ use App\Models\Notificacion;
 use App\Models\ReporteProblema;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Models\PlantaCuidado;
+use App\Models\Tratamiento;
 
 class RegistroCuidadoController extends Controller
 {
@@ -52,10 +54,34 @@ class RegistroCuidadoController extends Controller
             // 2. Crear el registro de cuidado
             $registro = RegistroCuidado::create($datos);
 
-            // 3. Actualizar reportes de problemas activos de esta adopción a "en_revision"
-            ReporteProblema::where('id_adopcion', $request->id_adopcion)
-                ->where('estado', 'activo')
-                ->update(['estado' => 'en_revision']);
+            // 3. Resolver automáticamente reportes de problemas si el cuidado coincide con un tratamiento
+$plantaCuidado = PlantaCuidado::find($request->id_planta_cuidado);
+
+$reportesActivos = ReporteProblema::where('id_adopcion', $request->id_adopcion)
+    ->whereIn('estado', ['activo', 'en_revision'])
+    ->get();
+
+            $adopcion = Adopcion::find($request->id_adopcion);
+
+            foreach ($reportesActivos as $reporte) {
+                $tratamientoRelacionado = Tratamiento::where('id_problema', $reporte->id_problema)
+                    ->where('id_cuidado', $plantaCuidado->id_cuidado)
+                    ->where(function ($query) use ($adopcion) {
+                        $query->where('id_planta', $adopcion->id_planta)
+                              ->orWhereNull('id_planta');
+                    })
+                    ->exists();
+
+                if ($tratamientoRelacionado) {
+                    $reporte->update([
+                        'estado' => 'resuelto'
+                    ]);
+                } else {
+                    $reporte->update([
+                        'estado' => 'en_revision'
+                    ]);
+                }
+            }
 
             // 4. Obtener IDs de recomendaciones pendientes que se están atendiendo
             $recomendacionesAtendidas = RecomendacionCuidado::where('id_adopcion', $request->id_adopcion)

@@ -31,7 +31,7 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/>
                             </svg>
                         </div>
-                        <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Mis plantas</p>
+                        <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Plantas adoptadas</p>
                         <p class="text-3xl font-bold text-gray-900 mt-0.5">{{ $misPlantas }}</p>
                         <p class="text-xs text-green-600 mt-1 group-hover:underline">Ver adopciones →</p>
                     </div>
@@ -66,13 +66,13 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
                             </svg>
                         </div>
-                        <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Cuidados</p>
-                        <p class="text-3xl font-bold text-gray-900 mt-0.5">{{ $misCuidados }}</p>
-                        <p class="text-xs text-gray-400 mt-1">Registrados</p>
+                        <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Problemas activos</p>
+                        <p class="text-3xl font-bold text-gray-900 mt-0.5">{{ $problemasActivos }}</p>
+                        <p class="text-xs text-blue-600 mt-1">Reportes en seguimiento</p>
                     </div>
                 </div>
 
-                <a href="{{ route('notificaciones.index') }}" class="group relative bg-white border border-gray-100 rounded-2xl p-5 shadow-sm hover:shadow-md hover:border-amber-200 transition overflow-hidden">
+                <div class="group relative bg-white border border-gray-100 rounded-2xl p-5 shadow-sm hover:shadow-md hover:border-amber-200 transition overflow-hidden">
                     <div class="absolute -right-4 -bottom-4 w-24 h-24 bg-amber-50 rounded-full opacity-50 group-hover:scale-110 transition-transform"></div>
                     <div class="relative">
                         <div class="w-10 h-10 bg-amber-100 rounded-xl flex items-center justify-center mb-3">
@@ -80,11 +80,11 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
                             </svg>
                         </div>
-                        <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Recomendaciones</p>
-                        <p class="text-3xl font-bold text-gray-900 mt-0.5">{{ $misRecomendaciones }}</p>
-                        <p class="text-xs text-amber-600 mt-1 group-hover:underline">Ver sugerencias →</p>
+                        <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Cuidados de hoy</p>
+                        <p class="text-3xl font-bold text-gray-900 mt-0.5">{{ $cuidadosPendientesHoy }}</p>
+                        <p class="text-xs text-amber-600 mt-1">Pendientes para hoy</p>
                     </div>
-                </a>
+                </div>
             </div>
 
             {{-- ACCIONES RÁPIDAS --}}

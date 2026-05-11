@@ -58,9 +58,9 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a4 4 0 00-5-3.87M9 20H4v-2a4 4 0 015-3.87m6-4.13a4 4 0 10-8 0 4 4 0 008 0z"/>
                             </svg>
                         </div>
-                        <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Usuarios</p>
+                        <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Usuarios registrados</p>
                         <p class="text-3xl font-bold text-gray-900 mt-0.5">{{ $totalUsuarios }}</p>
-                        <span class="text-xs text-gray-400 mt-1 inline-block">Registrados</span>
+                        <span class="text-xs text-gray-400 mt-1 inline-block">Activos en el sistema</span>
                     </div>
                 </div>
 
@@ -72,9 +72,9 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 016.364 0L12 7.636l1.318-1.318a4.5 4.5 0 116.364 6.364L12 20.364l-7.682-7.682a4.5 4.5 0 010-6.364z"/>
                             </svg>
                         </div>
-                        <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Adopciones</p>
+                        <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Plantas adoptadas</p>
                         <p class="text-3xl font-bold text-gray-900 mt-0.5">{{ $totalAdopciones }}</p>
-                        <a href="{{ route('adopciones.index') }}" class="text-xs text-violet-600 hover:underline mt-1 inline-block">Ver todas →</a>
+                        <a href="{{ route('adopciones.index') }}" class="text-xs text-violet-600 hover:underline mt-1 inline-block">Ver adopciones →</a>
                     </div>
                 </div>
 
@@ -86,9 +86,58 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6 6 0 10-12 0v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
                             </svg>
                         </div>
-                        <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Pendientes</p>
-                        <p class="text-3xl font-bold text-gray-900 mt-0.5">{{ $recomendacionesPendientes }}</p>
-                        <a href="{{ route('recomendaciones-cuidado.index') }}" class="text-xs text-amber-600 hover:underline mt-1 inline-block">Revisar →</a>
+                        <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider">Problemas activos</p>
+                        <p class="text-3xl font-bold text-gray-900 mt-0.5">{{ $problemasActivos }}</p>
+                        <a href="{{ route('reporte-problemas.index') }}" class="text-xs text-amber-600 hover:underline mt-1 inline-block">Ver reportes →</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-8">
+                <div class="bg-white border border-gray-100 rounded-2xl shadow-sm p-6">
+                    <div class="flex items-start justify-between gap-4 mb-4">
+                        <div>
+                            <h3 class="text-base font-bold text-gray-900">Planta más adoptada</h3>
+                            <p class="text-sm text-gray-400">La planta con más adopciones registradas</p>
+                        </div>
+                        <span class="text-xs font-semibold px-3 py-1 rounded-full bg-green-100 text-green-700">Real</span>
+                    </div>
+
+                    @if($plantaMasAdoptada)
+                        <div class="flex items-center gap-4">
+                            <div class="w-16 h-16 rounded-2xl bg-green-50 overflow-hidden flex-shrink-0 border border-green-100">
+                                <img src="{{ $plantaMasAdoptada->imagen ? (str_starts_with($plantaMasAdoptada->imagen, 'http') ? $plantaMasAdoptada->imagen : asset('storage/' . $plantaMasAdoptada->imagen)) : 'https://images.unsplash.com/photo-1592150621744-aca64f48394a?w=400&h=250&fit=crop' }}"
+                                     alt="{{ $plantaMasAdoptada->nombre }}"
+                                     class="w-full h-full object-cover">
+                            </div>
+
+                            <div class="min-w-0 flex-1">
+                                <p class="text-lg font-bold text-gray-900 truncate">{{ $plantaMasAdoptada->nombre }}</p>
+                                <p class="text-sm text-gray-500">{{ $plantaMasAdoptada->adopciones_count }} adopciones registradas</p>
+                                <p class="text-xs text-gray-400 mt-1">Zona: {{ $plantaMasAdoptada->tipo_zona ?? 'No definida' }}</p>
+                            </div>
+                        </div>
+                    @else
+                        <div class="rounded-xl bg-gray-50 border border-gray-100 p-4 text-sm text-gray-500">
+                            Aún no hay adopciones registradas para calcular este dato.
+                        </div>
+                    @endif
+                </div>
+
+                <div class="bg-white border border-gray-100 rounded-2xl shadow-sm p-6">
+                    <div class="flex items-start justify-between gap-4 mb-4">
+                        <div>
+                            <h3 class="text-base font-bold text-gray-900">Zonas recomendadas más usadas</h3>
+                            <p class="text-sm text-gray-400">Bloque pendiente de definición por uso real</p>
+                        </div>
+                        <span class="text-xs font-semibold px-3 py-1 rounded-full bg-amber-100 text-amber-700">Pendiente</span>
+                    </div>
+
+                    <div class="rounded-xl border border-dashed border-gray-200 bg-gray-50 p-4">
+                        <p class="text-sm text-gray-600 font-medium">Pendiente de implementar.</p>
+                        <p class="text-sm text-gray-400 mt-1">
+                            Aquí se mostrará la zona recomendada más usada cuando se defina el criterio de cálculo.
+                        </p>
                     </div>
                 </div>
             </div>

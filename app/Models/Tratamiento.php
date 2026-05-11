@@ -9,6 +9,7 @@ class Tratamiento extends Model
     protected $fillable = [
         'id_problema',
         'id_planta',
+        'id_cuidado',
         'descripcion',
         'indicaciones',
     ];
@@ -21,5 +22,10 @@ class Tratamiento extends Model
     public function planta()
     {
         return $this->belongsTo(Planta::class, 'id_planta');
+    }
+
+    public function cuidado()
+    {
+        return $this->belongsTo(Cuidado::class, 'id_cuidado');
     }
 }

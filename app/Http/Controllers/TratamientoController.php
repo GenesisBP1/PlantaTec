@@ -6,6 +6,7 @@ use App\Models\Tratamiento;
 use App\Models\Problema;
 use App\Models\Planta;
 use Illuminate\Http\Request;
+use App\Models\Cuidado;
 
 class TratamientoController extends Controller
 {
@@ -21,18 +22,20 @@ class TratamientoController extends Controller
     {
         $problemas = Problema::all();
         $plantas = Planta::all();
+        $cuidados = Cuidado::all();
 
-        return view('tratamientos.create', compact('problemas', 'plantas'));
+        return view('tratamientos.create', compact('problemas', 'plantas', 'cuidados'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'id_problema' => 'required|exists:problemas,id',
-            'id_planta' => 'nullable|exists:plantas,id',
-            'descripcion' => 'nullable|string',
-            'indicaciones' => 'nullable|string',
-        ]);
+    'id_problema' => 'required|exists:problemas,id',
+    'id_planta' => 'nullable|exists:plantas,id',
+    'id_cuidado' => 'nullable|exists:cuidados,id',
+    'descripcion' => 'nullable|string',
+    'indicaciones' => 'nullable|string',
+]);
 
         Tratamiento::create($request->all());
 
@@ -44,6 +47,7 @@ class TratamientoController extends Controller
     {
         $problemas = Problema::all();
         $plantas = Planta::all();
+        $cuidados = Cuidado::all();
 
         return view('tratamientos.edit', compact('tratamiento', 'problemas', 'plantas'));
     }
@@ -53,6 +57,7 @@ class TratamientoController extends Controller
         $request->validate([
             'id_problema' => 'required|exists:problemas,id',
             'id_planta' => 'nullable|exists:plantas,id',
+            'id_cuidado' => 'nullable|exists:cuidados,id',
             'descripcion' => 'nullable|string',
             'indicaciones' => 'nullable|string',
         ]);

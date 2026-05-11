@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\RecomendacionCuidado;
 use Illuminate\Database\Eloquent\Model;
 
 class Notificacion extends Model

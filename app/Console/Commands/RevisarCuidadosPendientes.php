@@ -6,12 +6,13 @@ use Illuminate\Console\Command;
 use App\Models\Adopcion;
 use App\Models\RegistroCuidado;
 use App\Models\RecomendacionCuidado;
-use App\Models\Notificacion;          // ← Agregado
+use App\Models\Notificacion;
 use Carbon\Carbon;
 
 class RevisarCuidadosPendientes extends Command
 {
     protected $signature = 'cuidados:revisar';
+
     protected $description = 'Revisa cuidados pendientes y genera recomendaciones automáticas';
 
     public function handle()
@@ -29,10 +30,10 @@ class RevisarCuidadosPendientes extends Command
                     ->first();
 
                 if ($ultimoRegistro) {
-                    $diasSinCuidado = Carbon::parse($ultimoRegistro->fecha)->diffInDays(now());
-                } else {
-                    $diasSinCuidado = Carbon::parse($adopcion->fecha_adopcion)->diffInDays(now());
-                }
+    $diasSinCuidado = (int) Carbon::parse($ultimoRegistro->fecha)->diffInDays(now());
+} else {
+    $diasSinCuidado = (int) Carbon::parse($adopcion->fecha_adopcion)->diffInDays(now());
+}
 
                 if ($diasSinCuidado >= $plantaCuidado->frecuencia) {
 
@@ -50,22 +51,20 @@ class RevisarCuidadosPendientes extends Command
                             $prioridad = 'alta';
                         }
 
-                        // 🔁 Guardamos la recomendación y capturamos el objeto
                         $recomendacion = RecomendacionCuidado::create([
                             'id_adopcion' => $adopcion->id,
                             'id_planta_cuidado' => $plantaCuidado->id,
-                            'mensaje' => 'No se ha registrado el cuidado "' . $plantaCuidado->cuidado->nombre . '" en los últimos ' . $diasSinCuidado . ' días.',
+'mensaje' => 'No se ha registrado el cuidado "' . $plantaCuidado->cuidado->nombre . '" desde hace ' . $diasSinCuidado . ' días.',
                             'prioridad' => $prioridad,
                             'estado' => 'pendiente',
                             'fecha_generada' => now(),
                         ]);
 
-                        // 🔔 Crear la notificación asociada
                         Notificacion::create([
-                            'id_usuario' => $adopcion->id_usuario,
+                            'id_usuario' => $adopcion->id_uphp artisan cuidados:revisarsuario,
                             'id_recomendacion_cuidado' => $recomendacion->id,
-                            'titulo' => 'Cuidado pendiente',
-                            'mensaje' => $recomendacion->mensaje,
+                            'titulo' => 'Cuidado pendiente: ' . $adopcion->planta->nombre,
+'mensaje' => 'Tu planta ' . $adopcion->planta->nombre . ' necesita atención. ' . $recomendacion->mensaje,
                             'tipo' => 'cuidado_pendiente',
                             'leida' => false,
                             'fecha_envio' => now(),
