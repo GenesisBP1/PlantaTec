@@ -22,6 +22,10 @@
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" class="px-3 py-2 rounded-lg transition">
                         Dashboard
                     </x-nav-link>
+                    
+                    <x-nav-link :href="route('admin.usuarios.index')" :active="request()->routeIs('admin.usuarios.*')">
+                        Usuarios
+                    </x-nav-link>
 
                     @if(auth()->user()->rol === 'admin')
                         <x-nav-link :href="route('plantas.index')" :active="request()->routeIs('plantas.*')" class="px-3 py-2 rounded-lg transition">

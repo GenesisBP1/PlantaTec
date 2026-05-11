@@ -17,6 +17,7 @@ use App\Http\Controllers\CatalogoPlantaController;
 use App\Http\Controllers\PlantaCuidadoController;
 use App\Http\Controllers\ReporteProblemaController;
 use App\Models\Adopcion;
+Use App\Http\Controllers\Admin\UsuarioController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -70,6 +71,16 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::resource('recomendaciones-cuidado', RecomendacionCuidadoController::class);
     Route::get('/reportes-problemas', [ReporteProblemaController::class, 'index'])->name('reporte-problemas.index');
     Route::put('/reportes-problemas/{reporteProblema}/resolver', [ReporteProblemaController::class, 'resolver'])->name('reporte-problemas.resolver');
+    
+// Rutas de administración de usuarios (solo admin)
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::resource('usuarios', UsuarioController::class);
+});
+
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    Route::resource('usuarios', UsuarioController::class);
+});
+
 });
 
 require __DIR__.'/auth.php';
