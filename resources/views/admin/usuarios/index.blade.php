@@ -7,6 +7,11 @@
                     Gestión de Usuarios
                 </h2>
             </div>
+            <div>
+                <a href="{{ route('admin.usuarios.create') }}" class="inline-block bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg transition-all duration-300 shadow-md hover:shadow-lg hover:-translate-y-0.5">
+                    Crear Usuario
+                </a>
+            </div>
         </div>
     </x-slot>
 
@@ -53,12 +58,22 @@
                                     <td class="px-6 py-4">{{ $usuario->created_at->format('d/m/Y') }}</td>
                                     <td class="px-6 py-4">
                                         <div class="flex gap-2">
-                                            <a href="{{ route('admin.usuarios.show', $usuario->id) }}" class="text-blue-600 hover:text-blue-800"><b>Ver</b></a>
-                                            <a href="{{ route('admin.usuarios.edit', $usuario->id) }}" class="text-yellow-600 hover:text-yellow-800"><b>Editar</b></a>
+                                            <a href="{{ route('admin.usuarios.show', $usuario->id) }}" 
+                                               class="inline-block px-3 py-1.5 text-blue-600 bg-blue-50 border border-blue-300 rounded-lg hover:bg-blue-600 hover:text-white hover:border-blue-600 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
+                                                Ver
+                                            </a>
+                                            <a href="{{ route('admin.usuarios.edit', $usuario->id) }}" 
+                                               class="inline-block px-3 py-1.5 text-yellow-600 bg-yellow-50 border border-yellow-300 rounded-lg hover:bg-yellow-500 hover:text-white hover:border-yellow-500 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
+                                                Editar
+                                            </a>
                                             @if($usuario->id !== auth()->id())
-                                            <form method="POST" action="{{ route('admin.usuarios.destroy', $usuario->id) }}" onsubmit="return confirm('¿Eliminar?')">
-                                                @csrf @method('DELETE')
-                                                <button class="text-red-600 hover:text-red-800"><b>Eliminar</b></button>
+                                            <form method="POST" action="{{ route('admin.usuarios.destroy', $usuario->id) }}" onsubmit="return confirm('¿Eliminar?')" class="inline">
+                                                @csrf 
+                                                @method('DELETE')
+                                                <button type="submit" 
+                                                        class="inline-block px-3 py-1.5 text-red-600 bg-red-50 border border-red-300 rounded-lg hover:bg-red-600 hover:text-white hover:border-red-600 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
+                                                    Eliminar
+                                                </button>
                                             </form>
                                             @endif
                                         </div>

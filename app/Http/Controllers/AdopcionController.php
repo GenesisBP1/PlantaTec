@@ -61,16 +61,23 @@ class AdopcionController extends Controller
     }
 
     public function update(Request $request, Adopcion $adopcione)
-{
-    if (auth()->user()->rol !== 'admin') {
-        abort(403);
+    {
+        if (auth()->user()->rol !== 'admin') {
+            abort(403);
+        }
+
+        $adopcione->update([
+            'estado_adopcion' => $request->estado_adopcion
+        ]);
+
+        return redirect()->route('adopciones.index')
+            ->with('success', 'Estado actualizado correctamente.');
     }
-
-    $adopcione->update([
-        'estado_adopcion' => $request->estado_adopcion
-    ]);
-
-    return redirect()->route('adopciones.index')
-        ->with('success', 'Estado actualizado correctamente.');
-}
+    public function edit($id)
+    {
+        $adopcion = Adopcion::with(['usuario', 'planta', 'ubicacion'])->findOrFail($id);
+        $ubicaciones = Ubicacion::all();
+        
+        return view('adopciones.edit', compact('adopcion', 'ubicaciones'));
+    }
 }

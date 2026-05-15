@@ -28,27 +28,44 @@
                     </x-nav-link>
 
                     @if(auth()->user()->rol === 'admin')
-                        <x-nav-link :href="route('plantas.index')" :active="request()->routeIs('plantas.*')" class="px-3 py-2 rounded-lg transition">
-                             Plantas
-                        </x-nav-link>
-                        <x-nav-link :href="route('adopciones.index')" :active="request()->routeIs('adopciones.*')" class="px-3 py-2 rounded-lg transition">
-                             Adopciones
-                        </x-nav-link>
-                        <x-nav-link :href="route('catalogo.plantas')" :active="request()->routeIs('catalogo.plantas')" class="px-3 py-2 rounded-lg transition">
-                             Catálogo
-                        </x-nav-link>
-                        <x-nav-link :href="route('recomendaciones-zona.index')" :active="request()->routeIs('recomendaciones-zona.*')" class="px-3 py-2 rounded-lg transition">
-                            Zonas
-                        </x-nav-link>
-                        <x-nav-link :href="route('cuidados.index')" :active="request()->routeIs('cuidados.*')" class="px-3 py-2 rounded-lg transition">
-                             Cuidados
-                        </x-nav-link>
-                        <x-nav-link :href="route('planta-cuidados.index')" :active="request()->routeIs('planta-cuidados.*')" class="px-3 py-2 rounded-lg transition">
-                             Asignar cuidados
-                        </x-nav-link>
-                        <x-nav-link :href="route('recomendaciones-cuidado.index')" :active="request()->routeIs('recomendaciones-cuidado.*')" class="px-3 py-2 rounded-lg transition">
-                             Recomendaciones
-                        </x-nav-link>
+                <div class="relative" x-data="{ adminOpen: false }">
+                    <button @click="adminOpen = !adminOpen" @click.away="adminOpen = false" 
+                        class="inline-flex items-center px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-green-50 dark:hover:bg-green-900/20 transition">
+                        Administración
+                        <svg class="w-4 h-4 ml-1 transition-transform" :class="{ 'rotate-180': adminOpen }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                        </svg>
+                    </button>
+
+                    <div x-show="adminOpen" x-transition 
+                        class="absolute left-0 mt-2 w-56 rounded-xl shadow-lg bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5 z-50"
+                        style="display: none;">
+                        <div class="py-1">
+                            <a href="{{ route('plantas.index') }}" class="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-green-50 dark:hover:bg-green-900/20">
+                                Plantas
+                            </a>
+                            <a href="{{ route('adopciones.index') }}" class="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-green-50 dark:hover:bg-green-900/20">
+                                Adopciones
+                            </a>
+                            <a href="{{ route('ubicaciones.index') }}" class="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-green-50 dark:hover:bg-green-900/20">
+                                Ubicaciones
+                            </a>
+                            <a href="{{ route('cuidados.index') }}" class="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-green-50 dark:hover:bg-green-900/20">
+                                Cuidados
+                            </a>
+                            <a href="{{ route('planta-cuidados.index') }}" class="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-green-50 dark:hover:bg-green-900/20">
+                                Asignar cuidados
+                            </a>
+                            <a href="{{ route('recomendaciones-cuidado.index') }}" class="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-green-50 dark:hover:bg-green-900/20">
+                                Recomendaciones
+                            </a>
+                            <hr class="my-1 border-gray-200 dark:border-gray-700">
+                            <a href="{{ route('admin.usuarios.index') }}" class="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-green-50 dark:hover:bg-green-900/20">
+                                Usuarios
+                            </a>
+                        </div>
+                    </div>
+                </div>
                     @else
                         <x-nav-link :href="route('catalogo.plantas')" :active="request()->routeIs('catalogo.plantas')" class="px-3 py-2 rounded-lg transition">
                              Catálogo
