@@ -7,6 +7,7 @@ use App\Models\Adopcion;
 use App\Models\Ubicacion;
 use App\Models\RecomendacionZona;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class CatalogoPlantaController extends Controller
 {
@@ -29,45 +30,99 @@ class CatalogoPlantaController extends Controller
             'tipo' => 'required|in:publico,privado',
         ]);
 
-        if ($request->tipo === 'publico') {
-            $request->validate([
-                'id_recomendacion_zona' => 'required|exists:recomendaciones_zona,id',
+        try {
+            DB::beginTransaction();
+
+            if ($request->tipo === 'publico') {
+                // Verificar método de ubicación
+                $metodo = $request->input('metodo_ubicacion_publica', 'zona');
+
+                if ($metodo === 'zona') {
+                    $request->validate([
+                        'id_recomendacion_zona' => 'required|exists:recomendaciones_zona,id',
+                    ]);
+
+                    $zona = RecomendacionZona::findOrFail($request->id_recomendacion_zona);
+
+                    $ubicacion = Ubicacion::create([
+                        'id_usuario' => auth()->id(),
+                        'tipo' => 'publico',
+                        'nombre_lugar' => $zona->nombre_lugar,
+                        'descripcion' => $zona->descripcion,
+                        'latitud' => $zona->latitud,
+                        'longitud' => $zona->longitud,
+                        'es_publica' => true,
+                    ]);
+                } else {
+                    // Mapa
+                    $request->validate([
+                        'latitud' => 'required|numeric|between:-90,90',
+                        'longitud' => 'required|numeric|between:-180,180',
+                        'nombre_lugar' => 'required|string|max:255',
+                    ]);
+
+                    $ubicacion = Ubicacion::create([
+                        'id_usuario' => auth()->id(),
+                        'tipo' => 'publico',
+                        'nombre_lugar' => $request->nombre_lugar,
+                        'descripcion' => $request->descripcion ?? null,
+                        'latitud' => $request->latitud,
+                        'longitud' => $request->longitud,
+                        'es_publica' => true,
+                    ]);
+                }
+            } elseif ($request->tipo === 'privado') {
+                $metodo = $request->input('metodo_ubicacion_privada', 'nombre');
+
+                if ($metodo === 'nombre') {
+                    $request->validate([
+                        'nombre_lugar_privado' => 'required|string|max:255',
+                    ]);
+
+                    $ubicacion = Ubicacion::create([
+                        'id_usuario' => auth()->id(),
+                        'tipo' => 'privado',
+                        'nombre_lugar' => $request->nombre_lugar_privado,
+                        'descripcion' => $request->descripcion_privada,
+                        'latitud' => null,
+                        'longitud' => null,
+                        'es_publica' => false,
+                    ]);
+                } else {
+                    // Mapa privado
+                    $request->validate([
+                        'latitud_privada' => 'required|numeric|between:-90,90',
+                        'longitud_privada' => 'required|numeric|between:-180,180',
+                        'nombre_lugar_privado_mapa' => 'required|string|max:255',
+                    ]);
+
+                    $ubicacion = Ubicacion::create([
+                        'id_usuario' => auth()->id(),
+                        'tipo' => 'privado',
+                        'nombre_lugar' => $request->nombre_lugar_privado_mapa,
+                        'descripcion' => $request->descripcion_privada_mapa,
+                        'latitud' => $request->latitud_privada,
+                        'longitud' => $request->longitud_privada,
+                        'es_publica' => false,
+                    ]);
+                }
+            }
+
+            Adopcion::create([
+                'id_usuario' => auth()->id(),
+                'id_planta' => $planta->id,
+                'id_ubicacion' => $ubicacion->id,
+                'estado_adopcion' => 'activa',
             ]);
 
-            $zona = RecomendacionZona::findOrFail($request->id_recomendacion_zona);
+            DB::commit();
 
-            $ubicacion = Ubicacion::create([
-                'tipo' => 'publico',
-                'nombre_lugar' => $zona->nombre_lugar,
-                'descripcion' => $zona->descripcion,
-                'latitud' => $zona->latitud,
-                'longitud' => $zona->longitud,
-            ]);
+            return redirect()->route('adopciones.index')
+                ->with('success', 'Planta adoptada correctamente.');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()
+                ->with('error', 'Error al adoptar la planta: ' . $e->getMessage());
         }
-
-        if ($request->tipo === 'privado') {
-            $request->validate([
-                'nombre_lugar_privado' => 'required|string|max:255',
-                'descripcion_privada' => 'nullable|string',
-            ]);
-
-            $ubicacion = Ubicacion::create([
-                'tipo' => 'privado',
-                'nombre_lugar' => $request->nombre_lugar_privado,
-                'descripcion' => $request->descripcion_privada,
-                'latitud' => null,
-                'longitud' => null,
-            ]);
-        }
-
-        Adopcion::create([
-            'id_usuario' => auth()->id(),
-            'id_planta' => $planta->id,
-            'id_ubicacion' => $ubicacion->id,
-            'estado_adopcion' => 'activa',
-        ]);
-
-        return redirect()->route('adopciones.index')
-            ->with('success', 'Planta adoptada correctamente.');
     }
 }

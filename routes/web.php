@@ -16,6 +16,8 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CatalogoPlantaController;
 use App\Http\Controllers\PlantaCuidadoController;
 use App\Http\Controllers\ReporteProblemaController;
+use App\Http\Controllers\MapaController;
+use App\Http\Controllers\Api\AdopcionMapaController;
 use App\Models\Adopcion;
 Use App\Http\Controllers\Admin\UsuarioController;
 
@@ -30,6 +32,19 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('adopciones', AdopcionController::class);
     Route::resource('registro-cuidados', RegistroCuidadoController::class);
     Route::resource('notificaciones', NotificacionController::class);
+
+    // Rutas del Mapa Interactivo
+    Route::get('/mapa', [MapaController::class, 'index'])->name('mapa.index');
+    Route::get('/api/mapa/ubicaciones', [MapaController::class, 'getUbicaciones'])->name('api.mapa.ubicaciones');
+    Route::get('/api/mapa/zonas-recomendadas', [MapaController::class, 'getZonasRecomendadas'])->name('api.mapa.zonas-recomendadas');
+    Route::post('/api/mapa/ubicaciones', [MapaController::class, 'guardarUbicacion'])->name('api.mapa.guardar');
+    Route::get('/api/mapa/ubicaciones-cercanas', [MapaController::class, 'getUbicacionesCercanas'])->name('api.mapa.cercanas');
+    Route::put('/api/mapa/ubicaciones/{ubicacion}/privacidad', [MapaController::class, 'updatePrivacidad'])->name('api.mapa.privacidad');
+    Route::delete('/api/mapa/ubicaciones/{ubicacion}', [MapaController::class, 'destroy'])->name('api.mapa.destroy');
+
+    // Rutas de adopciones con ubicación (API)
+    Route::post('/api/adopciones/crear-con-ubicacion', [AdopcionMapaController::class, 'crearAdopcionConUbicacion'])->name('api.adopciones.crear-con-ubicacion');
+    Route::get('/api/adopciones/en-mapa', [AdopcionMapaController::class, 'getAdopcionesEnMapa'])->name('api.adopciones.en-mapa');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -72,15 +87,10 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/reportes-problemas', [ReporteProblemaController::class, 'index'])->name('reporte-problemas.index');
     Route::put('/reportes-problemas/{reporteProblema}/resolver', [ReporteProblemaController::class, 'resolver'])->name('reporte-problemas.resolver');
     
-// Rutas de administración de usuarios (solo admin)
-Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
-    Route::resource('usuarios', UsuarioController::class);
-});
-
-Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
-    Route::resource('usuarios', UsuarioController::class);
-});
-
+    // Rutas de administración de usuarios (solo admin)
+    Route::prefix('admin')->name('admin.')->group(function () {
+        Route::resource('usuarios', UsuarioController::class);
+    });
 });
 
 require __DIR__.'/auth.php';

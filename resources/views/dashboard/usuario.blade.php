@@ -119,7 +119,22 @@
                     </svg>
                 </a>
 
-                <a href="{{ route('notificaciones.index') }}" class="group flex items-center gap-4 bg-white border border-gray-100 hover:border-red-200 rounded-2xl p-5 shadow-sm hover:shadow-md transition">
+                <a href="{{ route('mapa.index') }}" class="group flex items-center gap-4 bg-white border border-gray-100 hover:border-purple-200 rounded-2xl p-5 shadow-sm hover:shadow-md transition">
+                    <div class="w-12 h-12 bg-purple-600 rounded-xl flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform shadow-sm">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6.553 3.276A1 1 0 0021 20.382V9.618a1 1 0 00-1.447-.894L15 11m0 13V11m0 0L9 7"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <p class="font-semibold text-gray-900">Mapa interactivo</p>
+                        <p class="text-xs text-gray-400 mt-0.5">Descubre ubicaciones de plantas</p>
+                    </div>
+                    <svg class="w-4 h-4 text-gray-300 ml-auto group-hover:text-purple-500 transition" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+                    </svg>
+                </a>
+
+                <a href="{{ route('notificaciones.index') }}" class="group flex items-center gap-4 bg-white border border-gray-100 hover:border-red-200 rounded-2xl p-5 shadow-sm hover:shadow-md transition md:col-span-3 lg:col-span-1">
                     <div class="w-12 h-12 bg-red-500 rounded-xl flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform shadow-sm relative">
                         <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6 6 0 10-12 0v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
@@ -144,6 +159,25 @@
                         <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
                     </svg>
                 </a>
+            </div>
+
+            {{-- MAPA INTERACTIVO --}}
+            <div class="bg-white rounded-2xl shadow-sm overflow-hidden">
+                <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+                    <div>
+                        <h3 class="text-base font-bold text-gray-900">🗺️ Tus ubicaciones</h3>
+                        <p class="text-sm text-gray-400">Visualiza dónde están tus plantas adoptadas</p>
+                    </div>
+                    <a href="{{ route('mapa.index') }}" class="text-sm text-green-600 hover:text-green-700 font-medium">Ver mapa completo →</a>
+                </div>
+                <div class="p-6">
+                    <x-mapa-interactivo 
+                        id="mapa-dashboard"
+                        :canSelectLocation="false"
+                        showToolbar="true"
+                        height="350px"
+                    />
+                </div>
             </div>
 
             {{-- BANNER --}}

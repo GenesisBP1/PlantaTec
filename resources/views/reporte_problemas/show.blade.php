@@ -45,7 +45,7 @@
             </div>
 
             {{-- Tratamientos --}}
-            <div class="bg-white shadow rounded-lg p-6">
+            <div class="bg-white shadow rounded-lg p-6 mb-6">
                 <h4 class="text-xl font-semibold mb-4">
                     Tratamientos sugeridos
                 </h4>
@@ -67,6 +67,14 @@
                         No se encontraron tratamientos para este problema y planta.
                     </p>
                 @endforelse
+            </div>
+
+            {{-- Botón de regreso --}}
+            <div class="flex gap-3">
+                <a href="@if(auth()->user()->rol === 'admin'){{ route('reporte-problemas.index') }}@else{{ route('adopciones.index') }}@endif" 
+                   class="px-6 py-2 bg-gray-500 hover:bg-gray-600 text-white rounded-lg transition">
+                    ← Volver
+                </a>
             </div>
 
         </div>

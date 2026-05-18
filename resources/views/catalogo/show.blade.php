@@ -61,10 +61,11 @@
                     </div>
                 @endif
 
-                <!-- FORMULARIO CORREGIDO (con nombres separados) -->
-                <form action="{{ route('catalogo.plantas.adoptar', $planta) }}" method="POST">
+                <!-- FORMULARIO CON MAPA INTERACTIVO -->
+                <form id="formulario-adopcion" action="{{ route('catalogo.plantas.adoptar', $planta) }}" method="POST">
                     @csrf
 
+                    <!-- Tipo de ubicación -->
                     <div class="form-group">
                         <label>Tipo de ubicación</label>
                         <select name="tipo" id="tipoUbicacion" required>
@@ -74,42 +75,118 @@
                         </select>
                     </div>
 
+                    <!-- OPCIÓN 1: UBICACIÓN PÚBLICA (Zona recomendada o Mapa) -->
                     <div id="ubicacionPublica" class="hidden">
-                        <div class="form-group">
-                            <label>Zona pública recomendada</label>
+                        <div class="mb-4">
+                            <label class="block font-semibold text-gray-700 mb-3">¿Cómo deseas seleccionar la ubicación?</label>
+                            <div class="flex gap-3">
+                                <label class="flex items-center gap-2 cursor-pointer">
+                                    <input type="radio" name="metodo_ubicacion_publica" value="zona" checked class="metodo-ubicacion" data-metodo="zona">
+                                    <span>Zona recomendada</span>
+                                </label>
+                                <label class="flex items-center gap-2 cursor-pointer">
+                                    <input type="radio" name="metodo_ubicacion_publica" value="mapa" class="metodo-ubicacion" data-metodo="mapa">
+                                    <span>Seleccionar en mapa</span>
+                                </label>
+                            </div>
+                        </div>
 
+                        <!-- Subopción: Zona Recomendada -->
+                        <div id="subopcion-zona" class="form-group">
+                            <label>Zona pública recomendada</label>
                             <select name="id_recomendacion_zona">
                                 <option value="">Selecciona una zona recomendada</option>
-
                                 @foreach($zonasRecomendadas as $zona)
                                     <option value="{{ $zona->id }}">
                                         {{ $zona->nombre_lugar }} - {{ $zona->tipo_zona }}
                                     </option>
                                 @endforeach
                             </select>
+                            <p class="text-sm text-gray-500 mt-2">
+                                Se tomarán automáticamente el nombre, descripción, latitud y longitud registrados.
+                            </p>
                         </div>
 
-                        <p class="text-sm text-gray-500">
-                            Al elegir una zona pública se tomarán automáticamente el nombre, descripción, latitud y longitud registrados.
-                        </p>
+                        <!-- Subopción: Mapa -->
+                        <div id="subopcion-mapa" class="hidden">
+                            <p class="text-sm text-blue-700 mb-3">👇 Selecciona tu ubicación en el mapa o usa la geolocalización automática.</p>
+                            <x-mapa-interactivo 
+                                id="mapa-adopcion-publica"
+                                :canSelectLocation="true"
+                                showToolbar="true"
+                                height="400px"
+                            />
+                            <div class="mt-3 p-3 bg-blue-50 border border-blue-200 rounded">
+                                <p class="text-sm text-blue-900">Ubicación seleccionada: <strong id="ubicacion-seleccionada-publica">Ninguna</strong></p>
+                            </div>
+                            <input type="hidden" name="latitud" id="input-latitud">
+                            <input type="hidden" name="longitud" id="input-longitud">
+                            <input type="hidden" name="nombre_lugar" id="input-nombre_lugar">
+                            <input type="hidden" name="es_publica" id="input-es_publica" value="1">
+                        </div>
                     </div>
 
+                    <!-- OPCIÓN 2: UBICACIÓN PRIVADA (Nombre simple o Mapa) -->
                     <div id="ubicacionPrivada" class="hidden">
-                        <div class="form-group">
+                        <div class="mb-4">
+                            <label class="block font-semibold text-gray-700 mb-3">¿Cómo deseas registrar la ubicación?</label>
+                            <div class="flex gap-3">
+                                <label class="flex items-center gap-2 cursor-pointer">
+                                    <input type="radio" name="metodo_ubicacion_privada" value="nombre" checked class="metodo-ubicacion" data-metodo="nombre">
+                                    <span>Solo nombre</span>
+                                </label>
+                                <label class="flex items-center gap-2 cursor-pointer">
+                                    <input type="radio" name="metodo_ubicacion_privada" value="mapa" class="metodo-ubicacion" data-metodo="mapa">
+                                    <span>Con ubicación en mapa</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Subopción: Solo nombre -->
+                        <div id="subopcion-nombre" class="form-group">
                             <label>Nombre del lugar privado</label>
                             <input type="text"
                                    name="nombre_lugar_privado"
                                    placeholder="Ejemplo: Mi casa, patio, huerta familiar">
-                        </div>
-
-                        <div class="form-group">
-                            <label>Descripción opcional</label>
+                            
+                            <label class="mt-3">Descripción opcional</label>
                             <textarea name="descripcion_privada"
                                       placeholder="Ejemplo: patio trasero con sombra por la tarde"></textarea>
                         </div>
+
+                        <!-- Subopción: Con mapa -->
+                        <div id="subopcion-mapa-privada" class="hidden">
+                            <p class="text-sm text-blue-700 mb-3">👇 Selecciona tu ubicación en el mapa.</p>
+                            <x-mapa-interactivo 
+                                id="mapa-adopcion-privada"
+                                :canSelectLocation="true"
+                                showToolbar="true"
+                                height="400px"
+                            />
+                            <div class="mt-3 p-3 bg-blue-50 border border-blue-200 rounded">
+                                <p class="text-sm text-blue-900">Ubicación seleccionada: <strong id="ubicacion-seleccionada-privada">Ninguna</strong></p>
+                            </div>
+
+                            <div class="mt-4">
+                                <label>Nombre del lugar</label>
+                                <input type="text"
+                                       name="nombre_lugar_privado_mapa"
+                                       id="input-nombre_lugar_privado"
+                                       placeholder="Ejemplo: Mi casa, patio">
+                                
+                                <label class="mt-3">Descripción opcional</label>
+                                <textarea name="descripcion_privada_mapa"
+                                          id="input-descripcion_privada"
+                                          placeholder="Detalles sobre el lugar"></textarea>
+                            </div>
+
+                            <input type="hidden" name="latitud_privada" id="input-latitud-privada">
+                            <input type="hidden" name="longitud_privada" id="input-longitud-privada">
+                            <input type="hidden" name="es_publica_privada" id="input-es_publica_privada" value="0">
+                        </div>
                     </div>
 
-                    <button type="submit" class="btn-adoptar">Adoptar planta</button>
+                    <button type="submit" class="btn-adoptar mt-4">Adoptar planta</button>
                 </form>
             </div>
         </div>
@@ -119,22 +196,107 @@
         const tipoUbicacion = document.getElementById('tipoUbicacion');
         const ubicacionPublica = document.getElementById('ubicacionPublica');
         const ubicacionPrivada = document.getElementById('ubicacionPrivada');
+        const formulario = document.getElementById('formulario-adopcion');
 
-        function toggleCampos() {
-            const tipo = tipoUbicacion.value;
-            if (tipo === 'publico') {
-                ubicacionPublica.classList.remove('hidden');
-                ubicacionPrivada.classList.add('hidden');
-            } else if (tipo === 'privado') {
-                ubicacionPrivada.classList.remove('hidden');
-                ubicacionPublica.classList.add('hidden');
-            } else {
-                ubicacionPublica.classList.add('hidden');
-                ubicacionPrivada.classList.add('hidden');
+        // Cambio de tipo de ubicación
+        tipoUbicacion.addEventListener('change', function() {
+            const tipo = this.value;
+            ubicacionPublica.classList.toggle('hidden', tipo !== 'publico');
+            ubicacionPrivada.classList.toggle('hidden', tipo !== 'privado');
+        });
+
+        // Método de ubicación pública
+        document.querySelectorAll('input[name="metodo_ubicacion_publica"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                const metodo = this.value;
+                document.getElementById('subopcion-zona').classList.toggle('hidden', metodo !== 'zona');
+                document.getElementById('subopcion-mapa').classList.toggle('hidden', metodo !== 'mapa');
+                
+                // Si se muestra el mapa, recalcular su tamaño (Leaflet fix)
+                if (metodo === 'mapa' && window.mapaInstancias && window.mapaInstancias['mapa-adopcion-publica']) {
+                    setTimeout(() => {
+                        window.mapaInstancias['mapa-adopcion-publica'].invalidateSize();
+                    }, 50);
+                }
+            });
+        });
+
+        // Método de ubicación privada
+        document.querySelectorAll('input[name="metodo_ubicacion_privada"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                const metodo = this.value;
+                document.getElementById('subopcion-nombre').classList.toggle('hidden', metodo !== 'nombre');
+                document.getElementById('subopcion-mapa-privada').classList.toggle('hidden', metodo !== 'mapa');
+                
+                // Si se muestra el mapa, recalcular su tamaño (Leaflet fix)
+                if (metodo === 'mapa' && window.mapaInstancias && window.mapaInstancias['mapa-adopcion-privada']) {
+                    setTimeout(() => {
+                        window.mapaInstancias['mapa-adopcion-privada'].invalidateSize();
+                    }, 50);
+                }
+            });
+        });
+
+        // Actualizar ubicación seleccionada en los mapas
+        setInterval(() => {
+            if (window.ubicacionSeleccionada) {
+                const lat = window.ubicacionSeleccionada.latitud.toFixed(4);
+                const lng = window.ubicacionSeleccionada.longitud.toFixed(4);
+                
+                // Actualizar display según cuál mapa está activo
+                if (!document.getElementById('subopcion-mapa').classList.contains('hidden')) {
+                    document.getElementById('ubicacion-seleccionada-publica').textContent = `${lat}, ${lng}`;
+                    document.getElementById('input-latitud').value = window.ubicacionSeleccionada.latitud;
+                    document.getElementById('input-longitud').value = window.ubicacionSeleccionada.longitud;
+                    document.getElementById('input-nombre_lugar').value = window.ubicacionSeleccionada.nombreLugar;
+                }
+                
+                if (!document.getElementById('subopcion-mapa-privada').classList.contains('hidden')) {
+                    document.getElementById('ubicacion-seleccionada-privada').textContent = `${lat}, ${lng}`;
+                    document.getElementById('input-latitud-privada').value = window.ubicacionSeleccionada.latitud;
+                    document.getElementById('input-longitud-privada').value = window.ubicacionSeleccionada.longitud;
+                }
             }
-        }
+        }, 500);
 
-        tipoUbicacion.addEventListener('change', toggleCampos);
-        toggleCampos();
+        // Validar formulario antes de enviar
+        formulario.addEventListener('submit', function(e) {
+            const tipo = document.getElementById('tipoUbicacion').value;
+            
+            if (tipo === 'publico') {
+                const metodo = document.querySelector('input[name="metodo_ubicacion_publica"]:checked')?.value;
+                if (metodo === 'zona') {
+                    const zona = document.querySelector('select[name="id_recomendacion_zona"]').value;
+                    if (!zona) {
+                        e.preventDefault();
+                        alert('Por favor selecciona una zona recomendada');
+                    }
+                } else if (metodo === 'mapa') {
+                    if (!window.ubicacionSeleccionada) {
+                        e.preventDefault();
+                        alert('Por favor selecciona una ubicación en el mapa');
+                    }
+                }
+            } else if (tipo === 'privado') {
+                const metodo = document.querySelector('input[name="metodo_ubicacion_privada"]:checked')?.value;
+                if (metodo === 'nombre') {
+                    const nombre = document.querySelector('input[name="nombre_lugar_privado"]').value;
+                    if (!nombre) {
+                        e.preventDefault();
+                        alert('Por favor ingresa el nombre del lugar');
+                    }
+                } else if (metodo === 'mapa') {
+                    const nombre = document.getElementById('input-nombre_lugar_privado').value;
+                    if (!nombre) {
+                        e.preventDefault();
+                        alert('Por favor ingresa el nombre del lugar');
+                    }
+                    if (!window.ubicacionSeleccionada) {
+                        e.preventDefault();
+                        alert('Por favor selecciona una ubicación en el mapa');
+                    }
+                }
+            }
+        });
     </script>
 </x-app-layout>

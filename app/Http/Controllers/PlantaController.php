@@ -10,7 +10,26 @@ class PlantaController extends Controller
     public function index()
     {
         $plantas = Planta::latest()->get();
-        return view('plantas.index', compact('plantas'));
+        
+        // Preparar datos para la tabla
+        $tablePlantasRows = $plantas->map(function($planta) {
+            return [
+                '<div class="flex items-center gap-3"><div class="w-8 h-8 rounded-full bg-gradient-to-br from-green-400 to-emerald-600 flex items-center justify-center text-white font-bold text-sm">🌿</div><span class="font-medium">' . $planta->nombre . '</span></div>',
+                $planta->especie,
+                $planta->tipo_zona ?? 'Sin clasificar',
+                '<span class="inline-block px-3 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300">' . ($planta->estado ?? 'Activa') . '</span>',
+            ];
+        })->toArray();
+        
+        $tablePlantasActions = $plantas->map(function($planta) {
+            return [
+                'view' => route('plantas.show', $planta->id),
+                'edit' => route('plantas.edit', $planta->id),
+                'delete' => route('plantas.destroy', $planta->id),
+            ];
+        })->toArray();
+        
+        return view('plantas.index', compact('plantas', 'tablePlantasRows', 'tablePlantasActions'));
     }
 
     public function create()

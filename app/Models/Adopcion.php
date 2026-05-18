@@ -15,6 +15,10 @@ class Adopcion extends Model
         'fecha_adopcion',
         'estado_adopcion',
     ];
+
+    protected $casts = [
+        'fecha_adopcion' => 'datetime',
+    ];
     
 
     public function usuario()

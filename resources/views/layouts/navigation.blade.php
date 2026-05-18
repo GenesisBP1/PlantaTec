@@ -22,10 +22,6 @@
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" class="px-3 py-2 rounded-lg transition">
                         Dashboard
                     </x-nav-link>
-                    
-                    <x-nav-link :href="route('admin.usuarios.index')" :active="request()->routeIs('admin.usuarios.*')">
-                        Usuarios
-                    </x-nav-link>
 
                     @if(auth()->user()->rol === 'admin')
                 <div class="relative" x-data="{ adminOpen: false }">
@@ -57,7 +53,10 @@
                                 Asignar cuidados
                             </a>
                             <a href="{{ route('recomendaciones-cuidado.index') }}" class="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-green-50 dark:hover:bg-green-900/20">
-                                Recomendaciones
+                                Recomendaciones de Cuidado
+                            </a>
+                            <a href="{{ route('recomendaciones-zona.index') }}" class="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-green-50 dark:hover:bg-green-900/20">
+                                Recomendaciones de Zona
                             </a>
                             <hr class="my-1 border-gray-200 dark:border-gray-700">
                             <a href="{{ route('admin.usuarios.index') }}" class="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-green-50 dark:hover:bg-green-900/20">

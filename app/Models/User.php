@@ -47,4 +47,14 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function adopciones()
+    {
+        return $this->hasMany(Adopcion::class, 'id_usuario');
+    }
+
+    public function ubicaciones()
+    {
+        return $this->hasMany(Ubicacion::class, 'id_usuario');
+    }
 }

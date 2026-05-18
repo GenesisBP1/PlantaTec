@@ -28,18 +28,18 @@
         </div>
     </x-slot>
 
-    <div class="py-8 space-y-8">
+    <div class="py-14 space-y-16">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
 
             {{-- ════════════════════════════
                  MÉTRICAS PRINCIPALES
             ════════════════════════════ --}}
-            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-7 mb-14">
                 {{-- (Las métricas se mantienen igual) --}}
-                <div class="group relative bg-white border border-gray-100 rounded-2xl p-5 shadow-sm hover:shadow-md transition overflow-hidden">
+                <div class="group relative bg-white border border-gray-100 rounded-2xl p-6 shadow-sm hover:shadow-md transition overflow-hidden">
                     <div class="absolute -right-3 -top-3 w-20 h-20 bg-green-50 rounded-full opacity-60 group-hover:scale-110 transition-transform"></div>
                     <div class="relative">
-                        <div class="w-10 h-10 bg-green-100 rounded-xl flex items-center justify-center mb-3">
+                        <div class="w-10 h-10 bg-green-100 rounded-xl flex items-center justify-center mb-4">
                             <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 3C6 3 3 9 3 12c0 4.97 4.03 9 9 9s9-4.03 9-9c0-3-3-9-9-9z"/>
                             </svg>
@@ -50,10 +50,10 @@
                     </div>
                 </div>
 
-                <div class="group relative bg-white border border-gray-100 rounded-2xl p-5 shadow-sm hover:shadow-md transition overflow-hidden">
+                <div class="group relative bg-white border border-gray-100 rounded-2xl p-6 shadow-sm hover:shadow-md transition overflow-hidden">
                     <div class="absolute -right-3 -top-3 w-20 h-20 bg-blue-50 rounded-full opacity-60 group-hover:scale-110 transition-transform"></div>
                     <div class="relative">
-                        <div class="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center mb-3">
+                        <div class="w-10 h-10 bg-blue-100 rounded-xl flex items-center justify-center mb-4">
                             <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a4 4 0 00-5-3.87M9 20H4v-2a4 4 0 015-3.87m6-4.13a4 4 0 10-8 0 4 4 0 008 0z"/>
                             </svg>
@@ -64,10 +64,10 @@
                     </div>
                 </div>
 
-                <div class="group relative bg-white border border-gray-100 rounded-2xl p-5 shadow-sm hover:shadow-md transition overflow-hidden">
+                <div class="group relative bg-white border border-gray-100 rounded-2xl p-6 shadow-sm hover:shadow-md transition overflow-hidden">
                     <div class="absolute -right-3 -top-3 w-20 h-20 bg-violet-50 rounded-full opacity-60 group-hover:scale-110 transition-transform"></div>
                     <div class="relative">
-                        <div class="w-10 h-10 bg-violet-100 rounded-xl flex items-center justify-center mb-3">
+                        <div class="w-10 h-10 bg-violet-100 rounded-xl flex items-center justify-center mb-4">
                             <svg class="w-5 h-5 text-violet-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 016.364 0L12 7.636l1.318-1.318a4.5 4.5 0 116.364 6.364L12 20.364l-7.682-7.682a4.5 4.5 0 010-6.364z"/>
                             </svg>
@@ -78,10 +78,10 @@
                     </div>
                 </div>
 
-                <div class="group relative bg-white border border-gray-100 rounded-2xl p-5 shadow-sm hover:shadow-md transition overflow-hidden">
+                <div class="group relative bg-white border border-gray-100 rounded-2xl p-6 shadow-sm hover:shadow-md transition overflow-hidden">
                     <div class="absolute -right-3 -top-3 w-20 h-20 bg-amber-50 rounded-full opacity-60 group-hover:scale-110 transition-transform"></div>
                     <div class="relative">
-                        <div class="w-10 h-10 bg-amber-100 rounded-xl flex items-center justify-center mb-3">
+                        <div class="w-10 h-10 bg-amber-100 rounded-xl flex items-center justify-center mb-4">
                             <svg class="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6 6 0 10-12 0v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
                             </svg>
@@ -93,9 +93,9 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-8">
-                <div class="bg-white border border-gray-100 rounded-2xl shadow-sm p-6">
-                    <div class="flex items-start justify-between gap-4 mb-4">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 mb-14">
+                <div class="bg-white border border-gray-100 rounded-2xl shadow-sm p-7">
+                    <div class="flex items-start justify-between gap-4 mb-6">
                         <div>
                             <h3 class="text-base font-bold text-gray-900">Planta más adoptada</h3>
                             <p class="text-sm text-gray-400">La planta con más adopciones registradas</p>
@@ -124,36 +124,66 @@
                     @endif
                 </div>
 
-                <div class="bg-white border border-gray-100 rounded-2xl shadow-sm p-6">
-                    <div class="flex items-start justify-between gap-4 mb-4">
+                <div class="bg-white border border-gray-100 rounded-2xl shadow-sm p-7">
+                    <div class="flex items-start justify-between gap-4 mb-5">
                         <div>
-                            <h3 class="text-base font-bold text-gray-900">Zonas recomendadas más usadas</h3>
-                            <p class="text-sm text-gray-400">Bloque pendiente de definición por uso real</p>
+                            <h3 class="text-base font-bold text-gray-900">Zonas recomendadas disponibles</h3>
+                            <p class="text-sm text-gray-400">Ubicaciones que usuarios pueden elegir</p>
                         </div>
-                        <span class="text-xs font-semibold px-3 py-1 rounded-full bg-amber-100 text-amber-700">Pendiente</span>
+                        @php
+                            $totalZonas = \App\Models\RecomendacionZona::count();
+                        @endphp
+                        <span class="text-xs font-semibold px-3 py-1 rounded-full bg-green-100 text-green-700">{{ $totalZonas }} zonas</span>
                     </div>
 
-                    <div class="rounded-xl border border-dashed border-gray-200 bg-gray-50 p-4">
-                        <p class="text-sm text-gray-600 font-medium">Pendiente de implementar.</p>
-                        <p class="text-sm text-gray-400 mt-1">
-                            Aquí se mostrará la zona recomendada más usada cuando se defina el criterio de cálculo.
-                        </p>
-                    </div>
+                    @php
+                        $zonas = \App\Models\RecomendacionZona::orderBy('nombre_lugar')->get();
+                    @endphp
+
+                    @if($zonas->count() > 0)
+                        <div class="space-y-3">
+                            @foreach($zonas as $zona)
+                                <div class="flex items-start justify-between p-4 bg-gradient-to-r from-green-50 to-transparent border border-green-100 rounded-lg hover:border-green-300 transition">
+                                    <div class="flex-1">
+                                        <p class="text-sm font-bold text-gray-900">{{ $zona->nombre_lugar }}</p>
+                                        <div class="flex gap-3 mt-1">
+                                            <span class="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded">{{ $zona->tipo_zona }}</span>
+                                            @if($zona->descripcion)
+                                                <span class="text-xs text-gray-600 italic max-w-xs truncate">{{ $zona->descripcion }}</span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                    <div class="text-right">
+                                        <p class="text-xs text-gray-500">Coordenadas</p>
+                                        <p class="text-xs font-mono text-gray-700">{{ number_format($zona->latitud, 4) }}, {{ number_format($zona->longitud, 4) }}</p>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    @else
+                        <div class="rounded-xl bg-gray-50 border border-gray-100 p-4 text-center py-8">
+                            <svg class="w-12 h-12 text-gray-300 mx-auto mb-3" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 19C3.592 15.327 1 10.895 1 7c0-3.866 2.686-7 6-7s6 3.134 6 7c0 3.895-2.592 8.327-8 12zm12-7c0-3.866-2.686-7-6-7s-6 3.134-6 7c0 3.895 2.592 8.327 8 12c5.408-3.673 8-8.105 8-12z"/>
+                            </svg>
+                            <p class="text-sm text-gray-600 font-medium">No hay zonas recomendadas configuradas</p>
+                            <p class="text-sm text-gray-400 mt-1">Crea zonas en la sección de administración.</p>
+                        </div>
+                    @endif
                 </div>
             </div>
 
             {{-- ════════════════════════════
                  ACCESOS RÁPIDOS
             ════════════════════════════ --}}
-            <div class="bg-white border border-gray-100 rounded-2xl shadow-sm p-6">
-                <div class="flex items-center justify-between mb-5">
+            <div class="bg-white border border-gray-100 rounded-2xl shadow-sm p-9 mb-14">
+                <div class="flex items-center justify-between mb-7">
                     <div>
-                        <h3 class="text-base font-bold text-gray-900">Gestión rápida</h3>
-                        <p class="text-sm text-gray-400">Accede a cualquier módulo del sistema</p>
+                        <h3 class="text-lg font-bold text-gray-900">Gestión rápida</h3>
+                        <p class="text-sm text-gray-400 mt-1">Accede a cualquier módulo del sistema</p>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3">
+                <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
 
                     @php
                     $accesos = [
@@ -193,6 +223,25 @@
                     </a>
                     @endforeach
 
+                </div>
+            </div>
+
+            {{-- MAPA INTERACTIVO (VISTA ADMIN) --}}
+            <div class="mt-20 mb-14 bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100">
+                <div class="px-9 py-9 border-b border-gray-200 flex items-center justify-between">
+                    <div>
+                        <h3 class="text-lg font-bold text-gray-900">🗺️ Mapa de ubicaciones</h3>
+                        <p class="text-sm text-gray-500 mt-1">Visualiza todas las ubicaciones públicas y privadas de adopciones</p>
+                    </div>
+                    <a href="{{ route('mapa.index') }}" class="text-sm text-green-600 hover:text-green-700 font-medium hover:underline">Ver mapa completo →</a>
+                </div>
+                <div class="p-9 bg-gray-50">
+                    <x-mapa-interactivo 
+                        id="mapa-admin"
+                        :canSelectLocation="false"
+                        showToolbar="false"
+                        height="550px"
+                    />
                 </div>
             </div>
 
