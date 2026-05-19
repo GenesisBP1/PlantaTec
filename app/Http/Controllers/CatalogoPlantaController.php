@@ -108,10 +108,11 @@ class CatalogoPlantaController extends Controller
                 }
             }
 
-            Adopcion::create([
+            $adopcion = Adopcion::create([
                 'id_usuario' => auth()->id(),
                 'id_planta' => $planta->id,
                 'id_ubicacion' => $ubicacion->id,
+                'fecha_adopcion' => now(),
                 'estado_adopcion' => 'activa',
             ]);
 
@@ -121,6 +122,7 @@ class CatalogoPlantaController extends Controller
                 ->with('success', 'Planta adoptada correctamente.');
         } catch (\Exception $e) {
             DB::rollBack();
+            \Log::error('Error al adoptar planta: ' . $e->getMessage(), ['exception' => $e]);
             return redirect()->back()
                 ->with('error', 'Error al adoptar la planta: ' . $e->getMessage());
         }

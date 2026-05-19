@@ -1,9 +1,18 @@
-<x-app-layout>
-    <x-slot name="header">
+<?php if (isset($component)) { $__componentOriginal9ac128a9029c0e4701924bd2d73d7f54 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal9ac128a9029c0e4701924bd2d73d7f54 = $attributes; } ?>
+<?php $component = App\View\Components\AppLayout::resolve([] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('app-layout'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\App\View\Components\AppLayout::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
+     <?php $__env->slot('header', null, []); ?> 
         <h2 class="text-2xl font-bold text-gray-900 dark:text-white leading-tight">
             🌿 Catálogo de Plantas
         </h2>
-    </x-slot>
+     <?php $__env->endSlot(); ?>
 
     <style>
         /* ===== Estilos para el catálogo (adaptados del diseño de referencia) ===== */
@@ -208,30 +217,39 @@
 
             <!-- Grid de plantas -->
             <div class="grid-plantas">
-                @forelse($plantas as $planta)
+                <?php $__empty_1 = true; $__currentLoopData = $plantas; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $planta): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                     <div class="card">
-                        <img src="{{ $planta->imagen ?? 'https://images.unsplash.com/photo-1592150621744-aca64f48394a?w=300&h=200&fit=crop' }}" 
-                             alt="{{ $planta->nombre }}">
+                        <img src="<?php echo e($planta->imagen ?? 'https://images.unsplash.com/photo-1592150621744-aca64f48394a?w=300&h=200&fit=crop'); ?>" 
+                             alt="<?php echo e($planta->nombre); ?>">
                         <div class="card-body">
-                            <h3>{{ $planta->nombre }}</h3>
-                            <span class="zona">{{ $planta->tipo_zona ?? 'Zona no especificada' }}</span>
-                            <p>{{ Str::limit($planta->descripcion, 80) }}</p>
-                            <a href="{{ route('catalogo.plantas.show', $planta) }}" class="btn-adoptar">
+                            <h3><?php echo e($planta->nombre); ?></h3>
+                            <span class="zona"><?php echo e($planta->tipo_zona ?? 'Zona no especificada'); ?></span>
+                            <p><?php echo e(Str::limit($planta->descripcion, 80)); ?></p>
+                            <a href="<?php echo e(route('catalogo.plantas.show', $planta)); ?>" class="btn-adoptar">
                                 <i class="fas fa-hand-holding-heart"></i> Ver y adoptar
                             </a>
                         </div>
                     </div>
-                @empty
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                     <div class="col-span-3 text-center py-10 text-gray-500">
                         No hay plantas disponibles en el catálogo.
                     </div>
-                @endforelse
+                <?php endif; ?>
             </div>
         </div>
     </div>
 
     <!-- Incluir FontAwesome si no está en el layout -->
-    @push('scripts')
+    <?php $__env->startPush('scripts'); ?>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    @endpush
-</x-app-layout>
+    <?php $__env->stopPush(); ?>
+ <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal9ac128a9029c0e4701924bd2d73d7f54)): ?>
+<?php $attributes = $__attributesOriginal9ac128a9029c0e4701924bd2d73d7f54; ?>
+<?php unset($__attributesOriginal9ac128a9029c0e4701924bd2d73d7f54); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal9ac128a9029c0e4701924bd2d73d7f54)): ?>
+<?php $component = $__componentOriginal9ac128a9029c0e4701924bd2d73d7f54; ?>
+<?php unset($__componentOriginal9ac128a9029c0e4701924bd2d73d7f54); ?>
+<?php endif; ?><?php /**PATH C:\Users\vluis\Herd\PlantaTec\resources\views/catalogo/index.blade.php ENDPATH**/ ?>

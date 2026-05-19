@@ -1,14 +1,23 @@
-<x-app-layout>
-    <x-slot name="header">
+<?php if (isset($component)) { $__componentOriginal9ac128a9029c0e4701924bd2d73d7f54 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal9ac128a9029c0e4701924bd2d73d7f54 = $attributes; } ?>
+<?php $component = App\View\Components\AppLayout::resolve([] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('app-layout'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\App\View\Components\AppLayout::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
+     <?php $__env->slot('header', null, []); ?> 
         <div class="flex justify-between items-center">
             <h2 class="text-2xl font-bold text-gray-900 dark:text-white leading-tight">
                 Adoptar Planta
             </h2>
-            <a href="{{ route('catalogo.plantas') }}" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-xl transition">
+            <a href="<?php echo e(route('catalogo.plantas')); ?>" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-xl transition">
                 Volver
             </a>
         </div>
-    </x-slot>
+     <?php $__env->endSlot(); ?>
 
     <style>
         .adopcion-container { max-width: 1100px; margin: 0 auto; padding: 1rem; }
@@ -31,7 +40,7 @@
         <div class="adopcion-container">
             <div class="planta-card">
                 <div class="planta-imagen">
-                    @php
+                    <?php
                         $imagenUrl = 'https://images.unsplash.com/photo-1592150621744-aca64f48394a?w=300&fit=crop';
                         if ($planta->imagen) {
                             if (filter_var($planta->imagen, FILTER_VALIDATE_URL)) {
@@ -40,35 +49,35 @@
                                 $imagenUrl = asset('storage/' . $planta->imagen);
                             }
                         }
-                    @endphp
-                    <img src="{{ $imagenUrl }}" alt="{{ $planta->nombre }}">
+                    ?>
+                    <img src="<?php echo e($imagenUrl); ?>" alt="<?php echo e($planta->nombre); ?>">
                 </div>
 
                 <div class="planta-info">
-                    <h3 class="text-2xl font-bold text-green-700">{{ $planta->nombre }}</h3>
-                    <p class="mt-2"><strong>Especie:</strong> {{ $planta->especie }}</p>
-                    <p class="mt-2"><strong>Zona recomendada:</strong> {{ $planta->tipo_zona ?? 'Zona no especificada' }}</p>
-                    <p class="mt-2"><strong>Estado:</strong> {{ ucfirst($planta->estado) }}</p>
-                    <p class="mt-4 text-gray-700">{{ $planta->descripcion ?? 'Sin descripción.' }}</p>
+                    <h3 class="text-2xl font-bold text-green-700"><?php echo e($planta->nombre); ?></h3>
+                    <p class="mt-2"><strong>Especie:</strong> <?php echo e($planta->especie); ?></p>
+                    <p class="mt-2"><strong>Zona recomendada:</strong> <?php echo e($planta->tipo_zona ?? 'Zona no especificada'); ?></p>
+                    <p class="mt-2"><strong>Estado:</strong> <?php echo e(ucfirst($planta->estado)); ?></p>
+                    <p class="mt-4 text-gray-700"><?php echo e($planta->descripcion ?? 'Sin descripción.'); ?></p>
                 </div>
             </div>
 
             <div class="formulario-card">
                 <h4 class="text-xl font-bold text-gray-800 mb-4">Datos de ubicación</h4>
 
-                @if($errors->any())
+                <?php if($errors->any()): ?>
                     <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
                         <ul class="list-disc pl-5">
-                            @foreach($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
+                            <?php $__currentLoopData = $errors->all(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $error): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                <li><?php echo e($error); ?></li>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         </ul>
                     </div>
-                @endif
+                <?php endif; ?>
 
                 <!-- FORMULARIO CON MAPA INTERACTIVO -->
-                <form id="formulario-adopcion" action="{{ route('catalogo.plantas.adoptar', $planta) }}" method="POST">
-                    @csrf
+                <form id="formulario-adopcion" action="<?php echo e(route('catalogo.plantas.adoptar', $planta)); ?>" method="POST">
+                    <?php echo csrf_field(); ?>
 
                     <!-- Tipo de ubicación -->
                     <div class="form-group">
@@ -101,11 +110,12 @@
                             <label>Zona pública recomendada</label>
                             <select name="id_recomendacion_zona">
                                 <option value="">Selecciona una zona recomendada</option>
-                                @foreach($zonasRecomendadas as $zona)
-                                    <option value="{{ $zona->id }}">
-                                        {{ $zona->nombre_lugar }} - {{ $zona->tipo_zona }}
+                                <?php $__currentLoopData = $zonasRecomendadas; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $zona): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                    <option value="<?php echo e($zona->id); ?>">
+                                        <?php echo e($zona->nombre_lugar); ?> - <?php echo e($zona->tipo_zona); ?>
+
                                     </option>
-                                @endforeach
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                             </select>
                             <p class="text-sm text-gray-500 mt-2">
                                 Se tomarán automáticamente el nombre, descripción, latitud y longitud registrados.
@@ -115,12 +125,26 @@
                         <!-- Subopción: Mapa -->
                         <div id="subopcion-mapa" class="hidden">
                             <p class="text-sm text-blue-700 mb-3">👇 Selecciona tu ubicación en el mapa o usa la geolocalización automática.</p>
-                            <x-mapa-interactivo 
-                                id="mapa-adopcion-publica"
-                                :canSelectLocation="true"
-                                showToolbar="true"
-                                height="400px"
-                            />
+                            <?php if (isset($component)) { $__componentOriginal81c72807132ffb34a5ed67ad325fbcfc = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal81c72807132ffb34a5ed67ad325fbcfc = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.mapa-interactivo','data' => ['id' => 'mapa-adopcion-publica','canSelectLocation' => true,'showToolbar' => 'true','height' => '400px']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('mapa-interactivo'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['id' => 'mapa-adopcion-publica','canSelectLocation' => true,'showToolbar' => 'true','height' => '400px']); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal81c72807132ffb34a5ed67ad325fbcfc)): ?>
+<?php $attributes = $__attributesOriginal81c72807132ffb34a5ed67ad325fbcfc; ?>
+<?php unset($__attributesOriginal81c72807132ffb34a5ed67ad325fbcfc); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal81c72807132ffb34a5ed67ad325fbcfc)): ?>
+<?php $component = $__componentOriginal81c72807132ffb34a5ed67ad325fbcfc; ?>
+<?php unset($__componentOriginal81c72807132ffb34a5ed67ad325fbcfc); ?>
+<?php endif; ?>
                             <div class="mt-3 p-3 bg-blue-50 border border-blue-200 rounded">
                                 <p class="text-sm text-blue-900">Ubicación seleccionada: <strong id="ubicacion-seleccionada-publica">Ninguna</strong></p>
                             </div>
@@ -162,12 +186,26 @@
                         <!-- Subopción: Con mapa -->
                         <div id="subopcion-mapa-privada" class="hidden">
                             <p class="text-sm text-blue-700 mb-3">👇 Selecciona tu ubicación en el mapa.</p>
-                            <x-mapa-interactivo 
-                                id="mapa-adopcion-privada"
-                                :canSelectLocation="true"
-                                showToolbar="true"
-                                height="400px"
-                            />
+                            <?php if (isset($component)) { $__componentOriginal81c72807132ffb34a5ed67ad325fbcfc = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal81c72807132ffb34a5ed67ad325fbcfc = $attributes; } ?>
+<?php $component = Illuminate\View\AnonymousComponent::resolve(['view' => 'components.mapa-interactivo','data' => ['id' => 'mapa-adopcion-privada','canSelectLocation' => true,'showToolbar' => 'true','height' => '400px']] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('mapa-interactivo'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\Illuminate\View\AnonymousComponent::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes(['id' => 'mapa-adopcion-privada','canSelectLocation' => true,'showToolbar' => 'true','height' => '400px']); ?>
+<?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal81c72807132ffb34a5ed67ad325fbcfc)): ?>
+<?php $attributes = $__attributesOriginal81c72807132ffb34a5ed67ad325fbcfc; ?>
+<?php unset($__attributesOriginal81c72807132ffb34a5ed67ad325fbcfc); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal81c72807132ffb34a5ed67ad325fbcfc)): ?>
+<?php $component = $__componentOriginal81c72807132ffb34a5ed67ad325fbcfc; ?>
+<?php unset($__componentOriginal81c72807132ffb34a5ed67ad325fbcfc); ?>
+<?php endif; ?>
                             <div class="mt-3 p-3 bg-blue-50 border border-blue-200 rounded">
                                 <p class="text-sm text-blue-900">Ubicación seleccionada: <strong id="ubicacion-seleccionada-privada">Ninguna</strong></p>
                             </div>
@@ -304,4 +342,13 @@
             }
         });
     </script>
-</x-app-layout>
+ <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal9ac128a9029c0e4701924bd2d73d7f54)): ?>
+<?php $attributes = $__attributesOriginal9ac128a9029c0e4701924bd2d73d7f54; ?>
+<?php unset($__attributesOriginal9ac128a9029c0e4701924bd2d73d7f54); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal9ac128a9029c0e4701924bd2d73d7f54)): ?>
+<?php $component = $__componentOriginal9ac128a9029c0e4701924bd2d73d7f54; ?>
+<?php unset($__componentOriginal9ac128a9029c0e4701924bd2d73d7f54); ?>
+<?php endif; ?><?php /**PATH C:\Users\vluis\Herd\PlantaTec\resources\views/catalogo/show.blade.php ENDPATH**/ ?>
