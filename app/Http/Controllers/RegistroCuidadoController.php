@@ -114,6 +114,9 @@ $reportesActivos = ReporteProblema::where('id_adopcion', $request->id_adopcion)
                 ->withInput();
         }
     }
+    public function index()
+    {
+        return redirect()->route('adopciones.index');
+    }
 
-    
 }
