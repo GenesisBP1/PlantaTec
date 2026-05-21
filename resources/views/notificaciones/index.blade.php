@@ -1,383 +1,109 @@
 <x-app-layout>
     <x-slot name="header">
-    
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            Mis notificaciones
+        </h2>
     </x-slot>
 
-    <style>
-        .noti-page {
-            position: relative;
-            overflow: hidden;
-            padding: 0 0 3rem;
-            background: transparent;
-        }
-
-        .noti-container {
-            max-width: 1120px;
-            margin: 0 auto;
-            padding: 0 1rem;
-            position: relative;
-            z-index: 1;
-        }
-
-        .hero-card {
-            background: rgba(255, 255, 255, 0.82);
-            backdrop-filter: blur(14px);
-            border: 1px solid rgba(148, 163, 184, 0.18);
-            border-radius: 28px;
-            box-shadow: 0 24px 50px rgba(15, 23, 42, 0.08);
-            padding: 1.6rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .hero-top {
-            display: flex;
-            justify-content: space-between;
-            gap: 1rem;
-            align-items: flex-start;
-            flex-wrap: wrap;
-        }
-
-        .hero-kicker {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.45rem;
-            padding: 0.45rem 0.8rem;
-            border-radius: 999px;
-            background: #e8f7ee;
-            color: #166534;
-            font-weight: 700;
-            font-size: 0.85rem;
-            letter-spacing: 0.01em;
-            margin-bottom: 0.8rem;
-        }
-
-        .hero-title {
-            font-size: clamp(1.7rem, 3vw, 2.6rem);
-            line-height: 1.1;
-            font-weight: 900;
-            color: #123524;
-            margin: 0;
-        }
-
-        .hero-text {
-            margin-top: 0.7rem;
-            max-width: 60ch;
-            color: #4b5563;
-            font-size: 0.98rem;
-        }
-
-        .hero-stats {
-            display: grid;
-            grid-template-columns: repeat(2, minmax(120px, 1fr));
-            gap: 0.75rem;
-            min-width: min(100%, 300px);
-        }
-
-        .stat-chip {
-            border-radius: 18px;
-            padding: 0.95rem 1rem;
-            background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
-            border: 1px solid rgba(148, 163, 184, 0.16);
-            box-shadow: 0 10px 20px rgba(15, 23, 42, 0.05);
-        }
-
-        .stat-chip strong {
-            display: block;
-            font-size: 1.55rem;
-            line-height: 1;
-            color: #0f172a;
-            font-weight: 900;
-        }
-
-        .stat-chip span {
-            display: block;
-            margin-top: 0.35rem;
-            font-size: 0.84rem;
-            color: #64748b;
-            font-weight: 600;
-        }
-
-        .section-panel {
-            background: rgba(255, 255, 255, 0.72);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(148, 163, 184, 0.14);
-            border-radius: 26px;
-            box-shadow: 0 18px 36px rgba(15, 23, 42, 0.06);
-            padding: 1.1rem;
-            margin-bottom: 1rem;
-        }
-
-        .section-title {
-            display: flex;
-            align-items: center;
-            gap: 0.65rem;
-            font-size: 1.1rem;
-            font-weight: 900;
-            color: #123524;
-            margin: 0 0 1rem;
-        }
-
-        .section-dot {
-            width: 0.7rem;
-            height: 0.7rem;
-            border-radius: 999px;
-            background: #22c55e;
-            box-shadow: 0 0 0 6px rgba(34, 197, 94, 0.12);
-        }
-
-        .section-dot.read {
-            background: #60a5fa;
-            box-shadow: 0 0 0 6px rgba(96, 165, 250, 0.12);
-        }
-
-        .notifications-list {
-            display: grid;
-            gap: 0.9rem;
-        }
-
-        .noti-card {
-            background: linear-gradient(180deg, #ffffff 0%, #fbfdfb 100%);
-            border-radius: 24px;
-            padding: 1rem;
-            box-shadow: 0 12px 30px rgba(15, 23, 42, 0.06);
-            display: flex;
-            gap: 1rem;
-            align-items: stretch;
-            border: 1px solid rgba(148, 163, 184, 0.14);
-            transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
-        }
-
-        .noti-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 16px 34px rgba(15, 23, 42, 0.08);
-            border-color: rgba(74, 222, 128, 0.24);
-        }
-
-        .noti-card.leida {
-            opacity: 0.78;
-        }
-
-        .noti-img {
-            width: 118px;
-            height: 118px;
-            border-radius: 20px;
-            object-fit: cover;
-            background: #e2f0e6;
-            flex-shrink: 0;
-            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.7);
-        }
-
-        .noti-content {
-            flex: 1;
-            min-width: 0;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-
-        .noti-title {
-            display: flex;
-            align-items: center;
-            gap: 0.55rem;
-            font-size: 1.05rem;
-            font-weight: 900;
-            color: #1f2937;
-            margin-bottom: 0.35rem;
-        }
-
-        .noti-msg {
-            color: #4b5563;
-            margin-bottom: 0.55rem;
-            line-height: 1.5;
-        }
-
-        .noti-date {
-            font-size: 0.82rem;
-            color: #64748b;
-            font-weight: 600;
-        }
-
-        .btn-leida {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.45rem;
-            background: linear-gradient(135deg, #16a34a 0%, #22c55e 100%);
-            color: white;
-            padding: 0.7rem 1rem;
-            border-radius: 999px;
-            font-size: 0.85rem;
-            font-weight: 800;
-            border: none;
-            box-shadow: 0 10px 18px rgba(34, 197, 94, 0.22);
-            align-self: center;
-            transition: transform 0.18s ease, box-shadow 0.18s ease;
-            white-space: nowrap;
-        }
-
-        .btn-leida:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 14px 24px rgba(34, 197, 94, 0.28);
-        }
-
-        .empty-box {
-            background: rgba(255, 255, 255, 0.85);
-            padding: 1.8rem;
-            border-radius: 20px;
-            text-align: center;
-            color: #64748b;
-            border: 1px dashed rgba(148, 163, 184, 0.35);
-        }
-
-        @media(max-width: 700px) {
-            .hero-card {
-                padding: 1.2rem;
-            }
-
-            .hero-stats {
-                grid-template-columns: 1fr 1fr;
-                width: 100%;
-            }
-
-            .noti-card {
-                flex-direction: column;
-                align-items: stretch;
-            }
-
-            .noti-img {
-                width: 100%;
-                height: 210px;
-            }
-
-            .btn-leida {
-                width: 100%;
-                align-self: stretch;
-            }
-        }
-    </style>
-
-    <div class="noti-page">
-        <div class="noti-container">
-
-            <div class="hero-card">
-                <div class="hero-top">
-                    <div>
-                        <div class="hero-kicker">Centro de actividad</div>
-                        <h1 class="hero-title">Tus notificaciones, ordenadas y al día</h1>
-                        <p class="hero-text">
-                            Revisa recomendaciones, marca lo que ya leíste y mantén control rápido de lo que necesita tu atención.
-                        </p>
-                    </div>
-
-                    <div class="hero-stats">
-                        <div class="stat-chip">
-                            <strong>{{ $notificacionesPendientes->count() }}</strong>
-                            <span>Pendientes</span>
+    <div class="py-8">
+        <div class="max-w-6xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white shadow-lg rounded-2xl overflow-hidden">
+                <div class="p-6">
+                    @if(session('success'))
+                        <div class="bg-green-100 text-green-700 p-4 rounded-lg mb-6">
+                            {{ session('success') }}
                         </div>
+                    @endif
 
-                        <div class="stat-chip">
-                            <strong>{{ $notificacionesLeidas->count() }}</strong>
-                            <span>Leídas</span>
-                        </div>
+                    <div class="space-y-6">
+                        @forelse($notificaciones as $notificacion)
+                            @php
+                                // Determinar colores según el tipo de notificación
+                                $tipo = $notificacion->tipo ?? 'general';
+                                $bgColor = '';
+                                $borderColor = '';
+                                $badgeColor = '';
+
+                                if ($tipo === 'tratamiento_atraso') {
+                                    $bgColor = 'bg-red-100';
+                                    $borderColor = 'border-red-600';
+                                    $badgeColor = 'bg-red-200 text-red-800';
+                                } elseif ($tipo === 'atraso') {
+                                    $bgColor = 'bg-red-50';
+                                    $borderColor = 'border-red-400';
+                                    $badgeColor = 'bg-red-200 text-red-800';
+                                } elseif ($tipo === 'hoy') {
+                                    $bgColor = 'bg-orange-50';
+                                    $borderColor = 'border-orange-400';
+                                    $badgeColor = 'bg-orange-200 text-orange-800';
+                                } elseif ($tipo === 'proximo') {
+                                    $bgColor = 'bg-blue-50';
+                                    $borderColor = 'border-blue-400';
+                                    $badgeColor = 'bg-blue-200 text-blue-800';
+                                } else {
+                                    $bgColor = 'bg-amber-50';
+                                    $borderColor = 'border-amber-400';
+                                    $badgeColor = 'bg-amber-200 text-amber-800';
+                                }
+
+                                // Extraer nombre de planta del mensaje (para el botón "Ver planta")
+                                preg_match('/para tu planta ([^.]+)/', $notificacion->mensaje, $matches);
+                                $nombrePlanta = $matches[1] ?? null;
+                                $adopcion = null;
+                                if ($nombrePlanta) {
+                                    $adopcion = \App\Models\Adopcion::where('id_usuario', auth()->id())
+                                        ->whereHas('planta', function($q) use ($nombrePlanta) {
+                                            $q->where('nombre', 'like', $nombrePlanta);
+                                        })
+                                        ->first();
+                                }
+                            @endphp
+
+                            <div class="transition-all duration-200 hover:shadow-xl rounded-xl border {{ $borderColor }} {{ $bgColor }} overflow-hidden">
+                                <div class="p-5">
+                                    <div class="flex flex-col md:flex-row md:justify-between md:items-start gap-4">
+                                        <div class="flex-1">
+                                            <div class="flex items-center gap-3 flex-wrap mb-2">
+                                                <h3 class="font-bold text-gray-800 text-lg">{{ $notificacion->titulo }}</h3>
+                                                <span class="text-xs px-2 py-1 rounded-full {{ $badgeColor }} font-medium">
+                                                    {{ ucfirst(str_replace('_', ' ', $tipo)) }}
+                                                </span>
+                                            </div>
+                                            <p class="text-gray-700 text-base leading-relaxed">{{ $notificacion->mensaje }}</p>
+                                            <p class="text-xs text-gray-500 mt-2">
+                                                {{ $notificacion->fecha_envio->diffForHumans() }}
+                                            </p>
+                                        </div>
+                                        <div class="flex flex-col sm:flex-row gap-2 shrink-0">
+                                            @if(!$notificacion->leida)
+                                                <form action="{{ route('notificaciones.update', $notificacion) }}" method="POST">
+                                                    @csrf
+                                                    @method('PUT')
+                                                    <button type="submit" style="background-color: #2b7840; color: white;" class="font-semibold py-2 px-5 rounded-full shadow transition whitespace-nowrap hover:opacity-90">
+                                                        Marcar leída
+                                                    </button>
+                                                </form>
+                                            @endif
+                                            @if($adopcion)
+                                                <a href="{{ route('adopciones.show', $adopcion) }}" style="background-color: #4c9f6e; color: white;" class="font-semibold py-2 px-5 rounded-full shadow transition whitespace-nowrap hover:opacity-90 text-center">
+                                                    Ver planta
+                                                </a>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @empty
+                            <div class="text-center py-12 text-gray-500">
+                                <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path>
+                                </svg>
+                                <p class="mt-2">No tienes notificaciones.</p>
+                            </div>
+                        @endforelse
                     </div>
                 </div>
             </div>
-
-            @if(session('success'))
-                <div class="bg-green-100 text-green-700 p-4 rounded-xl mb-4 border border-green-200 shadow-sm">
-                    {{ session('success') }}
-                </div>
-            @endif
-
-            <div class="section-panel">
-                <h3 class="section-title">
-                    <span class="section-dot"></span>
-                    Pendientes
-                </h3>
-
-                <div class="notifications-list">
-                    @forelse($notificacionesPendientes as $notificacion)
-                        @php
-                            $planta = $notificacion->recomendacionCuidado?->adopcion?->planta;
-                            $imagen = $planta?->imagen;
-                        @endphp
-
-                        <div class="noti-card">
-                            <img class="noti-img"
-                                 src="{{ $imagen ? (str_starts_with($imagen, 'http') ? $imagen : asset('storage/' . $imagen)) : 'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=300&fit=crop' }}"
-                                 alt="Planta">
-
-                            <div class="noti-content">
-                                <div class="noti-title">
-                                    {{ $notificacion->titulo }}
-                                </div>
-
-                                <p class="noti-msg">
-                                    {{ $notificacion->mensaje }}
-                                </p>
-
-                                <p class="noti-date">
-                                    {{ \Carbon\Carbon::parse($notificacion->fecha_envio)->format('d/m/Y H:i') }}
-                                </p>
-                            </div>
-
-                            <form action="{{ route('notificaciones.update', $notificacion) }}" method="POST" class="self-center">
-                                @csrf
-                                @method('PUT')
-
-                                <button type="submit" class="btn-leida">
-                                    Marcar como leída
-                                </button>
-                            </form>
-                        </div>
-                    @empty
-                        <div class="empty-box">
-                            No tienes notificaciones pendientes.
-                        </div>
-                    @endforelse
-                </div>
-            </div>
-
-            <div class="section-panel">
-                <h3 class="section-title">
-                    <span class="section-dot read"></span>
-                    Leídas
-                </h3>
-
-                <div class="notifications-list">
-                    @forelse($notificacionesLeidas as $notificacion)
-                        @php
-                            $planta = $notificacion->recomendacionCuidado?->adopcion?->planta;
-                            $imagen = $planta?->imagen;
-                        @endphp
-
-                        <div class="noti-card leida">
-                            <img class="noti-img"
-                                 src="{{ $imagen ? (str_starts_with($imagen, 'http') ? $imagen : asset('storage/' . $imagen)) : 'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=300&fit=crop' }}"
-                                 alt="Planta">
-
-                            <div class="noti-content">
-                                <div class="noti-title">
-                                    {{ $notificacion->titulo }}
-                                </div>
-
-                                <p class="noti-msg">
-                                    {{ $notificacion->mensaje }}
-                                </p>
-
-                                <p class="noti-date">
-                                    Leída · {{ \Carbon\Carbon::parse($notificacion->fecha_envio)->format('d/m/Y H:i') }}
-                                </p>
-                            </div>
-                        </div>
-                    @empty
-                        <div class="empty-box">
-                            No tienes notificaciones leídas.
-                        </div>
-                    @endforelse
-                </div>
-            </div>
-
         </div>
     </div>
 </x-app-layout>

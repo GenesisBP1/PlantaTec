@@ -40,45 +40,34 @@
                                     <a href="{{ route('plantas.index') }}" class="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-green-50 dark:hover:bg-green-900/20">
                                          Plantas
                                     </a>
-
                                     <a href="{{ route('adopciones.index') }}" class="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-green-50 dark:hover:bg-green-900/20">
                                          Adopciones
                                     </a>
-
                                     <a href="{{ route('ubicaciones.index') }}" class="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-green-50 dark:hover:bg-green-900/20">
                                          Ubicaciones
                                     </a>
-
                                     <a href="{{ route('cuidados.index') }}" class="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-green-50 dark:hover:bg-green-900/20">
                                          Cuidados
                                     </a>
-
                                     <a href="{{ route('planta-cuidados.index') }}" class="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-green-50 dark:hover:bg-green-900/20">
                                          Asignar cuidados
                                     </a>
-
                                     <a href="{{ route('recomendaciones-cuidado.index') }}" class="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-green-50 dark:hover:bg-green-900/20">
                                          Recomendaciones de cuidado
                                     </a>
-
                                     <a href="{{ route('recomendaciones-zona.index') }}" class="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-green-50 dark:hover:bg-green-900/20">
                                          Recomendaciones de zona
                                     </a>
-
                                     <a href="{{ route('problemas.index') }}" class="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-green-50 dark:hover:bg-green-900/20">
                                          Problemas
                                     </a>
-
                                     <a href="{{ route('tratamientos.index') }}" class="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-green-50 dark:hover:bg-green-900/20">
                                          Tratamientos
                                     </a>
-
                                     <hr class="my-1 border-gray-200 dark:border-gray-700">
-
                                     <a href="{{ route('reporte-problemas.index') }}" class="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-green-50 dark:hover:bg-green-900/20">
                                          Reportes de problemas
                                     </a>
-
                                     <a href="{{ route('admin.usuarios.index') }}" class="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-green-50 dark:hover:bg-green-900/20">
                                          Usuarios
                                     </a>
@@ -94,18 +83,15 @@
                             Mis adopciones
                         </x-nav-link>
 
+                        <!-- Notificaciones (escritorio) con badge dinámico -->
+                        @php
+                            $notificacionesNoLeidas = \App\Models\Notificacion::where('id_usuario', auth()->id())->where('leida', false)->count();
+                        @endphp
                         <x-nav-link :href="route('notificaciones.index')" :active="request()->routeIs('notificaciones.*')" class="px-3 py-2 rounded-lg transition relative">
                             Notificaciones
-
-                            @php
-                                $pendientes = \App\Models\Notificacion::where('id_usuario', auth()->id())
-                                    ->where('leida', false)
-                                    ->count();
-                            @endphp
-
-                            @if($pendientes > 0)
+                            @if($notificacionesNoLeidas > 0)
                                 <span class="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold px-1.5 py-0.5 rounded-full min-w-[20px] text-center">
-                                    {{ $pendientes > 9 ? '9+' : $pendientes }}
+                                    {{ $notificacionesNoLeidas > 9 ? '9+' : $notificacionesNoLeidas }}
                                 </span>
                             @endif
                         </x-nav-link>
@@ -164,7 +150,7 @@
                 </div>
             </div>
 
-            <!-- Hamburguesa -->
+            <!-- Hamburguesa (menú móvil) -->
             <div class="-me-2 flex items-center sm:hidden">
                 <button @click="open = ! open" class="p-2 rounded-xl text-gray-600 dark:text-gray-400 hover:text-green-600 dark:hover:text-green-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition">
                     <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
@@ -187,43 +173,33 @@
                 <x-responsive-nav-link :href="route('plantas.index')" :active="request()->routeIs('plantas.*')">
                      Plantas
                 </x-responsive-nav-link>
-
                 <x-responsive-nav-link :href="route('adopciones.index')" :active="request()->routeIs('adopciones.*')">
                      Adopciones
                 </x-responsive-nav-link>
-
                 <x-responsive-nav-link :href="route('ubicaciones.index')" :active="request()->routeIs('ubicaciones.*')">
                      Ubicaciones
                 </x-responsive-nav-link>
-
                 <x-responsive-nav-link :href="route('cuidados.index')" :active="request()->routeIs('cuidados.*')">
                      Cuidados
                 </x-responsive-nav-link>
-
                 <x-responsive-nav-link :href="route('planta-cuidados.index')" :active="request()->routeIs('planta-cuidados.*')">
                      Asignar cuidados
                 </x-responsive-nav-link>
-
                 <x-responsive-nav-link :href="route('recomendaciones-cuidado.index')" :active="request()->routeIs('recomendaciones-cuidado.*')">
                      Recomendaciones de cuidado
                 </x-responsive-nav-link>
-
                 <x-responsive-nav-link :href="route('recomendaciones-zona.index')" :active="request()->routeIs('recomendaciones-zona.*')">
                      Recomendaciones de zona
                 </x-responsive-nav-link>
-
                 <x-responsive-nav-link :href="route('problemas.index')" :active="request()->routeIs('problemas.*')">
                      Problemas
                 </x-responsive-nav-link>
-
                 <x-responsive-nav-link :href="route('tratamientos.index')" :active="request()->routeIs('tratamientos.*')">
                      Tratamientos
                 </x-responsive-nav-link>
-
                 <x-responsive-nav-link :href="route('reporte-problemas.index')" :active="request()->routeIs('reporte-problemas.*')">
                      Reportes de problemas
                 </x-responsive-nav-link>
-
                 <x-responsive-nav-link :href="route('admin.usuarios.index')" :active="request()->routeIs('admin.usuarios.*')">
                      Usuarios
                 </x-responsive-nav-link>
@@ -231,23 +207,18 @@
                 <x-responsive-nav-link :href="route('catalogo.plantas')" :active="request()->routeIs('catalogo.plantas')">
                      Catálogo
                 </x-responsive-nav-link>
-
                 <x-responsive-nav-link :href="route('adopciones.index')" :active="request()->routeIs('adopciones.*')">
                      Mis adopciones
                 </x-responsive-nav-link>
 
+                @php
+                    $notificacionesNoLeidasMovil = \App\Models\Notificacion::where('id_usuario', auth()->id())->where('leida', false)->count();
+                @endphp
                 <x-responsive-nav-link :href="route('notificaciones.index')" :active="request()->routeIs('notificaciones.*')" class="flex justify-between items-center">
                     <span> Notificaciones</span>
-
-                    @php
-                        $pendientesMovil = \App\Models\Notificacion::where('id_usuario', auth()->id())
-                            ->where('leida', false)
-                            ->count();
-                    @endphp
-
-                    @if($pendientesMovil > 0)
+                    @if($notificacionesNoLeidasMovil > 0)
                         <span class="bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">
-                            {{ $pendientesMovil > 9 ? '9+' : $pendientesMovil }}
+                            {{ $notificacionesNoLeidasMovil > 9 ? '9+' : $notificacionesNoLeidasMovil }}
                         </span>
                     @endif
                 </x-responsive-nav-link>
@@ -259,7 +230,6 @@
                 <div class="w-10 h-10 rounded-full bg-gradient-to-br from-green-600 to-emerald-700 flex items-center justify-center text-white font-semibold text-base">
                     {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
                 </div>
-
                 <div>
                     <div class="font-medium text-gray-800 dark:text-gray-200">
                         {{ Auth::user()->name }}

@@ -8,6 +8,8 @@ use App\Models\ReporteProblema;
 use App\Models\Tratamiento;
 use App\Models\TratamientoReporte;
 use Illuminate\Http\Request;
+use App\Models\SeguimientoTratamiento;
+
 
 class ReporteProblemaController extends Controller
 {
@@ -162,5 +164,26 @@ class ReporteProblemaController extends Controller
 
     return redirect()->route('reporte-problemas.show', $reporte)
         ->with('success', 'Evidencia del tratamiento registrada correctamente. La próxima evidencia ya fue programada.');
+}
+
+
+public function aplicarTratamiento(Request $request, ReporteProblema $reporteProblema)
+{
+    $request->validate([
+        'id_tratamiento' => 'required|exists:tratamientos,id',
+        'fecha_aplicacion' => 'required|date',
+        'imagen' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+        'observaciones' => 'nullable|string',
+    ]);
+
+    $data = $request->only(['id_tratamiento', 'fecha_aplicacion', 'observaciones']);
+    if ($request->hasFile('imagen')) {
+        $data['imagen'] = $request->file('imagen')->store('tratamientos', 'public');
+    }
+    $data['estado'] = 'aplicado';
+
+    $reporteProblema->seguimientoTratamientos()->create($data);
+
+    return redirect()->back()->with('success', 'Aplicación de tratamiento registrada correctamente.');
 }
 }

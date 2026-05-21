@@ -1,12 +1,11 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="text-2xl font-bold text-gray-900 dark:text-white leading-tight">
-            🌿 Catálogo de Plantas
+            Catalogo de Plantas
         </h2>
     </x-slot>
 
     <style>
-        /* ===== Estilos para el catálogo (adaptados del diseño de referencia) ===== */
         @import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700;14..32,800&display=swap');
 
         :root {
@@ -37,7 +36,6 @@
             padding-left: 1.2rem;
         }
 
-        /* Filtros */
         .filtros {
             background: rgba(255, 255, 255, 0.7);
             backdrop-filter: blur(8px);
@@ -51,9 +49,16 @@
             justify-content: space-between;
             border: 1px solid rgba(75, 130, 90, 0.2);
             box-shadow: var(--sombra-suave);
+            position: relative;
         }
 
-        .filtros input, .filtros select {
+        .search-container {
+            flex: 2;
+            position: relative;
+        }
+
+        .search-container input {
+            width: 100%;
             padding: 0.7rem 1.2rem;
             border-radius: 40px;
             border: 1px solid #cde0d4;
@@ -65,12 +70,72 @@
             font-family: 'Inter', sans-serif;
         }
 
-        .filtros input:focus, .filtros select:focus {
+        .search-container input:focus {
             border-color: var(--verde-medio);
             box-shadow: 0 0 0 3px rgba(43, 120, 64, 0.1);
         }
 
-        /* Grid 3 columnas */
+        .suggestions-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border-radius: 24px;
+            box-shadow: var(--sombra-elevada);
+            margin-top: 8px;
+            z-index: 100;
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid rgba(75, 130, 90, 0.2);
+            display: none;
+        }
+
+        .suggestions-dropdown ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .suggestions-dropdown li {
+            padding: 0.8rem 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: background 0.2s;
+            border-bottom: 1px solid #e2ecd9;
+        }
+
+        .suggestions-dropdown li:last-child {
+            border-bottom: none;
+        }
+
+        .suggestions-dropdown li:hover {
+            background: var(--verde-claro);
+        }
+
+        .suggestions-dropdown img {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            object-fit: cover;
+        }
+
+        .suggestions-dropdown .info {
+            flex: 1;
+        }
+
+        .suggestions-dropdown .nombre {
+            font-weight: 700;
+            color: var(--verde-profundo);
+        }
+
+        .suggestions-dropdown .especie {
+            font-size: 0.75rem;
+            color: var(--gris-verde);
+        }
+
         .grid-plantas {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -78,7 +143,6 @@
             margin: 2rem 0 3rem;
         }
 
-        /* Tarjetas */
         .card {
             background: var(--blanco);
             border-radius: var(--border-radius-card);
@@ -115,7 +179,6 @@
             font-weight: 800;
             color: var(--verde-profundo);
             margin-bottom: 0.3rem;
-            letter-spacing: -0.3px;
         }
 
         .zona {
@@ -133,7 +196,6 @@
             font-size: 0.9rem;
             color: var(--gris-verde);
             margin-bottom: 1.2rem;
-            line-height: 1.4;
         }
 
         .btn-adoptar {
@@ -151,7 +213,6 @@
             justify-content: center;
             gap: 10px;
             font-size: 0.9rem;
-            font-family: 'Inter', sans-serif;
             text-decoration: none;
         }
 
@@ -161,12 +222,11 @@
             box-shadow: 0 8px 18px rgba(43, 120, 64, 0.3);
         }
 
-        /* Responsive */
         @media (max-width: 950px) {
             .grid-plantas { grid-template-columns: repeat(2, 1fr); gap: 1.8rem; }
         }
         @media (max-width: 650px) {
-            .grid-plantas { grid-template-columns: 1fr; max-width: 400px; margin-left: auto; margin-right: auto; }
+            .grid-plantas { grid-template-columns: 1fr; max-width: 400px; margin: 0 auto; }
             .card img { height: 190px; }
         }
         @media (max-width: 480px) {
@@ -174,7 +234,6 @@
             .card img { height: 170px; }
         }
 
-        /* Animación */
         @keyframes fadeSlideUp {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
@@ -191,47 +250,108 @@
     <div class="py-8">
         <div class="catalogo-container">
             <div class="catalogo-header">
-                <p>Explora y adopta plantas según tu entorno. 🌱</p>
+                <p>Explora y adopta plantas segun tu entorno.</p>
             </div>
 
-            <!-- Barra de búsqueda y filtros (solo visual) -->
             <div class="filtros">
-                <input type="text" placeholder="🔍 Buscar por nombre...">
-                <select>
-                    <option>Todas las zonas</option>
-                    <option>Interior</option>
-                    <option>Exterior</option>
-                    <option>Clima seco</option>
-                    <option>Clima húmedo</option>
+                <div class="search-container">
+                    <input type="text" id="search-input" placeholder="Buscar por nombre o especie..." autocomplete="off">
+                    <div id="suggestions" class="suggestions-dropdown"></div>
+                </div>
+                <select id="zona-filter">
+                    <option value="">Todas las zonas</option>
+                    <option value="Interior">Interior</option>
+                    <option value="Exterior">Exterior</option>
+                    <option value="Clima seco">Clima seco</option>
+                    <option value="Clima humedo">Clima humedo</option>
                 </select>
             </div>
 
-            <!-- Grid de plantas -->
-            <div class="grid-plantas">
-                @forelse($plantas as $planta)
-                    <div class="card">
-                        <img src="{{ $planta->imagen ?? 'https://images.unsplash.com/photo-1592150621744-aca64f48394a?w=300&h=200&fit=crop' }}" 
-                             alt="{{ $planta->nombre }}">
-                        <div class="card-body">
-                            <h3>{{ $planta->nombre }}</h3>
-                            <span class="zona">{{ $planta->tipo_zona ?? 'Zona no especificada' }}</span>
-                            <p>{{ Str::limit($planta->descripcion, 80) }}</p>
-                            <a href="{{ route('catalogo.plantas.show', $planta) }}" class="btn-adoptar">
-                                <i class="fas fa-hand-holding-heart"></i> Ver y adoptar
-                            </a>
-                        </div>
-                    </div>
-                @empty
-                    <div class="col-span-3 text-center py-10 text-gray-500">
-                        No hay plantas disponibles en el catálogo.
-                    </div>
-                @endforelse
+            <div id="grid-plantas" class="grid-plantas">
+                @include('catalogo.partials.plantas_grid', ['plantas' => $plantas])
             </div>
         </div>
     </div>
 
-    <!-- Incluir FontAwesome si no está en el layout -->
     @push('scripts')
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+        <script>
+            const searchInput = document.getElementById('search-input');
+            const suggestionsDiv = document.getElementById('suggestions');
+            const gridContainer = document.getElementById('grid-plantas');
+            const zonaFilter = document.getElementById('zona-filter');
+
+            let debounceTimer;
+
+            function fetchSuggestions() {
+                const query = searchInput.value.trim();
+                if (query.length < 2) {
+                    suggestionsDiv.style.display = 'none';
+                    return;
+                }
+
+                fetch(`/catalogo-plantas/buscar?q=${encodeURIComponent(query)}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (!data.length) {
+                            suggestionsDiv.style.display = 'none';
+                            return;
+                        }
+                        let html = '<ul>';
+                        data.forEach(planta => {
+                            const imgSrc = planta.imagen || 'https://images.unsplash.com/photo-1592150621744-aca64f48394a?w=40&h=40&fit=crop';
+                            html += `
+                                <li data-id="${planta.id}">
+                                    <img src="${imgSrc}" alt="${planta.nombre}">
+                                    <div class="info">
+                                        <div class="nombre">${planta.nombre}</div>
+                                        <div class="especie">${planta.especie}</div>
+                                    </div>
+                                </li>
+                            `;
+                        });
+                        html += '</ul>';
+                        suggestionsDiv.innerHTML = html;
+                        suggestionsDiv.style.display = 'block';
+
+                        document.querySelectorAll('#suggestions li').forEach(li => {
+                            li.addEventListener('click', () => {
+                                const plantaId = li.getAttribute('data-id');
+                                window.location.href = `/catalogo-plantas/${plantaId}`;
+                            });
+                        });
+                    })
+                    .catch(error => {
+                        console.error('Error fetching suggestions:', error);
+                        suggestionsDiv.style.display = 'none';
+                    });
+            }
+
+            function fetchGrid() {
+                const term = searchInput.value.trim();
+                const zona = zonaFilter.value;
+                let url = `/catalogo-plantas?term=${encodeURIComponent(term)}&zona=${encodeURIComponent(zona)}`;
+                fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+                    .then(response => response.text())
+                    .then(html => {
+                        gridContainer.innerHTML = html;
+                    });
+            }
+
+            searchInput.addEventListener('input', () => {
+                clearTimeout(debounceTimer);
+                debounceTimer = setTimeout(() => {
+                    fetchSuggestions();
+                    fetchGrid();
+                }, 300);
+            });
+
+            zonaFilter.addEventListener('change', () => fetchGrid());
+
+            document.addEventListener('click', (e) => {
+                if (!searchInput.contains(e.target) && !suggestionsDiv.contains(e.target)) {
+                    suggestionsDiv.style.display = 'none';
+                }
+            });
+        </script>
     @endpush
 </x-app-layout>

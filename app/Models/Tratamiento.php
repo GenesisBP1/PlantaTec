@@ -28,4 +28,9 @@ class Tratamiento extends Model
     {
         return $this->belongsTo(Cuidado::class, 'id_cuidado');
     }
+
+    public function seguimientos()
+{
+    return $this->hasMany(SeguimientoTratamiento::class, 'id_tratamiento');
+}
 }

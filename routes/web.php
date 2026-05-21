@@ -18,8 +18,8 @@ use App\Http\Controllers\PlantaCuidadoController;
 use App\Http\Controllers\ReporteProblemaController;
 use App\Http\Controllers\MapaController;
 use App\Http\Controllers\Api\AdopcionMapaController;
+use App\Http\Controllers\Admin\UsuarioController;
 use App\Models\Adopcion;
-Use App\Http\Controllers\Admin\UsuarioController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -55,14 +55,22 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/catalogo-plantas/{planta}', [CatalogoPlantaController::class, 'show'])->name('catalogo.plantas.show');
     Route::post('/catalogo-plantas/{planta}/adoptar', [CatalogoPlantaController::class, 'adoptar'])->name('catalogo.plantas.adoptar');
 
+    // Búsqueda (autocompletado)
+    Route::get('/catalogo-plantas/buscar', [CatalogoPlantaController::class, 'buscar'])->name('catalogo.plantas.buscar');
+
     // Reporte de problemas
     Route::get('/reporte-problemas/create', [ReporteProblemaController::class, 'create'])->name('reporte-problemas.create');
     Route::post('/reporte-problemas', [ReporteProblemaController::class, 'store'])->name('reporte-problemas.store');
     Route::get('/reporte-problemas/{reporteProblema}', [ReporteProblemaController::class, 'show'])->name('reporte-problemas.show');
-  // Evidencia de tratamientos de reportes
-Route::post('/tratamientos-reportes/{tratamientoReporte}/evidencia', [ReporteProblemaController::class, 'subirEvidenciaTratamiento'])
-    ->name('tratamientos-reportes.evidencia');
-    // API para obtener cuidados de una adopción (usado en el modal de la vista de adopciones)
+
+
+    Route::post('/reporte-problemas/{reporteProblema}/aplicar-tratamiento', [ReporteProblemaController::class, 'aplicarTratamiento'])
+    ->name('reporte-problemas.aplicar-tratamiento');
+    // Evidencia de tratamientos de reportes
+    Route::post('/tratamientos-reportes/{tratamientoReporte}/evidencia', [ReporteProblemaController::class, 'subirEvidenciaTratamiento'])
+        ->name('tratamientos-reportes.evidencia');
+
+    // API para obtener cuidados de una adopción
     Route::get('/api/plantas-cuidados/{adopcionId}', function ($adopcionId) {
         $adopcion = Adopcion::findOrFail($adopcionId);
         $cuidados = $adopcion->planta->plantaCuidados()->with('cuidado')->get()->map(function($pc) {
@@ -88,7 +96,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::resource('recomendaciones-cuidado', RecomendacionCuidadoController::class);
     Route::get('/reportes-problemas', [ReporteProblemaController::class, 'index'])->name('reporte-problemas.index');
     Route::put('/reportes-problemas/{reporteProblema}/resolver', [ReporteProblemaController::class, 'resolver'])->name('reporte-problemas.resolver');
-    
+
     // Rutas de administración de usuarios (solo admin)
     Route::prefix('admin')->name('admin.')->group(function () {
         Route::resource('usuarios', UsuarioController::class);

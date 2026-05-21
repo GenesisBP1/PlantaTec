@@ -11,16 +11,34 @@ use Illuminate\Support\Facades\DB;
 
 class CatalogoPlantaController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $plantas = Planta::latest()->get();
+        $query = Planta::query();
+
+        if ($request->filled('term')) {
+            $term = $request->term;
+            $query->where(function($q) use ($term) {
+                $q->where('nombre', 'like', "%{$term}%")
+                  ->orWhere('especie', 'like', "%{$term}%");
+            });
+        }
+
+        if ($request->filled('zona') && $request->zona !== '') {
+            $query->where('tipo_zona', $request->zona);
+        }
+
+        $plantas = $query->latest()->get();
+
+        if ($request->ajax()) {
+            return view('catalogo.partials.plantas_grid', compact('plantas'));
+        }
+
         return view('catalogo.index', compact('plantas'));
     }
 
     public function show(Planta $planta)
     {
         $zonasRecomendadas = RecomendacionZona::all();
-    
         return view('catalogo.show', compact('planta', 'zonasRecomendadas'));
     }
 
@@ -34,7 +52,6 @@ class CatalogoPlantaController extends Controller
             DB::beginTransaction();
 
             if ($request->tipo === 'publico') {
-                // Verificar método de ubicación
                 $metodo = $request->input('metodo_ubicacion_publica', 'zona');
 
                 if ($metodo === 'zona') {
@@ -54,7 +71,6 @@ class CatalogoPlantaController extends Controller
                         'es_publica' => true,
                     ]);
                 } else {
-                    // Mapa
                     $request->validate([
                         'latitud' => 'required|numeric|between:-90,90',
                         'longitud' => 'required|numeric|between:-180,180',
@@ -89,7 +105,6 @@ class CatalogoPlantaController extends Controller
                         'es_publica' => false,
                     ]);
                 } else {
-                    // Mapa privado
                     $request->validate([
                         'latitud_privada' => 'required|numeric|between:-90,90',
                         'longitud_privada' => 'required|numeric|between:-180,180',
@@ -126,5 +141,20 @@ class CatalogoPlantaController extends Controller
             return redirect()->back()
                 ->with('error', 'Error al adoptar la planta: ' . $e->getMessage());
         }
+    }
+
+    public function buscar(Request $request)
+    {
+        $termino = $request->get('q');
+        if (!$termino || strlen($termino) < 2) {
+            return response()->json([]);
+        }
+
+        $plantas = Planta::where('nombre', 'like', "%{$termino}%")
+            ->orWhere('especie', 'like', "%{$termino}%")
+            ->limit(8)
+            ->get(['id', 'nombre', 'especie', 'imagen']);
+
+        return response()->json($plantas);
     }
 }
