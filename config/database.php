@@ -3,6 +3,27 @@
 use Illuminate\Support\Str;
 use Pdo\Mysql;
 
+// Parse DATABASE_URL (Render and similar). If present, prefer its components
+// over individual DB_* environment variables.
+$__database_url = env('DATABASE_URL') ?: env('DB_URL');
+$__db_from_url = null;
+if ($__database_url) {
+    $__components = parse_url($__database_url);
+    $__query = [];
+    if (isset($__components['query'])) {
+        parse_str($__components['query'], $__query);
+    }
+
+    $__db_from_url = [
+        'host' => $__components['host'] ?? null,
+        'port' => $__components['port'] ?? null,
+        'database' => isset($__components['path']) ? ltrim($__components['path'], '/') : null,
+        'username' => $__components['user'] ?? null,
+        'password' => $__components['pass'] ?? null,
+        'sslmode' => $__query['sslmode'] ?? null,
+    ];
+}
+
 return [
 
     /*
@@ -34,7 +55,7 @@ return [
 
         'sqlite' => [
             'driver' => 'sqlite',
-            'url' => env('DB_URL'),
+            'url' => env('DB_URL', env('DATABASE_URL')),
             'database' => env('DB_DATABASE', database_path('database.sqlite')),
             'prefix' => '',
             'foreign_key_constraints' => env('DB_FOREIGN_KEYS', true),
@@ -46,12 +67,12 @@ return [
 
         'mysql' => [
             'driver' => 'mysql',
-            'url' => env('DB_URL'),
-            'host' => env('DB_HOST', '127.0.0.1'),
-            'port' => env('DB_PORT', '3306'),
-            'database' => env('DB_DATABASE', 'laravel'),
-            'username' => env('DB_USERNAME', 'root'),
-            'password' => env('DB_PASSWORD', ''),
+            'url' => env('DB_URL', env('DATABASE_URL')),
+            'host' => $__db_from_url['host'] ?? env('DB_HOST', '127.0.0.1'),
+            'port' => $__db_from_url['port'] ?? env('DB_PORT', '3306'),
+            'database' => $__db_from_url['database'] ?? env('DB_DATABASE', 'laravel'),
+            'username' => $__db_from_url['username'] ?? env('DB_USERNAME', 'root'),
+            'password' => $__db_from_url['password'] ?? env('DB_PASSWORD', ''),
             'unix_socket' => env('DB_SOCKET', ''),
             'charset' => env('DB_CHARSET', 'utf8mb4'),
             'collation' => env('DB_COLLATION', 'utf8mb4_unicode_ci'),
@@ -66,12 +87,12 @@ return [
 
         'mariadb' => [
             'driver' => 'mariadb',
-            'url' => env('DB_URL'),
-            'host' => env('DB_HOST', '127.0.0.1'),
-            'port' => env('DB_PORT', '3306'),
-            'database' => env('DB_DATABASE', 'laravel'),
-            'username' => env('DB_USERNAME', 'root'),
-            'password' => env('DB_PASSWORD', ''),
+            'url' => env('DB_URL', env('DATABASE_URL')),
+            'host' => $__db_from_url['host'] ?? env('DB_HOST', '127.0.0.1'),
+            'port' => $__db_from_url['port'] ?? env('DB_PORT', '3306'),
+            'database' => $__db_from_url['database'] ?? env('DB_DATABASE', 'laravel'),
+            'username' => $__db_from_url['username'] ?? env('DB_USERNAME', 'root'),
+            'password' => $__db_from_url['password'] ?? env('DB_PASSWORD', ''),
             'unix_socket' => env('DB_SOCKET', ''),
             'charset' => env('DB_CHARSET', 'utf8mb4'),
             'collation' => env('DB_COLLATION', 'utf8mb4_unicode_ci'),
@@ -86,17 +107,17 @@ return [
 
         'pgsql' => [
             'driver' => 'pgsql',
-            'url' => env('DB_URL'),
-            'host' => env('DB_HOST', '127.0.0.1'),
-            'port' => env('DB_PORT', '5432'),
-            'database' => env('DB_DATABASE', 'laravel'),
-            'username' => env('DB_USERNAME', 'root'),
-            'password' => env('DB_PASSWORD', ''),
+            'url' => env('DB_URL', env('DATABASE_URL')),
+            'host' => $__db_from_url['host'] ?? env('DB_HOST', '127.0.0.1'),
+            'port' => $__db_from_url['port'] ?? env('DB_PORT', '5432'),
+            'database' => $__db_from_url['database'] ?? env('DB_DATABASE', 'laravel'),
+            'username' => $__db_from_url['username'] ?? env('DB_USERNAME', 'root'),
+            'password' => $__db_from_url['password'] ?? env('DB_PASSWORD', ''),
             'charset' => env('DB_CHARSET', 'utf8'),
             'prefix' => '',
             'prefix_indexes' => true,
-            'search_path' => 'public',
-            'sslmode' => env('DB_SSLMODE', 'prefer'),
+            'search_path' => env('DB_SCHEMA', 'public'),
+            'sslmode' => $__db_from_url['sslmode'] ?? env('DB_SSLMODE', 'prefer'),
         ],
 
         'sqlsrv' => [
