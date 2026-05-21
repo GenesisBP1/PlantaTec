@@ -9,11 +9,12 @@ RUN apt-get update && apt-get install -y \
     libpng-dev \
     libonig-dev \
     libxml2-dev \
+    libpq-dev \
     sqlite3 \
     libsqlite3-dev \
     nodejs \
     npm \
-    && docker-php-ext-install pdo pdo_sqlite mbstring zip exif pcntl bcmath gd
+    && docker-php-ext-install pdo pdo_sqlite pdo_pgsql mbstring zip exif pcntl bcmath gd
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
@@ -39,4 +40,4 @@ RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-av
 
 EXPOSE 80
 
-CMD php artisan migrate --force && php artisan db:seed --force && php artisan storage:link || true && apache2-foreground
+CMD php artisan migrate --force && php artisan storage:link || true && apache2-foreground
