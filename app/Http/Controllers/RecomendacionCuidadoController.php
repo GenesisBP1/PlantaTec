@@ -34,6 +34,8 @@ class RecomendacionCuidadoController extends Controller
         
         $tableRecomendacionesActions = $recomendaciones->map(function($recomendacion) {
             return [
+                'view' => route('recomendaciones-cuidado.show', $recomendacion->id),
+        'edit' => route('recomendaciones-cuidado.edit', $recomendacion->id),
                 'delete' => route('recomendaciones-cuidado.destroy', $recomendacion->id),
             ];
         })->toArray();
@@ -48,4 +50,39 @@ class RecomendacionCuidadoController extends Controller
         return redirect()->route('recomendaciones-cuidado.index')
             ->with('success', 'Recomendación eliminada correctamente.');
     }
+    public function show($id)
+{
+    $recomendacion = RecomendacionCuidado::with(['adopcion.planta', 'plantaCuidado.cuidado'])
+        ->findOrFail($id);
+
+    return view('recomendaciones_cuidado.show', compact('recomendacion'));
+}
+
+public function edit($id)
+{
+    $recomendacion = RecomendacionCuidado::with(['adopcion.planta', 'plantaCuidado.cuidado'])
+        ->findOrFail($id);
+
+    return view('recomendaciones_cuidado.edit', compact('recomendacion'));
+}
+
+public function update(Request $request, $id)
+{
+    $request->validate([
+        'mensaje' => 'required|string',
+        'prioridad' => 'required|string|max:255',
+        'estado' => 'required|string|max:255',
+    ]);
+
+    $recomendacion = RecomendacionCuidado::findOrFail($id);
+
+    $recomendacion->update([
+        'mensaje' => $request->mensaje,
+        'prioridad' => $request->prioridad,
+        'estado' => $request->estado,
+    ]);
+
+    return redirect()->route('recomendaciones-cuidado.index')
+        ->with('success', 'Recomendación actualizada correctamente.');
+}
 }

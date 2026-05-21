@@ -37,7 +37,8 @@ class AdopcionController extends Controller
             'planta',
             'ubicacion',
             'registrosCuidados.plantaCuidado.cuidado',
-            'reportesProblemas.problema'
+            'reportesProblemas.problema',
+            'reportesProblemas.tratamientosReportes.tratamiento',
         ]);
 
         return view('adopciones.show', compact('adopcion'));

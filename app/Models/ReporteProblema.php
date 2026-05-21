@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\TratamientoReporte;
 
 class ReporteProblema extends Model
 {
@@ -26,4 +27,9 @@ class ReporteProblema extends Model
     {
         return $this->belongsTo(Problema::class, 'id_problema');
     }
+
+    public function tratamientosReportes()
+{
+    return $this->hasMany(TratamientoReporte::class, 'id_reporte_problema');
+}
 }

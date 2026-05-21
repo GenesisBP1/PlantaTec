@@ -8,10 +8,26 @@ use Illuminate\Http\Request;
 class ProblemaController extends Controller
 {
     public function index()
-    {
-        $problemas = Problema::latest()->get();
-        return view('problemas.index', compact('problemas'));
-    }
+{
+    $problemas = Problema::latest()->get();
+
+    $tableProblemasRows = $problemas->map(function ($problema) {
+        return [
+            '<strong>' . e($problema->nombre) . '</strong>',
+            e($problema->descripcion ?? 'Sin descripción'),
+        ];
+    })->toArray();
+
+    $tableProblemasActions = $problemas->map(function ($problema) {
+        return [
+            'view' => route('problemas.show', $problema->id),
+            'edit' => route('problemas.edit', $problema->id),
+            'delete' => route('problemas.destroy', $problema->id),
+        ];
+    })->toArray();
+
+    return view('problemas.index', compact('problemas', 'tableProblemasRows', 'tableProblemasActions'));
+}
 
     public function create()
     {
@@ -58,4 +74,8 @@ class ProblemaController extends Controller
         return redirect()->route('problemas.index')
             ->with('success', 'Problema eliminado correctamente.');
     }
+    public function show(Problema $problema)
+{
+    return view('problemas.show', compact('problema'));
+}
 }

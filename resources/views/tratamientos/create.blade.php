@@ -10,10 +10,14 @@
             <div class="bg-white border border-slate-200 shadow-sm rounded-2xl p-6 md:p-8">
 
                 <div class="mb-6">
-                    <p class="text-sm font-semibold text-emerald-600 uppercase tracking-wide">Nuevo registro</p>
-                    <h3 class="text-2xl font-bold text-slate-900 mt-1">Crear tratamiento</h3>
+                    <p class="text-sm font-semibold text-emerald-600 uppercase tracking-wide">
+                        Nuevo registro
+                    </p>
+                    <h3 class="text-2xl font-bold text-slate-900 mt-1">
+                        Crear tratamiento
+                    </h3>
                     <p class="text-sm text-slate-500 mt-2">
-                        Completa los datos para relacionar el problema con un cuidado o una planta específica.
+                        Completa los datos para relacionar el problema con una planta, cuidado y frecuencia del tratamiento.
                     </p>
                 </div>
 
@@ -33,8 +37,12 @@
 
                     <div class="grid gap-4 md:grid-cols-2">
                         <div>
-                            <label class="mb-1 block text-sm font-semibold text-slate-700">Problema</label>
-                            <select name="id_problema" class="w-full rounded-xl border-slate-300 focus:border-emerald-500 focus:ring-emerald-500" required>
+                            <label class="mb-1 block text-sm font-semibold text-slate-700">
+                                Problema
+                            </label>
+                            <select name="id_problema"
+                                    class="w-full rounded-xl border-slate-300 focus:border-emerald-500 focus:ring-emerald-500"
+                                    required>
                                 <option value="">Selecciona un problema</option>
                                 @foreach($problemas as $problema)
                                     <option value="{{ $problema->id }}" {{ old('id_problema') == $problema->id ? 'selected' : '' }}>
@@ -45,9 +53,14 @@
                         </div>
 
                         <div>
-                            <label class="mb-1 block text-sm font-semibold text-slate-700">Planta</label>
-                            <select name="id_planta" class="w-full rounded-xl border-slate-300 focus:border-emerald-500 focus:ring-emerald-500">
-                                <option value="" {{ old('id_planta') == null ? 'selected' : '' }}>Aplicable a cualquier planta</option>
+                            <label class="mb-1 block text-sm font-semibold text-slate-700">
+                                Planta
+                            </label>
+                            <select name="id_planta"
+                                    class="w-full rounded-xl border-slate-300 focus:border-emerald-500 focus:ring-emerald-500">
+                                <option value="" {{ old('id_planta') == null ? 'selected' : '' }}>
+                                    Aplicable a cualquier planta
+                                </option>
                                 @foreach($plantas as $planta)
                                     <option value="{{ $planta->id }}" {{ old('id_planta') == $planta->id ? 'selected' : '' }}>
                                         {{ $planta->nombre }}
@@ -57,9 +70,14 @@
                         </div>
 
                         <div class="md:col-span-2">
-                            <label class="mb-1 block text-sm font-semibold text-slate-700">Cuidado que ayuda a resolver</label>
-                            <select name="id_cuidado" class="w-full rounded-xl border-slate-300 focus:border-emerald-500 focus:ring-emerald-500">
-                                <option value="" {{ old('id_cuidado') == null ? 'selected' : '' }}>Sin cuidado específico</option>
+                            <label class="mb-1 block text-sm font-semibold text-slate-700">
+                                Cuidado que ayuda a resolver
+                            </label>
+                            <select name="id_cuidado"
+                                    class="w-full rounded-xl border-slate-300 focus:border-emerald-500 focus:ring-emerald-500">
+                                <option value="" {{ old('id_cuidado') == null ? 'selected' : '' }}>
+                                    Sin cuidado específico
+                                </option>
                                 @foreach($cuidados as $cuidado)
                                     <option value="{{ $cuidado->id }}" {{ old('id_cuidado') == $cuidado->id ? 'selected' : '' }}>
                                         {{ $cuidado->nombre }}
@@ -68,23 +86,48 @@
                             </select>
                         </div>
 
-                        <div class="md:col-span-2">
-                            <label class="mb-1 block text-sm font-semibold text-slate-700">Descripción</label>
-                            <textarea name="descripcion" class="w-full rounded-xl border-slate-300 focus:border-emerald-500 focus:ring-emerald-500" rows="3">{{ old('descripcion') }}</textarea>
+                        <div>
+                            <label class="mb-1 block text-sm font-semibold text-slate-700">
+                                Frecuencia del tratamiento
+                            </label>
+                            <div class="flex items-center gap-2">
+                                <input type="number"
+                                       name="frecuencia_dias"
+                                       min="1"
+                                       value="{{ old('frecuencia_dias', 1) }}"
+                                       class="w-full rounded-xl border-slate-300 focus:border-emerald-500 focus:ring-emerald-500"
+                                       required>
+                                <span class="text-sm text-slate-500">días</span>
+                            </div>
                         </div>
 
                         <div class="md:col-span-2">
-                            <label class="mb-1 block text-sm font-semibold text-slate-700">Indicaciones</label>
-                            <textarea name="indicaciones" class="w-full rounded-xl border-slate-300 focus:border-emerald-500 focus:ring-emerald-500" rows="4">{{ old('indicaciones') }}</textarea>
+                            <label class="mb-1 block text-sm font-semibold text-slate-700">
+                                Descripción
+                            </label>
+                            <textarea name="descripcion"
+                                      class="w-full rounded-xl border-slate-300 focus:border-emerald-500 focus:ring-emerald-500"
+                                      rows="3">{{ old('descripcion') }}</textarea>
+                        </div>
+
+                        <div class="md:col-span-2">
+                            <label class="mb-1 block text-sm font-semibold text-slate-700">
+                                Indicaciones
+                            </label>
+                            <textarea name="indicaciones"
+                                      class="w-full rounded-xl border-slate-300 focus:border-emerald-500 focus:ring-emerald-500"
+                                      rows="4">{{ old('indicaciones') }}</textarea>
                         </div>
                     </div>
 
                     <div class="mt-6 flex flex-col gap-3 sm:flex-row">
-                        <button type="submit" class="inline-flex items-center justify-center rounded-xl bg-emerald-600 px-5 py-2.5 font-semibold text-white transition hover:bg-emerald-700">
+                        <button type="submit"
+                                class="inline-flex items-center justify-center rounded-xl bg-emerald-600 px-5 py-2.5 font-semibold text-white transition hover:bg-emerald-700">
                             Guardar
                         </button>
 
-                        <a href="{{ route('tratamientos.index') }}" class="inline-flex items-center justify-center rounded-xl bg-slate-600 px-5 py-2.5 font-semibold text-white transition hover:bg-slate-700">
+                        <a href="{{ route('tratamientos.index') }}"
+                           class="inline-flex items-center justify-center rounded-xl bg-slate-600 px-5 py-2.5 font-semibold text-white transition hover:bg-slate-700">
                             Cancelar
                         </a>
                     </div>

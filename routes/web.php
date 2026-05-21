@@ -59,7 +59,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/reporte-problemas/create', [ReporteProblemaController::class, 'create'])->name('reporte-problemas.create');
     Route::post('/reporte-problemas', [ReporteProblemaController::class, 'store'])->name('reporte-problemas.store');
     Route::get('/reporte-problemas/{reporteProblema}', [ReporteProblemaController::class, 'show'])->name('reporte-problemas.show');
-
+  // Evidencia de tratamientos de reportes
+Route::post('/tratamientos-reportes/{tratamientoReporte}/evidencia', [ReporteProblemaController::class, 'subirEvidenciaTratamiento'])
+    ->name('tratamientos-reportes.evidencia');
     // API para obtener cuidados de una adopción (usado en el modal de la vista de adopciones)
     Route::get('/api/plantas-cuidados/{adopcionId}', function ($adopcionId) {
         $adopcion = Adopcion::findOrFail($adopcionId);

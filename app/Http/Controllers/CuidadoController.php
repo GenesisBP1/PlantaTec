@@ -19,12 +19,13 @@ class CuidadoController extends Controller
             ];
         })->toArray();
         
-        $tableCuidadosActions = $cuidados->map(function($cuidado) {
-            return [
-                'edit' => route('cuidados.edit', $cuidado->id),
-                'delete' => route('cuidados.destroy', $cuidado->id),
-            ];
-        })->toArray();
+       $tableCuidadosActions = $cuidados->map(function($cuidado) {
+    return [
+        'view' => route('cuidados.show', $cuidado->id),
+        'edit' => route('cuidados.edit', $cuidado->id),
+        'delete' => route('cuidados.destroy', $cuidado->id),
+    ];
+})->toArray();
         
         return view('cuidados.index', compact('cuidados', 'tableCuidadosRows', 'tableCuidadosActions'));
     }
@@ -72,4 +73,8 @@ class CuidadoController extends Controller
         return redirect()->route('cuidados.index')
             ->with('success', 'Cuidado eliminado correctamente.');
     }
+    public function show(Cuidado $cuidado)
+{
+    return view('cuidados.show', compact('cuidado'));
+}
 }

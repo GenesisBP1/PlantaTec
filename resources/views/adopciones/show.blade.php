@@ -6,9 +6,6 @@
     </x-slot>
 
     <style>
-        /* ============================================
-           Estilos para la vista detalle (coherentes con el catálogo)
-           ============================================ */
         @import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;600;700;800&display=swap');
 
         :root {
@@ -19,7 +16,6 @@
             --verde-muy-claro: #f4fbf2;
             --gris-verde: #6f8f7a;
             --blanco: #ffffff;
-            --sombra-suave: 0 12px 28px rgba(0, 32, 0, 0.08);
             --sombra-elevada: 0 20px 35px rgba(0, 0, 0, 0.12);
             --border-radius-card: 28px;
             --transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
@@ -122,6 +118,7 @@
             padding: 0.8rem;
             text-align: left;
             border-bottom: 1px solid #e2ecd9;
+            vertical-align: top;
         }
 
         .tabla-cuidados th {
@@ -142,14 +139,53 @@
         .badge-revision { background: #fef3c7; color: #b45309; }
         .badge-resuelto { background: #dcfce7; color: #15803d; }
 
+        .btn-diagnostico {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            white-space: nowrap;
+            background: #16a34a;
+            color: white;
+            padding: 0.55rem 1rem;
+            border-radius: 999px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .btn-diagnostico:hover {
+            background: #15803d;
+            transform: translateY(-1px);
+        }
+
         @media (max-width: 768px) {
             .card-body { padding: 1.2rem; }
-            .tabla-cuidados, .tabla-cuidados thead, .tabla-cuidados tbody, .tabla-cuidados tr, .tabla-cuidados td, .tabla-cuidados th {
+
+            .tabla-cuidados,
+            .tabla-cuidados thead,
+            .tabla-cuidados tbody,
+            .tabla-cuidados tr,
+            .tabla-cuidados td,
+            .tabla-cuidados th {
                 display: block;
             }
-            .tabla-cuidados tr { margin-bottom: 1rem; border: 1px solid #e2ecd9; border-radius: 20px; padding: 0.5rem; }
-            .tabla-cuidados td { border: none; padding: 0.3rem 0.5rem; }
-            .tabla-cuidados th { display: none; }
+
+            .tabla-cuidados tr {
+                margin-bottom: 1rem;
+                border: 1px solid #e2ecd9;
+                border-radius: 20px;
+                padding: 0.5rem;
+            }
+
+            .tabla-cuidados td {
+                border: none;
+                padding: 0.3rem 0.5rem;
+            }
+
+            .tabla-cuidados th {
+                display: none;
+            }
         }
     </style>
 
@@ -161,31 +197,40 @@
                 <div class="card-header">
                     <h3><i class="fas fa-leaf"></i> {{ $adopcion->planta->nombre }}</h3>
                 </div>
+
                 <div class="card-body">
                     <div class="info-grid">
                         <div class="info-item">
                             <strong>Especie</strong>
                             <span>{{ $adopcion->planta->especie }}</span>
                         </div>
+
                         <div class="info-item">
                             <strong>Estado adopción</strong>
                             <span>{{ ucfirst($adopcion->estado_adopcion) }}</span>
                         </div>
+
                         <div class="info-item">
                             <strong>Ubicación</strong>
                             <span>{{ $adopcion->ubicacion->nombre_lugar ?? 'No registrada' }}</span>
                         </div>
+
                         <div class="info-item">
                             <strong>Fecha adopción</strong>
                             <span>{{ \Carbon\Carbon::parse($adopcion->fecha_adopcion)->format('d/m/Y') }}</span>
                         </div>
                     </div>
-                    <p><strong>Descripción:</strong> {{ $adopcion->planta->descripcion ?? 'Sin descripción.' }}</p>
+
+                    <p>
+                        <strong>Descripción:</strong>
+                        {{ $adopcion->planta->descripcion ?? 'Sin descripción.' }}
+                    </p>
 
                     <div class="btn-group">
                         <a href="{{ route('registro-cuidados.create', ['adopcion_id' => $adopcion->id]) }}" class="btn-primary">
                             <i class="fas fa-camera"></i> Registrar cuidado general
                         </a>
+
                         <a href="{{ route('reporte-problemas.create', ['adopcion_id' => $adopcion->id]) }}" class="btn-primary btn-danger">
                             <i class="fas fa-exclamation-triangle"></i> Reportar problema
                         </a>
@@ -193,11 +238,12 @@
                 </div>
             </div>
 
-            {{-- 📅 Plan de cuidados (itinerario) --}}
+            {{-- Plan de cuidados --}}
             <div class="card">
                 <div class="card-header">
                     <h3><i class="fas fa-calendar-alt"></i> 📋 Plan de cuidados</h3>
                 </div>
+
                 <div class="card-body">
                     @php
                         $cuidadosAsignados = $adopcion->planta->plantaCuidados;
@@ -206,8 +252,14 @@
                     @if($cuidadosAsignados->count())
                         <table class="tabla-cuidados">
                             <thead>
-                                <tr><th>Cuidado</th><th>Frecuencia</th><th>Próxima fecha sugerida</th><th>Registrar</th></tr>
+                                <tr>
+                                    <th>Cuidado</th>
+                                    <th>Frecuencia</th>
+                                    <th>Próxima fecha sugerida</th>
+                                    <th>Registrar</th>
+                                </tr>
                             </thead>
+
                             <tbody>
                                 @foreach($cuidadosAsignados as $pc)
                                     @php
@@ -222,12 +274,21 @@
                                             $proximaFecha = \Carbon\Carbon::parse($adopcion->fecha_adopcion)->addDays($pc->frecuencia);
                                         }
                                     @endphp
+
                                     <tr>
-                                        <td><strong>{{ $pc->cuidado->nombre }}</strong><br><small class="text-gray-500">{{ $pc->instrucciones_esp ?? 'Sin instrucciones adicionales' }}</small></td>
-                                        <td>Cada {{ $pc->frecuencia }} días</td>
-                                        <td>{{ $proximaFecha->format('d/m/Y') }}</td>
                                         <td>
-                                            <a href="{{ route('registro-cuidados.create', ['adopcion_id' => $adopcion->id, 'cuidado_id' => $pc->id]) }}" 
+                                            <strong>{{ $pc->cuidado->nombre }}</strong><br>
+                                            <small class="text-gray-500">
+                                                {{ $pc->instrucciones_esp ?? 'Sin instrucciones adicionales' }}
+                                            </small>
+                                        </td>
+
+                                        <td>Cada {{ $pc->frecuencia }} días</td>
+
+                                        <td>{{ $proximaFecha->format('d/m/Y') }}</td>
+
+                                        <td>
+                                            <a href="{{ route('registro-cuidados.create', ['adopcion_id' => $adopcion->id, 'cuidado_id' => $pc->id]) }}"
                                                class="bg-green-600 text-white px-3 py-1 rounded text-sm hover:bg-green-700">
                                                 <i class="fas fa-check-circle"></i> Registrar
                                             </a>
@@ -242,27 +303,33 @@
                 </div>
             </div>
 
-            {{-- 📜 Historial de cuidados realizados --}}
+            {{-- Historial de cuidados --}}
             <div class="card">
                 <div class="card-header">
                     <h3><i class="fas fa-history"></i> Historial de cuidados</h3>
                 </div>
+
                 <div class="card-body">
                     @forelse($adopcion->registrosCuidados as $registro)
                         <div class="border-b border-gray-100 py-3 flex flex-wrap gap-3 items-start">
                             <div class="flex-1">
-                                {{-- CORRECIÓN 1: parse() para evitar error si fecha es string --}}
                                 <p>
                                     <strong>{{ $registro->plantaCuidado->cuidado->nombre }}</strong>
                                     – {{ \Carbon\Carbon::parse($registro->fecha)->format('d/m/Y H:i') }}
                                 </p>
-                                <p class="text-gray-600 text-sm">{{ $registro->descripcion ?? 'Sin descripción' }}</p>
+
+                                <p class="text-gray-600 text-sm">
+                                    {{ $registro->descripcion ?? 'Sin descripción' }}
+                                </p>
+
                                 @if($registro->estado_observado)
-                                    <p class="text-xs text-gray-500">Estado observado: {{ $registro->estado_observado }}</p>
+                                    <p class="text-xs text-gray-500">
+                                        Estado observado: {{ $registro->estado_observado }}
+                                    </p>
                                 @endif
                             </div>
+
                             @if($registro->imagen)
-                                {{-- CORRECCIÓN 2: asset en lugar de Storage::url --}}
                                 <div>
                                     <img src="{{ asset('storage/' . $registro->imagen) }}"
                                          class="w-24 h-24 object-cover rounded-lg shadow"
@@ -276,11 +343,12 @@
                 </div>
             </div>
 
-            {{-- ⚠️ Problemas reportados --}}
+            {{-- Problemas reportados --}}
             <div class="card">
                 <div class="card-header">
                     <h3><i class="fas fa-bug"></i> Problemas reportados</h3>
                 </div>
+
                 <div class="card-body">
                     @forelse($adopcion->reportesProblemas as $reporte)
                         <div class="border-b border-gray-100 py-3">
@@ -290,18 +358,140 @@
                                     @if($reporte->estado === 'activo') badge-activo
                                     @elseif($reporte->estado === 'en_revision') badge-revision
                                     @else badge-resuelto @endif">
-                                    {{ ucfirst($reporte->estado) }}
+                                    {{ ucfirst(str_replace('_', ' ', $reporte->estado)) }}
                                 </span>
                             </p>
+
                             <p>Gravedad: {{ ucfirst($reporte->gravedad) }}</p>
                             <p>{{ $reporte->descripcion ?? 'Sin descripción' }}</p>
+
                             <div class="mt-2">
-                                <a href="{{ route('reporte-problemas.show', $reporte) }}" class="text-blue-600 text-sm hover:underline">Ver diagnóstico</a>
+                                <a href="{{ route('reporte-problemas.show', $reporte) }}" class="text-blue-600 text-sm hover:underline">
+                                    Ver diagnóstico
+                                </a>
                             </div>
                         </div>
                     @empty
                         <p class="text-gray-500">No hay problemas reportados.</p>
                     @endforelse
+                </div>
+            </div>
+
+            {{-- Tratamientos --}}
+            <div class="card">
+                <div class="card-header">
+                    <h3>Tratamientos</h3>
+                </div>
+
+                <div class="card-body">
+                    <p class="text-gray-500 mb-6">
+                        Aquí se muestran los tratamientos registrados derivados de los problemas reportados en esta planta.
+                    </p>
+
+                    @php
+                        $tratamientosReporte = $adopcion->reportesProblemas
+                            ->flatMap(function ($reporte) {
+                                return $reporte->tratamientosReportes->map(function ($tratamientoReporte) use ($reporte) {
+                                    $tratamientoReporte->reporte_original = $reporte;
+                                    return $tratamientoReporte;
+                                });
+                            });
+                    @endphp
+
+                    @if($tratamientosReporte->count() > 0)
+                        <div class="overflow-x-auto">
+                            <table class="tabla-cuidados">
+                                <thead>
+                                    <tr>
+                                        <th>Problema</th>
+                                        <th>Tratamiento</th>
+                                        <th>Frecuencia</th>
+                                        <th>Fecha de registro</th>
+                                        <th>Estado</th>
+                                        <th>Evidencia</th>
+                                        <th style="min-width: 150px;">Acción</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    @foreach($tratamientosReporte as $tratamientoReporte)
+                                        @php
+                                            $estadoTratamiento = strtolower($tratamientoReporte->estado ?? 'pendiente');
+                                            $fechaRegistro = $tratamientoReporte->updated_at ?? $tratamientoReporte->created_at;
+                                        @endphp
+
+                                        <tr>
+                                            <td>
+                                                <strong>
+                                                    {{ $tratamientoReporte->reporte_original->problema->nombre ?? 'Problema no disponible' }}
+                                                </strong>
+                                                <br>
+                                                <small class="text-gray-500">
+                                                    Gravedad: {{ ucfirst($tratamientoReporte->reporte_original->gravedad ?? 'Sin gravedad') }}
+                                                </small>
+                                            </td>
+
+                                            <td>
+                                                <strong>
+                                                    {{ $tratamientoReporte->tratamiento->descripcion ?? 'Tratamiento sin descripción' }}
+                                                </strong>
+
+                                                @if($tratamientoReporte->descripcion)
+                                                    <br>
+                                                    <small class="text-blue-700">
+                                                        Último registro: {{ $tratamientoReporte->descripcion }}
+                                                    </small>
+                                                @endif
+                                            </td>
+
+                                            <td>
+                                                Cada {{ $tratamientoReporte->frecuencia_dias ?? 1 }} días
+                                            </td>
+
+                                            <td>
+                                                @if($fechaRegistro)
+                                                    {{ \Carbon\Carbon::parse($fechaRegistro)->format('d/m/Y') }}
+                                                @else
+                                                    Sin fecha
+                                                @endif
+                                            </td>
+
+                                            <td>
+                                                <span class="badge-estado
+                                                    @if($estadoTratamiento === 'pendiente') badge-revision
+                                                    @elseif($estadoTratamiento === 'evidenciado') badge-resuelto
+                                                    @elseif($estadoTratamiento === 'resuelto') badge-resuelto
+                                                    @else badge-revision @endif">
+                                                    {{ ucfirst($tratamientoReporte->estado ?? 'pendiente') }}
+                                                </span>
+                                            </td>
+
+                                            <td>
+                                                @if($tratamientoReporte->imagen)
+                                                    <img src="{{ asset('storage/' . $tratamientoReporte->imagen) }}"
+                                                         alt="Evidencia del tratamiento"
+                                                         class="w-20 h-20 object-cover rounded-xl border shadow-sm">
+                                                @else
+                                                    <span class="text-gray-500">Sin imagen</span>
+                                                @endif
+                                            </td>
+
+                                            <td style="min-width: 150px;">
+                                                <a href="{{ route('reporte-problemas.show', $tratamientoReporte->reporte_original->id) }}"
+                                                   class="btn-diagnostico">
+                                                    Ver diagnóstico
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    @else
+                        <div class="bg-gray-50 rounded-xl p-6 text-center text-gray-500">
+                            No hay tratamientos asignados todavía.
+                        </div>
+                    @endif
                 </div>
             </div>
 

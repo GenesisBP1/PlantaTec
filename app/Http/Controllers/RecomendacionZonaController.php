@@ -21,13 +21,14 @@ class RecomendacionZonaController extends Controller
             ];
         })->toArray();
         
-        $tableZonasActions = $zonas->map(function($zona) {
-            return [
-                'edit' => route('recomendaciones-zona.edit', $zona->id),
-                'delete' => route('recomendaciones-zona.destroy', $zona->id),
-            ];
-        })->toArray();
         
+        $tableZonasActions = $zonas->map(function($zona) {
+    return [
+        'view' => route('recomendaciones-zona.show', $zona->id),
+        'edit' => route('recomendaciones-zona.edit', $zona->id),
+        'delete' => route('recomendaciones-zona.destroy', $zona->id),
+    ];
+})->toArray();
         return view('recomendaciones-zona.index', compact('zonas', 'tableZonasRows', 'tableZonasActions'));
     }
 
@@ -80,4 +81,10 @@ class RecomendacionZonaController extends Controller
         return redirect()->route('recomendaciones-zona.index')
             ->with('success', 'Zona eliminada.');
     }
+    public function show($id)
+{
+    $zona = RecomendacionZona::findOrFail($id);
+
+    return view('recomendaciones-zona.show', compact('zona'));
+}
 }

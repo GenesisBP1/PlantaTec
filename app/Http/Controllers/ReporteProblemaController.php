@@ -6,6 +6,7 @@ use App\Models\Adopcion;
 use App\Models\Problema;
 use App\Models\ReporteProblema;
 use App\Models\Tratamiento;
+use App\Models\TratamientoReporte;
 use Illuminate\Http\Request;
 
 class ReporteProblemaController extends Controller
@@ -39,35 +40,64 @@ class ReporteProblemaController extends Controller
 
         $reporte = ReporteProblema::create($datos);
 
+        /*
+         * Crear tratamientos pendientes automáticamente
+         * según el problema reportado y la planta adoptada.
+         */
+        $reporte->load('adopcion');
+
+        $tratamientos = Tratamiento::where('id_problema', $reporte->id_problema)
+            ->where(function ($query) use ($reporte) {
+                $query->where('id_planta', $reporte->adopcion->id_planta)
+                    ->orWhereNull('id_planta');
+            })
+            ->get();
+
+        foreach ($tratamientos as $tratamiento) {
+            TratamientoReporte::create([
+                'id_reporte_problema' => $reporte->id,
+                'id_tratamiento' => $tratamiento->id,
+                'frecuencia_dias' => $tratamiento->frecuencia_dias ?? 1,
+                'fecha_inicio' => now()->toDateString(),
+                'fecha_proxima' => now()->addDays($tratamiento->frecuencia_dias ?? 1)->toDateString(),
+                'estado' => 'pendiente',
+            ]);
+        }
+
         return redirect()->route('reporte-problemas.show', $reporte)
             ->with('success', 'Problema reportado correctamente.');
     }
 
     public function show(ReporteProblema $reporteProblema)
     {
-        $reporteProblema->load('adopcion.planta', 'problema');
+        $reporteProblema->load([
+            'adopcion.usuario',
+            'adopcion.planta',
+            'problema',
+            'tratamientosReportes.tratamiento',
+        ]);
 
-        if ($reporteProblema->adopcion->id_usuario !== auth()->id() && auth()->user()->rol !== 'admin') {
-            abort(403);
+        if (
+            auth()->user()->rol !== 'admin' &&
+            $reporteProblema->adopcion->id_usuario !== auth()->id()
+        ) {
+            abort(403, 'No tienes permiso para ver este reporte.');
         }
 
-        $tratamientos = Tratamiento::where('id_problema', $reporteProblema->id_problema)
-            ->where(function ($query) use ($reporteProblema) {
-                $query->where('id_planta', $reporteProblema->adopcion->id_planta)
-                      ->orWhereNull('id_planta');
-            })
-            ->get();
-
-        return view('reporte_problemas.show', compact('reporteProblema', 'tratamientos'));
+        return view('reporte_problemas.show', compact('reporteProblema'));
     }
 
     public function index()
     {
         if (auth()->user()->rol !== 'admin') {
-            abort(403);
+            abort(403, 'No tienes permiso para ver los reportes.');
         }
 
-        $reportes = ReporteProblema::with(['adopcion.usuario', 'adopcion.planta', 'problema'])
+        $reportes = ReporteProblema::with([
+            'adopcion.usuario',
+            'adopcion.planta',
+            'problema',
+        ])
             ->latest()
             ->get();
 
@@ -77,14 +107,60 @@ class ReporteProblemaController extends Controller
     public function resolver(ReporteProblema $reporteProblema)
     {
         if (auth()->user()->rol !== 'admin') {
-            abort(403);
+            abort(403, 'No tienes permiso para resolver reportes.');
         }
-    
+
         $reporteProblema->update([
-            'estado' => 'resuelto'
+            'estado' => 'resuelto',
         ]);
-    
+
         return redirect()->route('reporte-problemas.index')
             ->with('success', 'Problema marcado como resuelto.');
     }
+
+    public function subirEvidenciaTratamiento(Request $request, TratamientoReporte $tratamientoReporte)
+{
+    $tratamientoReporte->load('reporteProblema.adopcion');
+
+    if (
+        auth()->user()->rol !== 'admin' &&
+        $tratamientoReporte->reporteProblema->adopcion->id_usuario !== auth()->id()
+    ) {
+        abort(403, 'No tienes permiso para registrar esta evidencia.');
+    }
+
+    $request->validate([
+        'imagen' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+        'descripcion' => 'nullable|string',
+    ]);
+
+    $datos = [
+        'descripcion' => $request->descripcion,
+        'estado' => 'evidenciado',
+        'fecha_proxima' => now()
+            ->addDays($tratamientoReporte->frecuencia_dias ?? 1)
+            ->toDateString(),
+    ];
+
+    if ($request->hasFile('imagen')) {
+        $datos['imagen'] = $request->file('imagen')
+            ->store('tratamientos_reportes', 'public');
+    }
+
+    $tratamientoReporte->update($datos);
+
+    $reporte = $tratamientoReporte->reporteProblema;
+
+    /*
+     * El problema no se marca como resuelto automáticamente.
+     * Se mantiene en revisión para que el usuario siga subiendo evidencias
+     * según la frecuencia del tratamiento.
+     */
+    $reporte->update([
+        'estado' => 'en_revision',
+    ]);
+
+    return redirect()->route('reporte-problemas.show', $reporte)
+        ->with('success', 'Evidencia del tratamiento registrada correctamente. La próxima evidencia ya fue programada.');
+}
 }
