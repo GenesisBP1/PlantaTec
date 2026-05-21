@@ -9,6 +9,7 @@ use App\Models\Notificacion;
 use App\Models\RegistroCuidado;
 use App\Models\RecomendacionCuidado;
 use App\Models\ReporteProblema;
+use App\Models\Ubicacion;
 use Carbon\Carbon;
 
 class DashboardController extends Controller
@@ -112,6 +113,20 @@ class DashboardController extends Controller
 
         $proximosCuidados = collect($proximosCuidados)->sortBy('fecha')->take(5);
 
+        // Ubicaciones públicas y propias para mostrar en el mapa del usuario
+        $ubicacionesMapa = Adopcion::with(['planta', 'ubicacion'])
+            ->whereHas('ubicacion', function ($q) {
+                $q->whereNotNull('latitud')
+                  ->whereNotNull('longitud');
+            })
+            ->where(function ($q) {
+                $q->whereHas('ubicacion', function ($ubicacion) {
+                    $ubicacion->where('tipo', 'publico');
+                })
+                ->orWhere('id_usuario', auth()->id());
+            })
+            ->get();
+
         return view('dashboard.usuario', compact(
             'misPlantas',
             'misNotificaciones',
@@ -121,7 +136,8 @@ class DashboardController extends Controller
             'cuidadosPendientesHoy',
             'ultimasPlantas',
             'actividadReciente',
-            'proximosCuidados'
+            'proximosCuidados',
+            'ubicacionesMapa'
         ));
     }
 
