@@ -31,7 +31,9 @@ RUN mkdir -p /var/data /var/www/html/database \
     && touch /var/data/database.sqlite \
     && chown -R www-data:www-data /var/www/html/database /var/data storage bootstrap/cache
 
-RUN php artisan optimize || true
+# Avoid caching configuration at build time so runtime env vars (APP_KEY, DB_*) are respected.
+# Caching config during image build can bake empty APP_KEY into the cache and cause HTTP 500.
+#RUN php artisan optimize || true
 
 ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
 
