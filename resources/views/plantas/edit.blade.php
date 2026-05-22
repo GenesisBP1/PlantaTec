@@ -1,62 +1,99 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            Editar Planta
-        </h2>
+        <div class="pt-header">
+            <div>
+                <p class="pt-header-label">Plantas</p>
+                <h2 class="pt-header-title">Editar planta</h2>
+            </div>
+        </div>
     </x-slot>
 
-    <div class="py-8">
-        <div class="max-w-3xl mx-auto sm:px-6 lg:px-8">
+    <div class="pt-page">
+        <div class="pt-container pt-form-container">
 
-            <div class="bg-white shadow rounded-lg p-6">
+            <div class="pt-form-card">
+                <div class="pt-form-intro">
+                    <p class="pt-header-label">Edición de registro</p>
+                    <h3 class="pt-form-title">Actualizar planta</h3>
+                    <p class="pt-form-subtitle">
+                        Modifica la información de la planta registrada.
+                    </p>
+                </div>
+
                 <form action="{{ route('plantas.update', $planta) }}" method="POST">
                     @csrf
                     @method('PUT')
 
-                    <div class="mb-4">
-                        <label class="block font-medium mb-1">Nombre</label>
-                        <input type="text" name="nombre" value="{{ $planta->nombre }}" class="w-full border-gray-300 rounded" required>
+                    <div class="pt-form-grid">
+
+                        <div class="pt-form-group">
+                            <label>Nombre</label>
+                            <input type="text"
+                                   name="nombre"
+                                   value="{{ $planta->nombre }}"
+                                   required>
+                        </div>
+
+                        <div class="pt-form-group">
+                            <label>Especie</label>
+                            <input type="text"
+                                   name="especie"
+                                   value="{{ $planta->especie }}"
+                                   required>
+                        </div>
+
+                        <div class="pt-form-group">
+                            <label>Tipo de zona</label>
+                            <input type="text"
+                                   name="tipo_zona"
+                                   value="{{ $planta->tipo_zona }}">
+                        </div>
+
+                        <div class="pt-form-group">
+                            <label>Imagen</label>
+                            <input type="text"
+                                   name="imagen"
+                                   value="{{ $planta->imagen }}">
+                        </div>
+
+                        <div class="pt-form-group full">
+                            <label>Descripción</label>
+                            <textarea name="descripcion" rows="4">{{ $planta->descripcion }}</textarea>
+                        </div>
+
+                        <div class="pt-form-group full">
+                            <label>Estado</label>
+                            <select name="estado">
+                                <option value="saludable" {{ $planta->estado == 'saludable' ? 'selected' : '' }}>
+                                    Saludable
+                                </option>
+
+                                <option value="observacion" {{ $planta->estado == 'observacion' ? 'selected' : '' }}>
+                                    Observación
+                                </option>
+
+                                <option value="problema" {{ $planta->estado == 'problema' ? 'selected' : '' }}>
+                                    Problema
+                                </option>
+
+                                <option value="tratamiento" {{ $planta->estado == 'tratamiento' ? 'selected' : '' }}>
+                                    Tratamiento
+                                </option>
+                            </select>
+                        </div>
+
                     </div>
 
-                    <div class="mb-4">
-                        <label class="block font-medium mb-1">Especie</label>
-                        <input type="text" name="especie" value="{{ $planta->especie }}" class="w-full border-gray-300 rounded" required>
-                    </div>
-
-                    <div class="mb-4">
-                        <label class="block font-medium mb-1">Tipo de zona</label>
-                        <input type="text" name="tipo_zona" value="{{ $planta->tipo_zona }}" class="w-full border-gray-300 rounded">
-                    </div>
-
-                    <div class="mb-4">
-                        <label class="block font-medium mb-1">Imagen</label>
-                        <input type="text" name="imagen" value="{{ $planta->imagen }}" class="w-full border-gray-300 rounded">
-                    </div>
-
-                    <div class="mb-4">
-                        <label class="block font-medium mb-1">Descripción</label>
-                        <textarea name="descripcion" class="w-full border-gray-300 rounded">{{ $planta->descripcion }}</textarea>
-                    </div>
-
-                    <div class="mb-4">
-                        <label class="block font-medium mb-1">Estado</label>
-                        <select name="estado" class="w-full border-gray-300 rounded">
-                            <option value="saludable" {{ $planta->estado == 'saludable' ? 'selected' : '' }}>Saludable</option>
-                            <option value="observacion" {{ $planta->estado == 'observacion' ? 'selected' : '' }}>Observación</option>
-                            <option value="problema" {{ $planta->estado == 'problema' ? 'selected' : '' }}>Problema</option>
-                            <option value="tratamiento" {{ $planta->estado == 'tratamiento' ? 'selected' : '' }}>Tratamiento</option>
-                        </select>
-                    </div>
-
-                    <div class="flex gap-2">
-                        <button class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded">
+                    <div class="pt-form-actions">
+                        <button type="submit" class="pt-btn pt-btn-yellow">
                             Actualizar
                         </button>
 
-                        <a href="{{ route('plantas.index') }}" class="bg-gray-500 text-white px-4 py-2 rounded">
+                        <a href="{{ route('plantas.index') }}" class="pt-btn pt-btn-dark">
                             Cancelar
                         </a>
                     </div>
+
                 </form>
             </div>
 

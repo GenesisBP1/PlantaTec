@@ -1,46 +1,74 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            Registrar problema
-        </h2>
+        <div class="pt-header">
+            <div>
+                <p class="pt-header-label">Problemas</p>
+                <h2 class="pt-header-title">Registrar problema</h2>
+            </div>
+        </div>
     </x-slot>
 
-    <div class="py-8">
-        <div class="max-w-3xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white shadow rounded-lg p-6">
+    <div class="pt-page">
+        <div class="pt-container pt-form-container">
+
+            <div class="pt-form-card">
+                <div class="pt-form-intro">
+                    <p class="pt-header-label">Nuevo registro</p>
+                    <h3 class="pt-form-title">Registrar problema</h3>
+                    <p class="pt-form-subtitle">
+                        Agrega un nuevo problema o afectación para las plantas del sistema.
+                    </p>
+                </div>
+
+                @if($errors->any())
+                    <div class="pt-alert-error">
+                        <p><strong>Revisa los campos del formulario:</strong></p>
+                        <ul>
+                            @foreach($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
 
                 <form action="{{ route('problemas.store') }}" method="POST">
                     @csrf
 
-                    <div class="mb-4">
-                        <label class="block font-medium mb-1">Nombre</label>
-                        <input type="text"
-                               name="nombre"
-                               class="w-full border-gray-300 rounded"
-                               required>
+                    <div class="pt-form-grid">
+
+                        <div class="pt-form-group full">
+                            <label>Nombre</label>
+                            <input
+                                type="text"
+                                name="nombre"
+                                value="{{ old('nombre') }}"
+                                required
+                            >
+                        </div>
+
+                        <div class="pt-form-group full">
+                            <label>Descripción</label>
+                            <textarea name="descripcion" rows="5">{{ old('descripcion') }}</textarea>
+                        </div>
+
+                        <div class="pt-form-group full">
+                            <label>Imagen (opcional)</label>
+                            <input
+                                type="text"
+                                name="imagen"
+                                value="{{ old('imagen') }}"
+                                placeholder="URL o referencia"
+                            >
+                        </div>
+
                     </div>
 
-                    <div class="mb-4">
-                        <label class="block font-medium mb-1">Descripción</label>
-                        <textarea name="descripcion"
-                                  class="w-full border-gray-300 rounded"></textarea>
-                    </div>
-
-                    <div class="mb-4">
-                        <label class="block font-medium mb-1">Imagen (opcional)</label>
-                        <input type="text"
-                               name="imagen"
-                               class="w-full border-gray-300 rounded"
-                               placeholder="URL o referencia">
-                    </div>
-
-                    <div class="flex gap-2">
-                        <button class="bg-green-600 text-white px-4 py-2 rounded">
+                    <div class="pt-form-actions">
+                        <button type="submit" class="pt-btn pt-btn-green">
                             Guardar
                         </button>
 
-                        <a href="{{ route('problemas.index') }}"
-                           class="bg-gray-500 text-white px-4 py-2 rounded">
+                        <a href="{{ route('problemas.index') }}" class="pt-btn pt-btn-dark">
                             Cancelar
                         </a>
                     </div>
@@ -48,6 +76,7 @@
                 </form>
 
             </div>
+
         </div>
     </div>
 </x-app-layout>

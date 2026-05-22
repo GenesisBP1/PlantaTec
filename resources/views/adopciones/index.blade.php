@@ -1,399 +1,130 @@
 <x-app-layout>
     <x-slot name="header">
-        <div>
-            <p class="text-sm font-bold tracking-[0.25em] text-green-600 uppercase">
-                Panel de administración
-            </p>
-            <h2 class="font-bold text-3xl text-gray-900 leading-tight mt-1">
-                Adopciones
-            </h2>
-            <p class="text-gray-500 mt-2">
-                Vista general de usuarios, plantas adoptadas, registros de cuidado y problemas resueltos.
-            </p>
+        <div class="pt-header">
+            <div>
+                <p class="pt-header-label">Adopciones</p>
+                <h2 class="pt-header-title">Detalle de adopción</h2>
+            </div>
         </div>
     </x-slot>
 
-    <style>
-        .admin-adopciones-container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 2rem;
-        }
+    <div class="pt-page">
+        <div class="pt-container">
 
-        .card-admin {
-            background: white;
-            border-radius: 28px;
-            box-shadow: 0 16px 35px rgba(0, 0, 0, 0.08);
-            border: 1px solid #e5e7eb;
-            overflow: hidden;
-            margin-bottom: 2rem;
-        }
-
-        .card-admin-header {
-            background: linear-gradient(135deg, #ecfdf5, #f7fee7);
-            padding: 1.5rem 2rem;
-            border-bottom: 1px solid #dbeafe;
-        }
-
-        .card-admin-header h3 {
-            font-size: 1.6rem;
-            font-weight: 800;
-            color: #143d2d;
-            margin: 0;
-        }
-
-        .card-admin-header p {
-            color: #64748b;
-            margin-top: 0.3rem;
-        }
-
-        .table-admin {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .table-admin th {
-            background: #f0fdf4;
-            color: #1f2937;
-            text-align: left;
-            padding: 1rem 1.2rem;
-            font-weight: 800;
-        }
-
-        .table-admin td {
-            padding: 1rem 1.2rem;
-            border-top: 1px solid #f1f5f9;
-            color: #334155;
-            vertical-align: top;
-        }
-
-        .table-admin tr:hover {
-            background: #f8fafc;
-        }
-
-        .badge {
-            display: inline-flex;
-            padding: 0.35rem 0.8rem;
-            border-radius: 999px;
-            font-size: 0.8rem;
-            font-weight: 800;
-        }
-
-        .badge-green {
-            background: #dcfce7;
-            color: #166534;
-        }
-
-        .badge-blue {
-            background: #dbeafe;
-            color: #1d4ed8;
-        }
-
-        .badge-yellow {
-            background: #fef3c7;
-            color: #92400e;
-        }
-
-        .badge-red {
-            background: #fee2e2;
-            color: #991b1b;
-        }
-
-        .btn-ver {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            white-space: nowrap;
-            background: #16a34a;
-            color: white;
-            padding: 0.55rem 1rem;
-            border-radius: 999px;
-            font-size: 0.85rem;
-            font-weight: 700;
-            text-decoration: none;
-            transition: all 0.2s ease;
-        }
-
-        .btn-ver:hover {
-            background: #15803d;
-            transform: translateY(-1px);
-        }
-
-        .btn-secundario {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            white-space: nowrap;
-            background: #64748b;
-            color: white;
-            padding: 0.55rem 1rem;
-            border-radius: 999px;
-            font-size: 0.85rem;
-            font-weight: 700;
-            text-decoration: none;
-            transition: all 0.2s ease;
-        }
-
-        .btn-secundario:hover {
-            background: #475569;
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 1rem;
-            margin-bottom: 2rem;
-        }
-
-        .stat-card {
-            background: white;
-            border-radius: 24px;
-            padding: 1.5rem;
-            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.06);
-            border: 1px solid #e5e7eb;
-        }
-
-        .stat-card span {
-            display: block;
-            color: #64748b;
-            font-size: 0.9rem;
-            margin-bottom: 0.4rem;
-        }
-
-        .stat-card strong {
-            font-size: 2rem;
-            color: #143d2d;
-        }
-
-        .empty-state {
-            padding: 2rem;
-            text-align: center;
-            color: #64748b;
-        }
-
-        @media (max-width: 900px) {
-            .admin-adopciones-container {
-                padding: 1rem;
-            }
-
-            .table-admin,
-            .table-admin thead,
-            .table-admin tbody,
-            .table-admin th,
-            .table-admin td,
-            .table-admin tr {
-                display: block;
-            }
-
-            .table-admin thead {
-                display: none;
-            }
-
-            .table-admin tr {
-                margin: 1rem;
-                border: 1px solid #e5e7eb;
-                border-radius: 18px;
-                overflow: hidden;
-                background: white;
-            }
-
-            .table-admin td {
-                display: flex;
-                justify-content: space-between;
-                gap: 1rem;
-            }
-
-            .table-admin td::before {
-                content: attr(data-label);
-                font-weight: 800;
-                color: #143d2d;
-            }
-        }
-    </style>
-
-    <div class="admin-adopciones-container">
-
-        @php
-            $totalUsuarios = $resumenUsuarios->count();
-            $totalPlantas = $resumenUsuarios->sum('total_plantas');
-            $totalRegistros = $resumenUsuarios->sum('total_registros');
-            $totalResueltos = $resumenUsuarios->sum('problemas_resueltos');
-        @endphp
-
-        <div class="stats-grid">
-            <div class="stat-card">
-                <span>Usuarios con adopciones</span>
-                <strong>{{ $totalUsuarios }}</strong>
-            </div>
-
-            <div class="stat-card">
-                <span>Plantas adoptadas</span>
-                <strong>{{ $totalPlantas }}</strong>
-            </div>
-
-            <div class="stat-card">
-                <span>Registros de cuidado</span>
-                <strong>{{ $totalRegistros }}</strong>
-            </div>
-
-            <div class="stat-card">
-                <span>Problemas resueltos</span>
-                <strong>{{ $totalResueltos }}</strong>
-            </div>
-        </div>
-
-        {{-- Lista general de usuarios --}}
-        <div class="card-admin">
-            <div class="card-admin-header">
-                <h3>Usuarios y adopciones</h3>
-                <p>Listado general de usuarios con sus plantas, registros y problemas.</p>
-            </div>
-
-            @if($resumenUsuarios->count() > 0)
-                <div class="overflow-x-auto">
-                    <table class="table-admin">
-                        <thead>
-                            <tr>
-                                <th>Usuario</th>
-                                <th>Correo</th>
-                                <th>Plantas adoptadas</th>
-                                <th>Registros</th>
-                                <th>Problemas</th>
-                                <th>Resueltos</th>
-                                <th>Acción</th>
-                            </tr>
-                        </thead>
-
-                        <tbody>
-                            @foreach($resumenUsuarios as $usuario)
-                                <tr>
-                                    <td data-label="Usuario">
-                                        <strong>{{ $usuario['nombre'] }}</strong>
-                                    </td>
-
-                                    <td data-label="Correo">
-                                        {{ $usuario['email'] }}
-                                    </td>
-
-                                    <td data-label="Plantas adoptadas">
-                                        <span class="badge badge-green">
-                                            {{ $usuario['total_plantas'] }}
-                                        </span>
-                                    </td>
-
-                                    <td data-label="Registros">
-                                        <span class="badge badge-blue">
-                                            {{ $usuario['total_registros'] }}
-                                        </span>
-                                    </td>
-
-                                    <td data-label="Problemas">
-                                        <span class="badge badge-yellow">
-                                            {{ $usuario['total_problemas'] }}
-                                        </span>
-                                    </td>
-
-                                    <td data-label="Resueltos">
-                                        <span class="badge badge-green">
-                                            {{ $usuario['problemas_resueltos'] }}
-                                        </span>
-                                    </td>
-
-                                    <td data-label="Acción">
-                                        <a href="{{ route('adopciones.index', ['usuario_id' => $usuario['usuario_id']]) }}"
-                                           class="btn-ver">
-                                            Ver detalle
-                                        </a>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+            <div class="pt-card pt-adoption-detail">
+                <div class="pt-card-header">
+                    <h3 class="pt-card-title">{{ $adopcion->planta->nombre }}</h3>
                 </div>
-            @else
-                <div class="empty-state">
-                    No hay usuarios con adopciones registradas.
-                </div>
-            @endif
-        </div>
 
-        {{-- Detalle del usuario seleccionado --}}
-        @if($usuarioSeleccionado)
-            <div class="card-admin">
-                <div class="card-admin-header">
-                    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                        <div>
-                            <h3>Detalle de {{ $usuarioSeleccionado->name }}</h3>
-                            <p>{{ $usuarioSeleccionado->email }}</p>
+                <div class="pt-card-body">
+                    <div class="pt-adoption-flex">
+                        <div class="pt-adoption-image">
+                            @php
+                                $imagenUrl = 'https://images.unsplash.com/photo-1592150621744-aca64f48394a?w=300&fit=crop';
+                                if ($adopcion->planta->imagen) {
+                                    if (filter_var($adopcion->planta->imagen, FILTER_VALIDATE_URL)) {
+                                        $imagenUrl = $adopcion->planta->imagen;
+                                    } elseif (file_exists(public_path('storage/' . $adopcion->planta->imagen))) {
+                                        $imagenUrl = asset('storage/' . $adopcion->planta->imagen);
+                                    }
+                                }
+                            @endphp
+
+                            <img src="{{ $imagenUrl }}" alt="{{ $adopcion->planta->nombre }}">
                         </div>
 
-                        <a href="{{ route('adopciones.index') }}" class="btn-secundario">
-                            Limpiar selección
-                        </a>
+                        <div class="pt-adoption-info">
+                            <div class="pt-info-grid-small">
+                                <div class="pt-info-box">
+                                    <strong>Especie</strong>
+                                    <span>{{ $adopcion->planta->especie }}</span>
+                                </div>
+
+                                <div class="pt-info-box">
+                                    <strong>Estado adopción</strong>
+                                    <span>{{ ucfirst($adopcion->estado_adopcion) }}</span>
+                                </div>
+
+                                <div class="pt-info-box">
+                                    <strong>Ubicación</strong>
+                                    <span>{{ $adopcion->ubicacion->nombre_lugar ?? 'No registrada' }}</span>
+                                </div>
+
+                                <div class="pt-info-box">
+                                    <strong>Fecha adopción</strong>
+                                    <span>{{ \Carbon\Carbon::parse($adopcion->fecha_adopcion)->format('d/m/Y') }}</span>
+                                </div>
+                            </div>
+
+                            <p class="pt-description">
+                                <strong>Descripción:</strong>
+                                {{ $adopcion->planta->descripcion ?? 'Sin descripción.' }}
+                            </p>
+
+                            <div class="pt-btn-group">
+                                <a href="{{ route('registro-cuidados.create', ['adopcion_id' => $adopcion->id]) }}" class="pt-btn pt-btn-green">
+                                    Registrar cuidado general
+                                </a>
+
+                                <a href="{{ route('reporte-problemas.create', ['adopcion_id' => $adopcion->id]) }}" class="pt-btn pt-btn-red">
+                                    Reportar problema
+                                </a>
+                            </div>
+                        </div>
                     </div>
                 </div>
+            </div>
 
-                <div class="p-6">
-                    <h4 class="text-xl font-bold text-green-900 mb-4">
-                        Plantas adoptadas
-                    </h4>
+            <div class="pt-card">
+                <div class="pt-card-header">
+                    <h3 class="pt-card-title">Plan de cuidados</h3>
+                </div>
 
-                    @if($adopcionesUsuarioSeleccionado->count() > 0)
-                        <div class="overflow-x-auto mb-8">
-                            <table class="table-admin">
+                <div class="pt-card-body">
+                    @php
+                        $cuidadosAsignados = $adopcion->planta->plantaCuidados;
+                    @endphp
+
+                    @if($cuidadosAsignados->count())
+                        <div class="pt-table-wrapper">
+                            <table class="pt-table">
                                 <thead>
                                     <tr>
-                                        <th>Planta</th>
-                                        <th>Especie</th>
-                                        <th>Ubicación</th>
-                                        <th>Fecha de adopción</th>
-                                        <th>Cuidados registrados</th>
-                                        <th>Problemas resueltos</th>
-                                        <th>Acción</th>
+                                        <th>Cuidado</th>
+                                        <th>Frecuencia</th>
+                                        <th>Próxima fecha sugerida</th>
+                                        <th>Registrar</th>
                                     </tr>
                                 </thead>
 
                                 <tbody>
-                                    @foreach($adopcionesUsuarioSeleccionado as $adopcion)
+                                    @foreach($cuidadosAsignados as $pc)
                                         @php
-                                            $fechaAdopcion = $adopcion->fecha_adopcion ?? $adopcion->created_at;
-                                            $problemasResueltos = $adopcion->reportesProblemas
-                                                ->where('estado', 'resuelto')
-                                                ->count();
+                                            $ultimoRegistro = $adopcion->registrosCuidados()
+                                                ->where('id_planta_cuidado', $pc->id)
+                                                ->latest()
+                                                ->first();
+
+                                            if ($ultimoRegistro) {
+                                                $proximaFecha = \Carbon\Carbon::parse($ultimoRegistro->fecha)->addDays($pc->frecuencia);
+                                            } else {
+                                                $proximaFecha = \Carbon\Carbon::parse($adopcion->fecha_adopcion)->addDays($pc->frecuencia);
+                                            }
                                         @endphp
 
                                         <tr>
-                                            <td data-label="Planta">
-                                                <strong>{{ $adopcion->planta->nombre ?? 'Planta no disponible' }}</strong>
+                                            <td>
+                                                <strong>{{ $pc->cuidado->nombre }}</strong>
+                                                @if($pc->instrucciones_esp)
+                                                    <br>
+                                                    <small>{{ Str::limit($pc->instrucciones_esp, 80) }}</small>
+                                                @endif
                                             </td>
-
-                                            <td data-label="Especie">
-                                                {{ $adopcion->planta->especie ?? 'Sin especie' }}
-                                            </td>
-
-                                            <td data-label="Ubicación">
-                                                {{ $adopcion->ubicacion->nombre_lugar ?? 'No registrada' }}
-                                            </td>
-
-                                            <td data-label="Fecha de adopción">
-                                                {{ $fechaAdopcion ? \Carbon\Carbon::parse($fechaAdopcion)->format('d/m/Y') : 'Sin fecha' }}
-                                            </td>
-
-                                            <td data-label="Cuidados registrados">
-                                                <span class="badge badge-blue">
-                                                    {{ $adopcion->registrosCuidados->count() }}
-                                                </span>
-                                            </td>
-
-                                            <td data-label="Problemas resueltos">
-                                                <span class="badge badge-green">
-                                                    {{ $problemasResueltos }}
-                                                </span>
-                                            </td>
-
-                                            <td data-label="Acción">
-                                                <a href="{{ route('adopciones.show', $adopcion) }}" class="btn-ver">
-                                                    Ver planta
+                                            <td>Cada {{ $pc->frecuencia }} días</td>
+                                            <td>{{ $proximaFecha->format('d/m/Y') }}</td>
+                                            <td>
+                                                <a href="{{ route('registro-cuidados.create', ['adopcion_id' => $adopcion->id, 'cuidado_id' => $pc->id]) }}" class="pt-small-btn green">
+                                                    Registrar
                                                 </a>
                                             </td>
                                         </tr>
@@ -402,60 +133,169 @@
                             </table>
                         </div>
                     @else
-                        <div class="empty-state">
-                            Este usuario no tiene plantas adoptadas.
-                        </div>
+                        <p class="pt-muted">No hay cuidados asignados a esta planta.</p>
                     @endif
+                </div>
+            </div>
 
-                    <h4 class="text-xl font-bold text-green-900 mb-4">
-                        Historial general de cuidados
-                    </h4>
+            <div class="pt-card">
+                <div class="pt-card-header">
+                    <h3 class="pt-card-title">Historial de cuidados</h3>
+                </div>
 
-                    @if($historialCuidados->count() > 0)
-                        <div class="overflow-x-auto">
-                            <table class="table-admin">
+                <div class="pt-card-body">
+                    @forelse($adopcion->registrosCuidados as $registro)
+                        <div class="pt-history-item">
+                            <div class="pt-history-content">
+                                <p class="pt-history-title">
+                                    {{ $registro->plantaCuidado->cuidado->nombre }}
+                                    <span>{{ \Carbon\Carbon::parse($registro->fecha)->format('d/m/Y H:i') }}</span>
+                                </p>
+
+                                <p class="pt-history-text">
+                                    {{ $registro->descripcion ?? 'Sin descripción' }}
+                                </p>
+
+                                @if($registro->estado_observado)
+                                    <p class="pt-muted">
+                                        Estado observado: {{ $registro->estado_observado }}
+                                    </p>
+                                @endif
+                            </div>
+
+                            @if($registro->imagen)
+                                <img src="{{ asset('storage/' . $registro->imagen) }}" class="pt-history-image" alt="Evidencia de cuidado">
+                            @endif
+                        </div>
+                    @empty
+                        <p class="pt-muted">Aún no se han registrado cuidados.</p>
+                    @endforelse
+                </div>
+            </div>
+
+            <div class="pt-card">
+                <div class="pt-card-header">
+                    <h3 class="pt-card-title">Problemas reportados</h3>
+                </div>
+
+                <div class="pt-card-body">
+                    @forelse($adopcion->reportesProblemas as $reporte)
+                        <div class="pt-problem-item">
+                            <div class="pt-problem-header">
+                                <div>
+                                    <strong>{{ $reporte->problema->nombre }}</strong>
+                                    <span class="pt-status-badge
+                                        @if($reporte->estado === 'activo') active
+                                        @elseif($reporte->estado === 'en_revision') review
+                                        @else solved @endif">
+                                        {{ ucfirst(str_replace('_', ' ', $reporte->estado)) }}
+                                    </span>
+                                </div>
+
+                                <span class="pt-muted">Gravedad: {{ ucfirst($reporte->gravedad) }}</span>
+                            </div>
+
+                            <p class="pt-history-text">{{ $reporte->descripcion ?? 'Sin descripción' }}</p>
+
+                            <a href="{{ route('reporte-problemas.show', $reporte) }}" class="pt-link green">
+                                Ver diagnóstico
+                            </a>
+                        </div>
+                    @empty
+                        <p class="pt-muted">No hay problemas reportados.</p>
+                    @endforelse
+                </div>
+            </div>
+
+            <div class="pt-card">
+                <div class="pt-card-header">
+                    <h3 class="pt-card-title">Tratamientos aplicados</h3>
+                </div>
+
+                <div class="pt-card-body">
+                    <p class="pt-muted">
+                        Tratamientos registrados derivados de los problemas reportados.
+                    </p>
+
+                    @php
+                        $tratamientosReporte = $adopcion->reportesProblemas
+                            ->flatMap(function ($reporte) {
+                                return $reporte->tratamientosReportes->map(function ($tratamientoReporte) use ($reporte) {
+                                    $tratamientoReporte->reporte_original = $reporte;
+                                    return $tratamientoReporte;
+                                });
+                            });
+                    @endphp
+
+                    @if($tratamientosReporte->count() > 0)
+                        <div class="pt-table-wrapper">
+                            <table class="pt-table">
                                 <thead>
                                     <tr>
-                                        <th>Planta</th>
-                                        <th>Cuidado</th>
-                                        <th>Fecha</th>
-                                        <th>Descripción</th>
-                                        <th>Estado observado</th>
+                                        <th>Problema</th>
+                                        <th>Tratamiento</th>
+                                        <th>Frecuencia</th>
+                                        <th>Fecha registro</th>
+                                        <th>Estado</th>
                                         <th>Evidencia</th>
+                                        <th>Acción</th>
                                     </tr>
                                 </thead>
 
                                 <tbody>
-                                    @foreach($historialCuidados as $registro)
+                                    @foreach($tratamientosReporte as $tratamientoReporte)
+                                        @php
+                                            $estadoTratamiento = strtolower($tratamientoReporte->estado ?? 'pendiente');
+                                            $fechaRegistro = $tratamientoReporte->updated_at ?? $tratamientoReporte->created_at;
+                                        @endphp
+
                                         <tr>
-                                            <td data-label="Planta">
-                                                <strong>{{ $registro->adopcion_original->planta->nombre ?? 'Planta no disponible' }}</strong>
+                                            <td>
+                                                <strong>{{ $tratamientoReporte->reporte_original->problema->nombre ?? 'Problema no disponible' }}</strong>
+                                                <br>
+                                                <small>Gravedad: {{ ucfirst($tratamientoReporte->reporte_original->gravedad ?? 'Sin gravedad') }}</small>
                                             </td>
 
-                                            <td data-label="Cuidado">
-                                                {{ $registro->plantaCuidado->cuidado->nombre ?? 'Cuidado no disponible' }}
-                                            </td>
-
-                                            <td data-label="Fecha">
-                                                {{ $registro->fecha ? \Carbon\Carbon::parse($registro->fecha)->format('d/m/Y H:i') : 'Sin fecha' }}
-                                            </td>
-
-                                            <td data-label="Descripción">
-                                                {{ $registro->descripcion ?? 'Sin descripción' }}
-                                            </td>
-
-                                            <td data-label="Estado observado">
-                                                {{ $registro->estado_observado ?? 'No registrado' }}
-                                            </td>
-
-                                            <td data-label="Evidencia">
-                                                @if($registro->imagen)
-                                                    <img src="{{ asset('storage/' . $registro->imagen) }}"
-                                                         alt="Evidencia"
-                                                         class="w-20 h-20 object-cover rounded-xl border shadow-sm">
-                                                @else
-                                                    <span class="text-gray-500">Sin imagen</span>
+                                            <td>
+                                                <strong>{{ $tratamientoReporte->tratamiento->descripcion ?? 'Tratamiento sin descripción' }}</strong>
+                                                @if($tratamientoReporte->descripcion)
+                                                    <br>
+                                                    <small>Último registro: {{ $tratamientoReporte->descripcion }}</small>
                                                 @endif
+                                            </td>
+
+                                            <td>Cada {{ $tratamientoReporte->frecuencia_dias ?? 1 }} días</td>
+
+                                            <td>
+                                                @if($fechaRegistro)
+                                                    {{ \Carbon\Carbon::parse($fechaRegistro)->format('d/m/Y') }}
+                                                @else
+                                                    Sin fecha
+                                                @endif
+                                            </td>
+
+                                            <td>
+                                                <span class="pt-status-badge
+                                                    @if($estadoTratamiento === 'pendiente') review
+                                                    @elseif($estadoTratamiento === 'evidenciado') solved
+                                                    @elseif($estadoTratamiento === 'resuelto') solved
+                                                    @else review @endif">
+                                                    {{ ucfirst($tratamientoReporte->estado ?? 'pendiente') }}
+                                                </span>
+                                            </td>
+
+                                            <td>
+                                                @if($tratamientoReporte->imagen)
+                                                    <img src="{{ asset('storage/' . $tratamientoReporte->imagen) }}" class="pt-table-image" alt="Evidencia del tratamiento">
+                                                @else
+                                                    <span class="pt-muted">Sin imagen</span>
+                                                @endif
+                                            </td>
+
+                                            <td>
+                                                <a href="{{ route('reporte-problemas.show', $tratamientoReporte->reporte_original->id) }}" class="pt-small-btn green">
+                                                    Ver diagnóstico
+                                                </a>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -463,12 +303,13 @@
                             </table>
                         </div>
                     @else
-                        <div class="empty-state">
-                            Este usuario todavía no tiene historial de cuidados.
+                        <div class="pt-empty center">
+                            No hay tratamientos asignados todavía.
                         </div>
                     @endif
                 </div>
             </div>
-        @endif
+
+        </div>
     </div>
 </x-app-layout>

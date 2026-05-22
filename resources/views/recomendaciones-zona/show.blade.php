@@ -1,35 +1,66 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            Detalle de recomendación por zona
-        </h2>
+        <div class="pt-header">
+            <div>
+                <p class="pt-header-label">Zonas públicas</p>
+                <h2 class="pt-header-title">Detalle de zona pública</h2>
+            </div>
+        </div>
     </x-slot>
 
-    <div class="py-8">
-        <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white shadow rounded-2xl p-6">
-                <h1 class="text-2xl font-bold text-green-800 mb-4">
-                    {{ $zona->nombre_lugar }}
-                </h1>
+    <div class="pt-page">
+        <div class="pt-container pt-form-container">
 
-                <p><strong>Tipo de zona:</strong> {{ $zona->tipo_zona ?? 'Sin tipo' }}</p>
-                <p><strong>Descripción:</strong> {{ $zona->descripcion ?? 'Sin descripción' }}</p>
-                <p><strong>Indicaciones:</strong> {{ $zona->indicaciones ?? 'Sin indicaciones' }}</p>
-                <p><strong>Latitud:</strong> {{ $zona->latitud ?? 'No registrada' }}</p>
-                <p><strong>Longitud:</strong> {{ $zona->longitud ?? 'No registrada' }}</p>
+            <div class="pt-form-card">
+                <div class="pt-form-intro">
+                    <p class="pt-header-label">Registro guardado</p>
+                    <h3 class="pt-form-title">{{ $zona->nombre_lugar }}</h3>
+                    <p class="pt-form-subtitle">
+                        Información completa de la zona recomendada.
+                    </p>
+                </div>
 
-                <div class="flex gap-3 mt-6">
-                    <a href="{{ route('recomendaciones-zona.edit', $zona) }}"
-                       class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-lg">
+                <div class="pt-detail-grid">
+
+                    <div class="pt-detail-item">
+                        <strong>Tipo de zona</strong>
+                        <span>{{ $zona->tipo_zona ?? 'Sin tipo registrado' }}</span>
+                    </div>
+
+                    <div class="pt-detail-item">
+                        <strong>Latitud</strong>
+                        <span>{{ $zona->latitud ?? 'No registrada' }}</span>
+                    </div>
+
+                    <div class="pt-detail-item">
+                        <strong>Longitud</strong>
+                        <span>{{ $zona->longitud ?? 'No registrada' }}</span>
+                    </div>
+
+                    <div class="pt-detail-item full">
+                        <strong>Descripción</strong>
+                        <span>{{ $zona->descripcion ?? 'Sin descripción registrada' }}</span>
+                    </div>
+
+                    <div class="pt-detail-item full">
+                        <strong>Indicaciones</strong>
+                        <span>{{ $zona->indicaciones ?? 'Sin indicaciones registradas' }}</span>
+                    </div>
+
+                </div>
+
+                <div class="pt-form-actions">
+                    <a href="{{ route('recomendaciones-zona.edit', $zona) }}" class="pt-btn pt-btn-yellow">
                         Editar
                     </a>
 
-                    <a href="{{ route('recomendaciones-zona.index') }}"
-                       class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg">
+                    <a href="{{ route('recomendaciones-zona.index') }}" class="pt-btn pt-btn-dark">
                         Volver
                     </a>
                 </div>
+
             </div>
+
         </div>
     </div>
 </x-app-layout>

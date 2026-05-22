@@ -1,170 +1,27 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex justify-between items-center">
-            <h2 class="text-2xl font-bold text-gray-900 dark:text-white leading-tight">
-                Adoptar Planta
-            </h2>
-            <a href="{{ route('catalogo.plantas') }}" class="bg-green-600 hover:bg-green-700 text-white px-5 py-2 rounded-full transition shadow-md hover:shadow-lg">
-                ← Volver al catálogo
-            </a>
+        <div class="pt-header">
+            <div>
+                <p class="pt-header-label">Catálogo</p>
+                <h2 class="pt-header-title">Adoptar Planta</h2>
+            </div>
+
+            <div class="pt-header-actions">
+                <a href="{{ route('catalogo.plantas') }}" class="pt-btn pt-btn-green">
+                    ← Volver al catálogo
+                </a>
+            </div>
         </div>
     </x-slot>
 
-    <style>
-        .adopcion-container { max-width: 1200px; margin: 0 auto; padding: 1rem; }
-        
-        .planta-card {
-            background: white;
-            border-radius: 2rem;
-            box-shadow: 0 20px 35px -12px rgba(0, 32, 0, 0.15);
-            margin-bottom: 2rem;
-            display: flex;
-            flex-wrap: wrap;
-            overflow: hidden;
-            transition: transform 0.2s;
-        }
-        .planta-imagen {
-            flex: 1.2;
-            min-width: 280px;
-            background: linear-gradient(135deg, #e2f0e6, #c8e0d0);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 2rem;
-        }
-        .planta-imagen img {
-            max-width: 100%;
-            max-height: 320px;
-            object-fit: contain;
-            border-radius: 1.5rem;
-            filter: drop-shadow(0 8px 12px rgba(0,0,0,0.1));
-        }
-        .planta-info {
-            flex: 2;
-            padding: 2rem;
-            background: white;
-        }
-        .planta-info h3 {
-            font-size: 2.2rem;
-            font-weight: 800;
-            color: #1e3a2f;
-            margin-bottom: 0.5rem;
-        }
-        .badge-estado {
-            background: #e2f0e6;
-            color: #2b7840;
-            padding: 0.25rem 1rem;
-            border-radius: 40px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            display: inline-block;
-            margin: 0.5rem 0;
-        }
-        .cuidados-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-            gap: 1rem;
-            margin: 1.5rem 0;
-        }
-        .cuidado-item {
-            background: #f8faf6;
-            border-radius: 1.2rem;
-            padding: 0.8rem 1rem;
-            border-left: 4px solid #2b7840;
-            transition: all 0.2s;
-        }
-        .cuidado-item strong {
-            color: #1e3a2f;
-            font-size: 1rem;
-        }
-        .cuidado-frecuencia {
-            font-size: 0.75rem;
-            color: #6f8f7a;
-            margin-top: 0.25rem;
-        }
-        .formulario-card {
-            background: white;
-            border-radius: 2rem;
-            box-shadow: 0 20px 35px -12px rgba(0, 32, 0, 0.15);
-            padding: 2rem;
-            margin-top: 1rem;
-        }
-        .form-group { margin-bottom: 1.5rem; }
-        .form-group label { display: block; font-weight: 700; margin-bottom: 0.5rem; color: #1e3a2f; }
-        .form-group input, .form-group select, .form-group textarea {
-            width: 100%;
-            padding: 0.8rem 1rem;
-            border-radius: 1rem;
-            border: 1.5px solid #cde0d4;
-            background: #fefef9;
-            transition: all 0.2s;
-        }
-        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
-            outline: none;
-            border-color: #2b7840;
-            box-shadow: 0 0 0 3px rgba(43,120,64,0.2);
-        }
-        .radio-group {
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-            background: #f4fbf2;
-            padding: 1rem 1.2rem;
-            border-radius: 1.5rem;
-        }
-        .radio-group label {
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            cursor: pointer;
-        }
-        .radio-group input[type="radio"] {
-            width: 1.2rem;
-            height: 1.2rem;
-            margin: 0;
-        }
-        .btn-adoptar {
-            background: linear-gradient(105deg, #2b7840, #3e8a5a);
-            color: white;
-            border: none;
-            padding: 0.9rem 2rem;
-            border-radius: 3rem;
-            font-weight: 800;
-            font-size: 1.1rem;
-            cursor: pointer;
-            transition: all 0.2s;
-            width: 100%;
-            box-shadow: 0 8px 20px rgba(43,120,64,0.3);
-        }
-        .btn-adoptar:hover {
-            transform: scale(0.98);
-            background: linear-gradient(105deg, #236a3b, #2b7840);
-            box-shadow: 0 12px 25px rgba(43,120,64,0.4);
-        }
-        .hidden { display: none; }
-        .text-red-500 { color: #ef4444; }
-        .text-sm { font-size: 0.875rem; }
-        .bg-blue-50 { background: #eff6ff; }
-        .border-blue-200 { border-color: #bfdbfe; }
-        .text-blue-900 { color: #1e3a8a; }
-        .mt-2 { margin-top: 0.5rem; }
-        .mt-4 { margin-top: 1rem; }
-        .mb-3 { margin-bottom: 0.75rem; }
-        @media (max-width: 768px) {
-            .planta-card { flex-direction: column; }
-            .planta-info h3 { font-size: 1.8rem; }
-            .radio-group { gap: 0.5rem; }
-        }
-    </style>
+    <div class="pt-page">
+        <div class="pt-container">
 
-    <div class="mt-16 py-8">
-        <div class="adopcion-container">
-            <!-- Tarjeta de información de la planta con cuidados -->
-            <div class="planta-card">
-                <div class="planta-imagen">
+            <div class="pt-catalog-show-card">
+                <div class="pt-catalog-show-image">
                     @php
                         $imagenUrl = 'https://images.unsplash.com/photo-1592150621744-aca64f48394a?w=300&fit=crop';
+
                         if ($planta->imagen) {
                             if (filter_var($planta->imagen, FILTER_VALIDATE_URL)) {
                                 $imagenUrl = $planta->imagen;
@@ -173,52 +30,66 @@
                             }
                         }
                     @endphp
+
                     <img src="{{ $imagenUrl }}" alt="{{ $planta->nombre }}">
                 </div>
 
-                <div class="planta-info">
+                <div class="pt-catalog-show-info">
                     <h3>{{ $planta->nombre }}</h3>
-                    <p class="text-gray-600"><strong>Especie:</strong> {{ $planta->especie }}</p>
-                    <span class="badge-estado"> Estado: {{ ucfirst($planta->estado) }}</span>
-                    
-                    <div class="mt-4">
-                        <h4 class="text-lg font-bold text-green-800 flex items-center gap-2">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
+
+                    <p class="pt-text">
+                        <strong>Especie:</strong> {{ $planta->especie }}
+                    </p>
+
+                    <span class="pt-badge green">
+                        Estado: {{ ucfirst($planta->estado) }}
+                    </span>
+
+                    <div class="pt-show-section">
+                        <h4 class="pt-show-section-title">
                             Cuidados necesarios
                         </h4>
+
                         @if($planta->plantaCuidados && $planta->plantaCuidados->count())
-                            <div class="cuidados-grid">
+                            <div class="pt-care-grid">
                                 @foreach($planta->plantaCuidados as $pc)
-                                    <div class="cuidado-item">
+                                    <div class="pt-care-item">
                                         <strong>{{ $pc->cuidado->nombre }}</strong>
-                                        <div class="cuidado-frecuencia">Cada {{ $pc->frecuencia }} días</div>
+
+                                        <p>Cada {{ $pc->frecuencia }} días</p>
+
                                         @if($pc->instrucciones_esp)
-                                            <div class="text-xs text-gray-600 mt-1">{{ Str::limit($pc->instrucciones_esp, 60) }}</div>
+                                            <span>{{ Str::limit($pc->instrucciones_esp, 60) }}</span>
                                         @endif
                                     </div>
                                 @endforeach
                             </div>
                         @else
-                            <p class="text-gray-500 italic">No se han definido cuidados específicos para esta planta.</p>
+                            <p class="pt-muted">No se han definido cuidados específicos para esta planta.</p>
                         @endif
                     </div>
 
-                    <div class="mt-4">
-                        <p><strong> Zona recomendada:</strong> {{ $planta->tipo_zona ?? 'No especificada' }}</p>
-                        <p class="mt-3 text-gray-700">{{ $planta->descripcion ?? 'Sin descripción.' }}</p>
+                    <div class="pt-show-section">
+                        <p class="pt-text">
+                            <strong>Zona recomendada:</strong>
+                            {{ $planta->tipo_zona ?? 'No especificada' }}
+                        </p>
+
+                        <p class="pt-description">
+                            {{ $planta->descripcion ?? 'Sin descripción.' }}
+                        </p>
                     </div>
                 </div>
             </div>
 
-            <!-- Formulario de adopción -->
-            <div class="formulario-card">
-                <h4 class="text-xl font-bold text-gray-800 mb-4"> Datos de ubicación para la adopción</h4>
+            <div class="pt-card pt-adoption-form-card">
+                <h4 class="pt-section-title">
+                    Datos de ubicación para la adopción
+                </h4>
 
                 @if($errors->any())
-                    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-                        <ul class="list-disc pl-5">
+                    <div class="pt-alert-error">
+                        <ul>
                             @foreach($errors->all() as $error)
                                 <li>{{ $error }}</li>
                             @endforeach
@@ -229,25 +100,26 @@
                 <form id="formulario-adopcion" action="{{ route('catalogo.plantas.adoptar', $planta) }}" method="POST">
                     @csrf
 
-                    <!-- Tipo de ubicación -->
-                    <div class="form-group">
+                    <div class="pt-form-group">
                         <label>Tipo de ubicación</label>
-                        <select name="tipo" id="tipoUbicacion" required class="w-full">
+
+                        <select name="tipo" id="tipoUbicacion" required>
                             <option value="">Selecciona</option>
                             <option value="publico">Pública (parque, jardín público)</option>
                             <option value="privado">Privada (casa, jardín particular)</option>
                         </select>
                     </div>
 
-                    <!-- OPCIÓN 1: UBICACIÓN PÚBLICA -->
                     <div id="ubicacionPublica" class="hidden">
-                        <div class="form-group">
-                            <label class="block font-semibold mb-2">¿Cómo deseas seleccionar la ubicación?</label>
-                            <div class="radio-group">
+                        <div class="pt-form-group">
+                            <label>¿Cómo deseas seleccionar la ubicación?</label>
+
+                            <div class="pt-radio-group">
                                 <label>
                                     <input type="radio" name="metodo_ubicacion_publica" value="zona" checked class="metodo-ubicacion" data-metodo="zona">
                                     <span>Elegir zona recomendada</span>
                                 </label>
+
                                 <label>
                                     <input type="radio" name="metodo_ubicacion_publica" value="mapa" class="metodo-ubicacion" data-metodo="mapa">
                                     <span>Seleccionar en el mapa</span>
@@ -255,30 +127,43 @@
                             </div>
                         </div>
 
-                        <div id="subopcion-zona" class="form-group">
+                        <div id="subopcion-zona" class="pt-form-group">
                             <label>Zona pública recomendada</label>
-                            <select name="id_recomendacion_zona" class="w-full">
+
+                            <select name="id_recomendacion_zona">
                                 <option value="">Selecciona una zona</option>
+
                                 @foreach($zonasRecomendadas as $zona)
                                     <option value="{{ $zona->id }}">
                                         {{ $zona->nombre_lugar }} - {{ $zona->tipo_zona ?? 'Sin tipo' }}
                                     </option>
                                 @endforeach
                             </select>
-                            <p class="text-sm text-gray-500 mt-1">Se tomarán automáticamente los datos de la zona.</p>
+
+                            <p class="pt-help-text">
+                                Se tomarán automáticamente los datos de la zona.
+                            </p>
                         </div>
 
                         <div id="subopcion-mapa" class="hidden">
-                            <p class="text-sm text-blue-700 mb-2"> Selecciona tu ubicación en el mapa o usa geolocalización.</p>
+                            <p class="pt-info-message">
+                                Selecciona tu ubicación en el mapa o usa geolocalización.
+                            </p>
+
                             <x-mapa-interactivo 
                                 id="mapa-adopcion-publica"
                                 :canSelectLocation="true"
                                 showToolbar="true"
                                 height="400px"
                             />
-                            <div class="mt-3 p-3 bg-blue-50 rounded-xl border border-blue-200">
-                                <p class="text-sm font-medium text-blue-900">Ubicación elegida: <strong id="ubicacion-seleccionada-publica">Ninguna</strong></p>
+
+                            <div class="pt-location-box">
+                                <p>
+                                    Ubicación elegida:
+                                    <strong id="ubicacion-seleccionada-publica">Ninguna</strong>
+                                </p>
                             </div>
+
                             <input type="hidden" name="latitud" id="input-latitud">
                             <input type="hidden" name="longitud" id="input-longitud">
                             <input type="hidden" name="nombre_lugar" id="input-nombre_lugar">
@@ -286,15 +171,16 @@
                         </div>
                     </div>
 
-                    <!-- OPCIÓN 2: UBICACIÓN PRIVADA -->
                     <div id="ubicacionPrivada" class="hidden">
-                        <div class="form-group">
-                            <label class="block font-semibold mb-2">¿Cómo deseas registrar la ubicación?</label>
-                            <div class="radio-group">
+                        <div class="pt-form-group">
+                            <label>¿Cómo deseas registrar la ubicación?</label>
+
+                            <div class="pt-radio-group">
                                 <label>
                                     <input type="radio" name="metodo_ubicacion_privada" value="nombre" checked class="metodo-ubicacion" data-metodo="nombre">
                                     <span>Solo nombre</span>
                                 </label>
+
                                 <label>
                                     <input type="radio" name="metodo_ubicacion_privada" value="mapa" class="metodo-ubicacion" data-metodo="mapa">
                                     <span>Con ubicación exacta (mapa)</span>
@@ -302,29 +188,40 @@
                             </div>
                         </div>
 
-                        <div id="subopcion-nombre" class="form-group">
+                        <div id="subopcion-nombre" class="pt-form-group">
                             <label>Nombre del lugar privado</label>
+
                             <input type="text" name="nombre_lugar_privado" placeholder="Ejemplo: Mi casa, patio trasero, jardín familiar">
-                            <label class="mt-3">Descripción (opcional)</label>
+
+                            <label>Descripción (opcional)</label>
+
                             <textarea name="descripcion_privada" rows="2" placeholder="Comparte detalles como luz, sombra, etc."></textarea>
                         </div>
 
                         <div id="subopcion-mapa-privada" class="hidden">
-                            <p class="text-sm text-blue-700 mb-2"> Selecciona tu ubicación en el mapa.</p>
+                            <p class="pt-info-message">
+                                Selecciona tu ubicación en el mapa.
+                            </p>
+
                             <x-mapa-interactivo 
                                 id="mapa-adopcion-privada"
                                 :canSelectLocation="true"
                                 showToolbar="true"
                                 height="400px"
                             />
-                            <div class="mt-3 p-3 bg-blue-50 rounded-xl border border-blue-200">
-                                <p class="text-sm font-medium text-blue-900">Ubicación elegida: <strong id="ubicacion-seleccionada-privada">Ninguna</strong></p>
+
+                            <div class="pt-location-box">
+                                <p>
+                                    Ubicación elegida:
+                                    <strong id="ubicacion-seleccionada-privada">Ninguna</strong>
+                                </p>
                             </div>
 
-                            <div class="mt-4">
+                            <div class="pt-form-group">
                                 <label>Nombre del lugar (obligatorio)</label>
                                 <input type="text" name="nombre_lugar_privado_mapa" id="input-nombre_lugar_privado" placeholder="Ejemplo: Mi hogar, oficina, huerto">
-                                <label class="mt-3">Descripción (opcional)</label>
+
+                                <label>Descripción (opcional)</label>
                                 <textarea name="descripcion_privada_mapa" id="input-descripcion_privada" rows="2" placeholder="Información adicional..."></textarea>
                             </div>
 
@@ -334,15 +231,15 @@
                         </div>
                     </div>
 
-                    <button type="submit" class="btn-adoptar mt-4">
-                         Adoptar {{ $planta->nombre }}
+                    <button type="submit" class="pt-submit-btn">
+                        Adoptar {{ $planta->nombre }}
                     </button>
                 </form>
             </div>
+
         </div>
     </div>
 
-    <!-- Script original sin cambios -->
     <script>
         const tipoUbicacion = document.getElementById('tipoUbicacion');
         const ubicacionPublica = document.getElementById('ubicacionPublica');
@@ -360,8 +257,11 @@
                 const metodo = this.value;
                 document.getElementById('subopcion-zona').classList.toggle('hidden', metodo !== 'zona');
                 document.getElementById('subopcion-mapa').classList.toggle('hidden', metodo !== 'mapa');
+
                 if (metodo === 'mapa' && window.mapaInstancias && window.mapaInstancias['mapa-adopcion-publica']) {
-                    setTimeout(() => { window.mapaInstancias['mapa-adopcion-publica'].invalidateSize(); }, 50);
+                    setTimeout(() => {
+                        window.mapaInstancias['mapa-adopcion-publica'].invalidateSize();
+                    }, 50);
                 }
             });
         });
@@ -371,8 +271,11 @@
                 const metodo = this.value;
                 document.getElementById('subopcion-nombre').classList.toggle('hidden', metodo !== 'nombre');
                 document.getElementById('subopcion-mapa-privada').classList.toggle('hidden', metodo !== 'mapa');
+
                 if (metodo === 'mapa' && window.mapaInstancias && window.mapaInstancias['mapa-adopcion-privada']) {
-                    setTimeout(() => { window.mapaInstancias['mapa-adopcion-privada'].invalidateSize(); }, 50);
+                    setTimeout(() => {
+                        window.mapaInstancias['mapa-adopcion-privada'].invalidateSize();
+                    }, 50);
                 }
             });
         });
@@ -381,12 +284,14 @@
             if (window.ubicacionSeleccionada) {
                 const lat = window.ubicacionSeleccionada.latitud.toFixed(4);
                 const lng = window.ubicacionSeleccionada.longitud.toFixed(4);
+
                 if (!document.getElementById('subopcion-mapa').classList.contains('hidden')) {
                     document.getElementById('ubicacion-seleccionada-publica').textContent = `${lat}, ${lng}`;
                     document.getElementById('input-latitud').value = window.ubicacionSeleccionada.latitud;
                     document.getElementById('input-longitud').value = window.ubicacionSeleccionada.longitud;
                     document.getElementById('input-nombre_lugar').value = window.ubicacionSeleccionada.nombreLugar || 'Lugar seleccionado';
                 }
+
                 if (!document.getElementById('subopcion-mapa-privada').classList.contains('hidden')) {
                     document.getElementById('ubicacion-seleccionada-privada').textContent = `${lat}, ${lng}`;
                     document.getElementById('input-latitud-privada').value = window.ubicacionSeleccionada.latitud;
@@ -397,23 +302,45 @@
 
         formulario.addEventListener('submit', function(e) {
             const tipo = document.getElementById('tipoUbicacion').value;
+
             if (tipo === 'publico') {
                 const metodo = document.querySelector('input[name="metodo_ubicacion_publica"]:checked')?.value;
+
                 if (metodo === 'zona') {
                     const zona = document.querySelector('select[name="id_recomendacion_zona"]').value;
-                    if (!zona) { e.preventDefault(); alert('Por favor selecciona una zona recomendada'); }
+
+                    if (!zona) {
+                        e.preventDefault();
+                        alert('Por favor selecciona una zona recomendada');
+                    }
                 } else if (metodo === 'mapa') {
-                    if (!window.ubicacionSeleccionada) { e.preventDefault(); alert('Por favor selecciona una ubicación en el mapa'); }
+                    if (!window.ubicacionSeleccionada) {
+                        e.preventDefault();
+                        alert('Por favor selecciona una ubicación en el mapa');
+                    }
                 }
             } else if (tipo === 'privado') {
                 const metodo = document.querySelector('input[name="metodo_ubicacion_privada"]:checked')?.value;
+
                 if (metodo === 'nombre') {
                     const nombre = document.querySelector('input[name="nombre_lugar_privado"]').value;
-                    if (!nombre) { e.preventDefault(); alert('Por favor ingresa el nombre del lugar'); }
+
+                    if (!nombre) {
+                        e.preventDefault();
+                        alert('Por favor ingresa el nombre del lugar');
+                    }
                 } else if (metodo === 'mapa') {
                     const nombre = document.getElementById('input-nombre_lugar_privado').value;
-                    if (!nombre) { e.preventDefault(); alert('Por favor ingresa el nombre del lugar'); }
-                    if (!window.ubicacionSeleccionada) { e.preventDefault(); alert('Por favor selecciona una ubicación en el mapa'); }
+
+                    if (!nombre) {
+                        e.preventDefault();
+                        alert('Por favor ingresa el nombre del lugar');
+                    }
+
+                    if (!window.ubicacionSeleccionada) {
+                        e.preventDefault();
+                        alert('Por favor selecciona una ubicación en el mapa');
+                    }
                 }
             }
         });

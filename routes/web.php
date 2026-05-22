@@ -96,7 +96,20 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::resource('recomendaciones-cuidado', RecomendacionCuidadoController::class);
     Route::get('/reportes-problemas', [ReporteProblemaController::class, 'index'])->name('reporte-problemas.index');
     Route::put('/reportes-problemas/{reporteProblema}/resolver', [ReporteProblemaController::class, 'resolver'])->name('reporte-problemas.resolver');
+ Route::get('/reportes-problemas', [ReporteProblemaController::class, 'index'])
+    ->name('reporte-problemas.index');
 
+Route::get('/reporte-problemas/{reporteProblema}/edit', [ReporteProblemaController::class, 'edit'])
+    ->name('reporte-problemas.edit');
+
+Route::put('/reporte-problemas/{reporteProblema}', [ReporteProblemaController::class, 'update'])
+    ->name('reporte-problemas.update');
+
+Route::delete('/reporte-problemas/{reporteProblema}', [ReporteProblemaController::class, 'destroy'])
+    ->name('reporte-problemas.destroy');
+
+Route::put('/reportes-problemas/{reporteProblema}/resolver', [ReporteProblemaController::class, 'resolver'])
+    ->name('reporte-problemas.resolver');
     // Rutas de administración de usuarios (solo admin)
     Route::prefix('admin')->name('admin.')->group(function () {
         Route::resource('usuarios', UsuarioController::class);

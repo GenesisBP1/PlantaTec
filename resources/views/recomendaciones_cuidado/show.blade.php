@@ -1,61 +1,75 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            Detalle de recomendación de cuidado
-        </h2>
+        <div class="pt-header">
+            <div>
+                <p class="pt-header-label">Recomendaciones</p>
+                <h2 class="pt-header-title">Detalle de recomendación</h2>
+            </div>
+        </div>
     </x-slot>
 
-    <div class="py-8">
-        <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white shadow rounded-2xl p-6">
-                <h1 class="text-2xl font-bold text-green-800 mb-6">
-                    Recomendación de cuidado
-                </h1>
+    <div class="pt-page">
+        <div class="pt-container pt-form-container">
 
-                <div class="space-y-4 text-gray-700">
-                    <p>
-                        <strong>Planta:</strong>
-                        {{ $recomendacion->adopcion->planta->nombre ?? 'Sin planta registrada' }}
-                    </p>
-
-                    <p>
-                        <strong>Cuidado:</strong>
-                        {{ $recomendacion->plantaCuidado->cuidado->nombre ?? 'Sin cuidado registrado' }}
-                    </p>
-
-                    <p>
-                        <strong>Mensaje:</strong>
-                        {{ $recomendacion->mensaje ?? 'Sin mensaje registrado' }}
-                    </p>
-
-                    <p>
-                        <strong>Prioridad:</strong>
-                        {{ ucfirst($recomendacion->prioridad ?? 'Sin prioridad') }}
-                    </p>
-
-                    <p>
-                        <strong>Estado:</strong>
-                        {{ ucfirst($recomendacion->estado ?? 'Sin estado') }}
-                    </p>
-
-                    <p>
-                        <strong>Fecha de registro:</strong>
-                        {{ $recomendacion->created_at ? $recomendacion->created_at->format('d/m/Y') : 'Sin fecha' }}
+            <div class="pt-form-card">
+                <div class="pt-form-intro">
+                    <p class="pt-header-label">Registro guardado</p>
+                    <h3 class="pt-form-title">Recomendación de cuidado</h3>
+                    <p class="pt-form-subtitle">
+                        Información completa de la recomendación registrada.
                     </p>
                 </div>
 
-                <div class="flex gap-3 mt-6">
+                <div class="pt-detail-grid">
+
+                    <div class="pt-detail-item">
+                        <strong>Planta</strong>
+                        <span>{{ $recomendacion->adopcion->planta->nombre ?? 'Sin planta registrada' }}</span>
+                    </div>
+
+                    <div class="pt-detail-item">
+                        <strong>Cuidado</strong>
+                        <span>{{ $recomendacion->plantaCuidado->cuidado->nombre ?? 'Sin cuidado registrado' }}</span>
+                    </div>
+
+                    <div class="pt-detail-item full">
+                        <strong>Mensaje</strong>
+                        <span>{{ $recomendacion->mensaje ?? 'Sin mensaje registrado' }}</span>
+                    </div>
+
+                    <div class="pt-detail-item">
+                        <strong>Prioridad</strong>
+                        <span>{{ ucfirst($recomendacion->prioridad ?? 'Sin prioridad') }}</span>
+                    </div>
+
+                    <div class="pt-detail-item">
+                        <strong>Estado</strong>
+                        <span>{{ ucfirst($recomendacion->estado ?? 'Sin estado') }}</span>
+                    </div>
+
+                    <div class="pt-detail-item full">
+                        <strong>Fecha de registro</strong>
+                        <span>
+                            {{ $recomendacion->created_at ? $recomendacion->created_at->format('d/m/Y') : 'Sin fecha' }}
+                        </span>
+                    </div>
+
+                </div>
+
+                <div class="pt-form-actions">
                     <a href="{{ route('recomendaciones-cuidado.edit', $recomendacion->id) }}"
-                       class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-lg">
+                       class="pt-btn pt-btn-yellow">
                         Editar
                     </a>
 
                     <a href="{{ route('recomendaciones-cuidado.index') }}"
-                       class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg">
+                       class="pt-btn pt-btn-dark">
                         Volver
                     </a>
                 </div>
+
             </div>
+
         </div>
     </div>
 </x-app-layout>

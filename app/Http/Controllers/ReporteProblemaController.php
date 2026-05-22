@@ -8,11 +8,59 @@ use App\Models\ReporteProblema;
 use App\Models\Tratamiento;
 use App\Models\TratamientoReporte;
 use Illuminate\Http\Request;
-use App\Models\SeguimientoTratamiento;
-
 
 class ReporteProblemaController extends Controller
 {
+    public function index()
+    {
+        if (auth()->user()->rol !== 'admin') {
+            abort(403, 'No tienes permiso para ver los reportes.');
+        }
+
+        $reportes = ReporteProblema::with([
+            'adopcion.usuario',
+            'adopcion.planta',
+            'problema',
+        ])->latest()->get();
+
+        $tableReportesRows = $reportes->map(function ($reporte) {
+            $gravedadClass = match (strtolower($reporte->gravedad ?? 'leve')) {
+                'grave' => 'pt-badge pt-badge-danger',
+                'media', 'moderada' => 'pt-badge pt-badge-warning',
+                default => 'pt-badge pt-badge-success',
+            };
+
+            $estadoClass = match (strtolower($reporte->estado ?? 'pendiente')) {
+                'resuelto' => 'pt-badge pt-badge-success',
+                'en_revision' => 'pt-badge pt-badge-warning',
+                default => 'pt-badge pt-badge-info',
+            };
+
+            return [
+                e($reporte->adopcion->usuario->name ?? 'Usuario no disponible'),
+                e($reporte->adopcion->planta->nombre ?? 'Planta no disponible'),
+                e($reporte->problema->nombre ?? 'Problema no disponible'),
+                '<span class="' . $gravedadClass . '">' . ucfirst($reporte->gravedad ?? 'leve') . '</span>',
+                '<span class="' . $estadoClass . '">' . ucfirst(str_replace('_', ' ', $reporte->estado ?? 'pendiente')) . '</span>',
+                $reporte->created_at ? $reporte->created_at->format('d/m/Y') : 'Sin fecha',
+            ];
+        })->toArray();
+
+        $tableReportesActions = $reportes->map(function ($reporte) {
+            return [
+                'view' => route('reporte-problemas.show', $reporte->id),
+                   'edit' => route('reporte-problemas.edit', $reporte->id),
+                'delete' => route('reporte-problemas.destroy', $reporte->id),   
+                ];
+        })->toArray();
+
+        return view('reporte_problemas.index', compact(
+            'reportes',
+            'tableReportesRows',
+            'tableReportesActions'
+        ));
+    }
+
     public function create(Request $request)
     {
         $adopcion = Adopcion::with('planta')
@@ -42,10 +90,6 @@ class ReporteProblemaController extends Controller
 
         $reporte = ReporteProblema::create($datos);
 
-        /*
-         * Crear tratamientos pendientes automáticamente
-         * según el problema reportado y la planta adoptada.
-         */
         $reporte->load('adopcion');
 
         $tratamientos = Tratamiento::where('id_problema', $reporte->id_problema)
@@ -89,23 +133,6 @@ class ReporteProblemaController extends Controller
         return view('reporte_problemas.show', compact('reporteProblema'));
     }
 
-    public function index()
-    {
-        if (auth()->user()->rol !== 'admin') {
-            abort(403, 'No tienes permiso para ver los reportes.');
-        }
-
-        $reportes = ReporteProblema::with([
-            'adopcion.usuario',
-            'adopcion.planta',
-            'problema',
-        ])
-            ->latest()
-            ->get();
-
-        return view('reporte_problemas.index', compact('reportes'));
-    }
-
     public function resolver(ReporteProblema $reporteProblema)
     {
         if (auth()->user()->rol !== 'admin') {
@@ -121,69 +148,117 @@ class ReporteProblemaController extends Controller
     }
 
     public function subirEvidenciaTratamiento(Request $request, TratamientoReporte $tratamientoReporte)
+    {
+        $tratamientoReporte->load('reporteProblema.adopcion');
+
+        if (
+            auth()->user()->rol !== 'admin' &&
+            $tratamientoReporte->reporteProblema->adopcion->id_usuario !== auth()->id()
+        ) {
+            abort(403, 'No tienes permiso para registrar esta evidencia.');
+        }
+
+        $request->validate([
+            'imagen' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'descripcion' => 'nullable|string',
+        ]);
+
+        $datos = [
+            'descripcion' => $request->descripcion,
+            'estado' => 'evidenciado',
+            'fecha_proxima' => now()
+                ->addDays($tratamientoReporte->frecuencia_dias ?? 1)
+                ->toDateString(),
+        ];
+
+        if ($request->hasFile('imagen')) {
+            $datos['imagen'] = $request->file('imagen')
+                ->store('tratamientos_reportes', 'public');
+        }
+
+        $tratamientoReporte->update($datos);
+
+        $reporte = $tratamientoReporte->reporteProblema;
+
+        $reporte->update([
+            'estado' => 'en_revision',
+        ]);
+
+        return redirect()->route('reporte-problemas.show', $reporte)
+            ->with('success', 'Evidencia del tratamiento registrada correctamente.');
+    }
+
+    public function aplicarTratamiento(Request $request, ReporteProblema $reporteProblema)
+    {
+        $request->validate([
+            'id_tratamiento' => 'required|exists:tratamientos,id',
+            'fecha_aplicacion' => 'required|date',
+            'imagen' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+            'observaciones' => 'nullable|string',
+        ]);
+
+        $data = $request->only(['id_tratamiento', 'fecha_aplicacion', 'observaciones']);
+
+        if ($request->hasFile('imagen')) {
+            $data['imagen'] = $request->file('imagen')->store('tratamientos', 'public');
+        }
+
+        $data['estado'] = 'aplicado';
+
+        $reporteProblema->seguimientoTratamientos()->create($data);
+
+        return redirect()->back()
+            ->with('success', 'Aplicación de tratamiento registrada correctamente.');
+    }
+
+    public function edit(ReporteProblema $reporteProblema)
 {
-    $tratamientoReporte->load('reporteProblema.adopcion');
-
-    if (
-        auth()->user()->rol !== 'admin' &&
-        $tratamientoReporte->reporteProblema->adopcion->id_usuario !== auth()->id()
-    ) {
-        abort(403, 'No tienes permiso para registrar esta evidencia.');
+    if (auth()->user()->rol !== 'admin') {
+        abort(403, 'No tienes permiso para editar reportes.');
     }
 
-    $request->validate([
-        'imagen' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
-        'descripcion' => 'nullable|string',
+    $reporteProblema->load([
+        'adopcion.planta',
+        'problema',
     ]);
 
-    $datos = [
-        'descripcion' => $request->descripcion,
-        'estado' => 'evidenciado',
-        'fecha_proxima' => now()
-            ->addDays($tratamientoReporte->frecuencia_dias ?? 1)
-            ->toDateString(),
-    ];
+    $problemas = Problema::all();
 
-    if ($request->hasFile('imagen')) {
-        $datos['imagen'] = $request->file('imagen')
-            ->store('tratamientos_reportes', 'public');
-    }
-
-    $tratamientoReporte->update($datos);
-
-    $reporte = $tratamientoReporte->reporteProblema;
-
-    /*
-     * El problema no se marca como resuelto automáticamente.
-     * Se mantiene en revisión para que el usuario siga subiendo evidencias
-     * según la frecuencia del tratamiento.
-     */
-    $reporte->update([
-        'estado' => 'en_revision',
-    ]);
-
-    return redirect()->route('reporte-problemas.show', $reporte)
-        ->with('success', 'Evidencia del tratamiento registrada correctamente. La próxima evidencia ya fue programada.');
+    return view('reporte_problemas.edit', compact('reporteProblema', 'problemas'));
 }
 
-
-public function aplicarTratamiento(Request $request, ReporteProblema $reporteProblema)
+public function update(Request $request, ReporteProblema $reporteProblema)
 {
+    if (auth()->user()->rol !== 'admin') {
+        abort(403, 'No tienes permiso para actualizar reportes.');
+    }
+
     $request->validate([
-        'id_tratamiento' => 'required|exists:tratamientos,id',
-        'fecha_aplicacion' => 'required|date',
-        'imagen' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
-        'observaciones' => 'nullable|string',
+        'id_problema' => 'required|exists:problemas,id',
+        'descripcion' => 'nullable|string',
+        'gravedad' => 'required|in:leve,media,grave',
+        'estado' => 'required|in:pendiente,en_revision,resuelto',
     ]);
 
-    $data = $request->only(['id_tratamiento', 'fecha_aplicacion', 'observaciones']);
-    if ($request->hasFile('imagen')) {
-        $data['imagen'] = $request->file('imagen')->store('tratamientos', 'public');
+    $reporteProblema->update([
+        'id_problema' => $request->id_problema,
+        'descripcion' => $request->descripcion,
+        'gravedad' => $request->gravedad,
+        'estado' => $request->estado,
+    ]);
+
+    return redirect()->route('reporte-problemas.index')
+        ->with('success', 'Reporte actualizado correctamente.');
+}
+public function destroy(ReporteProblema $reporteProblema)
+{
+    if (auth()->user()->rol !== 'admin') {
+        abort(403, 'No tienes permiso para eliminar reportes.');
     }
-    $data['estado'] = 'aplicado';
 
-    $reporteProblema->seguimientoTratamientos()->create($data);
+    $reporteProblema->delete();
 
-    return redirect()->back()->with('success', 'Aplicación de tratamiento registrada correctamente.');
+    return redirect()->route('reporte-problemas.index')
+        ->with('success', 'Reporte eliminado correctamente.');  
 }
 }

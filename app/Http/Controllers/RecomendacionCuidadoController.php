@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\RecomendacionCuidado;
 use Illuminate\Http\Request;
+use App\Models\Adopcion;
+use App\Models\PlantaCuidado;
 
 class RecomendacionCuidadoController extends Controller
 {
@@ -42,7 +44,35 @@ class RecomendacionCuidadoController extends Controller
 
         return view('recomendaciones_cuidado.index', compact('recomendaciones', 'tableRecomendacionesRows', 'tableRecomendacionesActions'));
     }
+ public function create()
+{
+    $adopciones = Adopcion::with('planta')->get();
+    $plantaCuidados = PlantaCuidado::with(['planta', 'cuidado'])->get();
 
+    return view('recomendaciones_cuidado.create', compact('adopciones', 'plantaCuidados'));
+}
+
+public function store(Request $request)
+{
+    $request->validate([
+        'id_adopcion' => 'required|exists:adopciones,id',
+        'id_planta_cuidado' => 'required|exists:planta_cuidados,id',
+        'mensaje' => 'required|string',
+        'prioridad' => 'required|string|max:255',
+        'estado' => 'required|string|max:255',
+    ]);
+
+    RecomendacionCuidado::create([
+        'id_adopcion' => $request->id_adopcion,
+        'id_planta_cuidado' => $request->id_planta_cuidado,
+        'mensaje' => $request->mensaje,
+        'prioridad' => $request->prioridad,
+        'estado' => $request->estado,
+    ]);
+
+    return redirect()->route('recomendaciones-cuidado.index')
+        ->with('success', 'Recomendación registrada correctamente.');
+}
     public function destroy(RecomendacionCuidado $recomendacionCuidado)
     {
         $recomendacionCuidado->delete();
@@ -85,4 +115,5 @@ public function update(Request $request, $id)
     return redirect()->route('recomendaciones-cuidado.index')
         ->with('success', 'Recomendación actualizada correctamente.');
 }
+
 }

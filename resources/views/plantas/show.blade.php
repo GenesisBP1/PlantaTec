@@ -1,36 +1,61 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            Detalle de Planta
-        </h2>
+        <div class="pt-header">
+            <div>
+                <p class="pt-header-label">Plantas</p>
+                <h2 class="pt-header-title">Detalle de planta</h2>
+            </div>
+        </div>
     </x-slot>
 
-    <div class="py-8">
-        <div class="max-w-3xl mx-auto sm:px-6 lg:px-8">
+    <div class="pt-page">
+        <div class="pt-container pt-form-container">
 
-            <div class="bg-white shadow rounded-lg p-6">
-                <h3 class="text-2xl font-bold mb-4">{{ $planta->nombre }}</h3>
-
-                <p><strong>Especie:</strong> {{ $planta->especie }}</p>
-                <p><strong>Tipo de zona:</strong> {{ $planta->tipo_zona ?? 'No especificada' }}</p>
-                <p><strong>Estado:</strong> {{ $planta->estado }}</p>
-
-                <div class="mt-4">
-                    <strong>Descripción:</strong>
-                    <p class="text-gray-700">
-                        {{ $planta->descripcion ?? 'Sin descripción.' }}
+            <div class="pt-form-card">
+                <div class="pt-form-intro">
+                    <p class="pt-header-label">Registro guardado</p>
+                    <h3 class="pt-form-title">{{ $planta->nombre }}</h3>
+                    <p class="pt-form-subtitle">
+                        Información completa de la planta registrada.
                     </p>
                 </div>
 
-                <div class="mt-6 flex gap-2">
-                    <a href="{{ route('plantas.edit', $planta) }}" class="bg-yellow-500 text-white px-4 py-2 rounded">
+                <div class="pt-detail-grid">
+
+                    <div class="pt-detail-item">
+                        <strong>Especie</strong>
+                        <span>{{ $planta->especie }}</span>
+                    </div>
+
+                    <div class="pt-detail-item">
+                        <strong>Tipo de zona</strong>
+                        <span>{{ $planta->tipo_zona ?? 'No especificada' }}</span>
+                    </div>
+
+                    <div class="pt-detail-item">
+                        <strong>Estado</strong>
+                        <span>{{ ucfirst($planta->estado) }}</span>
+                    </div>
+
+                    <div class="pt-detail-item full">
+                        <strong>Descripción</strong>
+                        <span>{{ $planta->descripcion ?? 'Sin descripción.' }}</span>
+                    </div>
+
+                </div>
+
+                <div class="pt-form-actions">
+                    <a href="{{ route('plantas.edit', $planta) }}"
+                       class="pt-btn pt-btn-yellow">
                         Editar
                     </a>
 
-                    <a href="{{ route('plantas.index') }}" class="bg-gray-500 text-white px-4 py-2 rounded">
+                    <a href="{{ route('plantas.index') }}"
+                       class="pt-btn pt-btn-dark">
                         Volver
                     </a>
                 </div>
+
             </div>
 
         </div>

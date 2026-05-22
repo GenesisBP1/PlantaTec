@@ -1,40 +1,63 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            Detalle del problema
-        </h2>
+        <div class="pt-header">
+            <div>
+                <p class="pt-header-label">Problemas</p>
+                <h2 class="pt-header-title">Detalle del problema</h2>
+            </div>
+        </div>
     </x-slot>
 
-    <div class="py-8">
-        <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white shadow rounded-2xl p-6">
-                <h1 class="text-2xl font-bold text-green-800 mb-4">
-                    {{ $problema->nombre }}
-                </h1>
+    <div class="pt-page">
+        <div class="pt-container pt-form-container">
 
-                <p class="text-gray-700 mb-4">
-                    <strong>Descripción:</strong>
-                    {{ $problema->descripcion ?? 'Sin descripción' }}
-                </p>
+            <div class="pt-form-card">
+                <div class="pt-form-intro">
+                    <p class="pt-header-label">Registro guardado</p>
+                    <h3 class="pt-form-title">{{ $problema->nombre }}</h3>
+                    <p class="pt-form-subtitle">
+                        Información completa del problema registrado.
+                    </p>
+                </div>
 
-                @if($problema->imagen)
-                    <img src="{{ asset('storage/' . $problema->imagen) }}"
-                         alt="{{ $problema->nombre }}"
-                         class="w-64 h-64 object-cover rounded-xl mb-4">
-                @endif
+                <div class="pt-detail-grid">
 
-                <div class="flex gap-3 mt-6">
+                    <div class="pt-detail-item full">
+                        <strong>Descripción</strong>
+                        <span>{{ $problema->descripcion ?? 'Sin descripción' }}</span>
+                    </div>
+
+                    @if($problema->imagen)
+    @php
+        $imagenProblema = filter_var($problema->imagen, FILTER_VALIDATE_URL)
+            ? $problema->imagen
+            : asset('storage/' . $problema->imagen);
+    @endphp
+
+    <div class="pt-detail-item full">
+        <strong>Imagen</strong>
+        <img src="{{ $imagenProblema }}"
+             alt="{{ $problema->nombre }}"
+             class="pt-problem-image">
+    </div>
+@endif
+
+                </div>
+
+                <div class="pt-form-actions">
                     <a href="{{ route('problemas.edit', $problema) }}"
-                       class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-lg">
+                       class="pt-btn pt-btn-yellow">
                         Editar
                     </a>
 
                     <a href="{{ route('problemas.index') }}"
-                       class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg">
+                       class="pt-btn pt-btn-dark">
                         Volver
                     </a>
                 </div>
+
             </div>
+
         </div>
     </div>
 </x-app-layout>

@@ -1,42 +1,61 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            Detalle de Ubicación
-        </h2>
+        <div class="pt-header">
+            <div>
+                <p class="pt-header-label">Ubicaciones</p>
+                <h2 class="pt-header-title">Detalle de ubicación</h2>
+            </div>
+        </div>
     </x-slot>
 
-    <div class="py-8">
-        <div class="max-w-3xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white shadow rounded-lg p-6">
+    <div class="pt-page">
+        <div class="pt-container pt-form-container">
 
-                <h3 class="text-2xl font-bold mb-4">{{ $ubicacion->nombre_lugar }}</h3>
-
-                <p><strong>Tipo:</strong> {{ ucfirst($ubicacion->tipo) }}</p>
-
-                <p><strong>Latitud:</strong> {{ $ubicacion->latitud ?? 'No especificada' }}</p>
-
-                <p><strong>Longitud:</strong> {{ $ubicacion->longitud ?? 'No especificada' }}</p>
-
-                <div class="mt-4">
-                    <strong>Descripción:</strong>
-                    <p class="text-gray-700">
-                        {{ $ubicacion->descripcion ?? 'Sin descripción.' }}
+            <div class="pt-form-card">
+                <div class="pt-form-intro">
+                    <p class="pt-header-label">Registro guardado</p>
+                    <h3 class="pt-form-title">{{ $ubicacion->nombre_lugar }}</h3>
+                    <p class="pt-form-subtitle">
+                        Información completa de la ubicación registrada.
                     </p>
                 </div>
 
-                <div class="mt-6 flex gap-2">
-                    <a href="{{ route('ubicaciones.edit', $ubicacion) }}"
-                       class="bg-yellow-500 text-white px-4 py-2 rounded">
+                <div class="pt-detail-grid">
+
+                    <div class="pt-detail-item">
+                        <strong>Tipo</strong>
+                        <span>{{ ucfirst($ubicacion->tipo) }}</span>
+                    </div>
+
+                    <div class="pt-detail-item">
+                        <strong>Latitud</strong>
+                        <span>{{ $ubicacion->latitud ?? 'No especificada' }}</span>
+                    </div>
+
+                    <div class="pt-detail-item">
+                        <strong>Longitud</strong>
+                        <span>{{ $ubicacion->longitud ?? 'No especificada' }}</span>
+                    </div>
+
+                    <div class="pt-detail-item full">
+                        <strong>Descripción</strong>
+                        <span>{{ $ubicacion->descripcion ?? 'Sin descripción.' }}</span>
+                    </div>
+
+                </div>
+
+                <div class="pt-form-actions">
+                    <a href="{{ route('ubicaciones.edit', $ubicacion) }}" class="pt-btn pt-btn-yellow">
                         Editar
                     </a>
 
-                    <a href="{{ route('ubicaciones.index') }}"
-                       class="bg-gray-500 text-white px-4 py-2 rounded">
+                    <a href="{{ route('ubicaciones.index') }}" class="pt-btn pt-btn-dark">
                         Volver
                     </a>
                 </div>
 
             </div>
+
         </div>
     </div>
 </x-app-layout>

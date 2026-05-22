@@ -1,105 +1,130 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            Editar Ubicación
-        </h2>
+        <div class="pt-header">
+            <div>
+                <p class="pt-header-label">Ubicaciones</p>
+                <h2 class="pt-header-title">Editar ubicación</h2>
+            </div>
+        </div>
     </x-slot>
 
-    <div class="py-8">
-        <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white shadow rounded-lg p-6">
+    <div class="pt-page">
+        <div class="pt-container">
+
+            <div class="pt-form-card">
+                <div class="pt-form-intro">
+                    <p class="pt-header-label">Edición de registro</p>
+                    <h3 class="pt-form-title">Actualizar ubicación</h3>
+                    <p class="pt-form-subtitle">
+                        Modifica la ubicación, descripción o selecciona una nueva posición en el mapa.
+                    </p>
+                </div>
 
                 <form action="{{ route('ubicaciones.update', $ubicacion) }}" method="POST" id="formulario-ubicacion">
                     @csrf
                     @method('PUT')
 
-                    <div class="mb-4">
-                        <label class="block font-medium mb-1">Tipo</label>
-                        <select name="tipo" class="w-full border-gray-300 rounded">
-                            <option value="publico" {{ $ubicacion->tipo == 'publico' ? 'selected' : '' }}>Público</option>
-                            <option value="privado" {{ $ubicacion->tipo == 'privado' ? 'selected' : '' }}>Privado</option>
-                        </select>
-                    </div>
+                    <div class="pt-form-grid">
 
-                    <div class="mb-6">
-                        <label class="block font-medium mb-2">Zona recomendada (opcional)</label>
-                        <select name="id_recomendacion_zona" id="zona-select" class="w-full border-gray-300 rounded">
-                            <option value="">-- Selecciona una zona para llenar automáticamente --</option>
-                            @php
-                                $zonas = \App\Models\RecomendacionZona::orderBy('nombre_lugar')->get();
-                            @endphp
-                            @forelse($zonas as $zona)
-                                <option value="{{ $zona->id }}">
-                                    {{ $zona->nombre_lugar }} ({{ $zona->tipo_zona }})
+                        <div class="pt-form-group">
+                            <label>Tipo</label>
+                            <select name="tipo">
+                                <option value="publico" {{ $ubicacion->tipo == 'publico' ? 'selected' : '' }}>
+                                    Público
                                 </option>
-                            @empty
-                                <option value="" disabled>No hay zonas recomendadas registradas</option>
-                            @endforelse
-                        </select>
-                        <p class="text-sm text-gray-500 mt-1">Si seleccionas una zona, los datos se llenarán automáticamente</p>
-                    </div>
-
-                    <!-- MAPA INTERACTIVO -->
-                    <div class="mb-6">
-                        <label class="block font-medium mb-2">Selecciona ubicación en el mapa</label>
-                        <x-mapa-interactivo 
-                            id="mapa-ubicacion"
-                            :canSelectLocation="true"
-                            showToolbar="true"
-                            height="400px"
-                        />
-                    </div>
-
-                    <div class="mb-4">
-                        <label class="block font-medium mb-1">Nombre del lugar</label>
-                        <input type="text"
-                               name="nombre_lugar"
-                               id="nombre-lugar"
-                               value="{{ $ubicacion->nombre_lugar }}"
-                               class="w-full border-gray-300 rounded"
-                               required>
-                    </div>
-
-                    <div class="mb-4">
-                        <label class="block font-medium mb-1">Descripción</label>
-                        <textarea name="descripcion" id="descripcion" class="w-full border-gray-300 rounded">{{ $ubicacion->descripcion }}</textarea>
-                    </div>
-
-                    <div class="grid grid-cols-2 gap-4 mb-4">
-                        <div>
-                            <label class="block font-medium mb-1">Latitud</label>
-                            <input type="text"
-                                   name="latitud"
-                                   id="latitud"
-                                   value="{{ $ubicacion->latitud }}"
-                                   class="w-full border-gray-300 rounded"
-                                   readonly>
+                                <option value="privado" {{ $ubicacion->tipo == 'privado' ? 'selected' : '' }}>
+                                    Privado
+                                </option>
+                            </select>
                         </div>
-                        <div>
-                            <label class="block font-medium mb-1">Longitud</label>
-                            <input type="text"
-                                   name="longitud"
-                                   id="longitud"
-                                   value="{{ $ubicacion->longitud }}"
-                                   class="w-full border-gray-300 rounded"
-                                   readonly>
+
+                        <div class="pt-form-group full">
+                            <label>Zona recomendada (opcional)</label>
+                            <select name="id_recomendacion_zona" id="zona-select">
+                                <option value="">Selecciona una zona para llenar automáticamente</option>
+
+                                @php
+                                    $zonas = \App\Models\RecomendacionZona::orderBy('nombre_lugar')->get();
+                                @endphp
+
+                                @forelse($zonas as $zona)
+                                    <option value="{{ $zona->id }}">
+                                        {{ $zona->nombre_lugar }} ({{ $zona->tipo_zona }})
+                                    </option>
+                                @empty
+                                    <option disabled>No hay zonas recomendadas registradas</option>
+                                @endforelse
+                            </select>
                         </div>
+
+                        <div class="pt-form-group full">
+                            <label>Selecciona ubicación en el mapa</label>
+
+                            <x-mapa-interactivo
+                                id="mapa-ubicacion"
+                                :canSelectLocation="true"
+                                showToolbar="true"
+                                height="400px"
+                            />
+                        </div>
+
+                        <div class="pt-form-group full">
+                            <label>Nombre del lugar</label>
+                            <input
+                                type="text"
+                                name="nombre_lugar"
+                                id="nombre-lugar"
+                                value="{{ $ubicacion->nombre_lugar }}"
+                                required
+                            >
+                        </div>
+
+                        <div class="pt-form-group full">
+                            <label>Descripción</label>
+                            <textarea
+                                name="descripcion"
+                                id="descripcion"
+                                rows="4"
+                            >{{ $ubicacion->descripcion }}</textarea>
+                        </div>
+
+                        <div class="pt-form-group">
+                            <label>Latitud</label>
+                            <input
+                                type="text"
+                                name="latitud"
+                                id="latitud"
+                                value="{{ $ubicacion->latitud }}"
+                                readonly
+                            >
+                        </div>
+
+                        <div class="pt-form-group">
+                            <label>Longitud</label>
+                            <input
+                                type="text"
+                                name="longitud"
+                                id="longitud"
+                                value="{{ $ubicacion->longitud }}"
+                                readonly
+                            >
+                        </div>
+
                     </div>
 
-                    <div class="flex gap-2">
-                        <button type="submit" class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded">
-                            Actualizar
-                        </button>
-
-                        <a href="{{ route('ubicaciones.index') }}"
-                           class="bg-gray-500 text-white px-4 py-2 rounded">
+                    <div class="pt-form-actions">
+                        <a href="{{ route('ubicaciones.index') }}" class="pt-btn pt-btn-dark">
                             Cancelar
                         </a>
+
+                        <button type="submit" class="pt-btn pt-btn-yellow">
+                            Actualizar
+                        </button>
                     </div>
 
                 </form>
-
             </div>
+
         </div>
     </div>
 
@@ -110,7 +135,6 @@
         const latInput = document.getElementById('latitud');
         const lngInput = document.getElementById('longitud');
 
-        // Mapeo de zonas (se genera del servidor)
         const zonasData = {
             @foreach(\App\Models\RecomendacionZona::all() as $zona)
                 {{ $zona->id }}: {
@@ -125,12 +149,12 @@
         zonaSelect.addEventListener('change', function() {
             if (this.value && zonasData[this.value]) {
                 const zona = zonasData[this.value];
+
                 nombreInput.value = zona.nombre;
                 descInput.value = zona.descripcion || '';
                 latInput.value = zona.latitud;
                 lngInput.value = zona.longitud;
-                
-                // Actualizar mapa
+
                 if (window.mapaInstancias && window.mapaInstancias['mapa-ubicacion']) {
                     const mapa = window.mapaInstancias['mapa-ubicacion'];
                     mapa.setView([zona.latitud, zona.longitud], 15);
@@ -138,18 +162,16 @@
             }
         });
 
-        // Cargar ubicación actual en el mapa al inicio
         window.addEventListener('load', function() {
             const latActual = {{ $ubicacion->latitud ?? 25.5095 }};
             const lngActual = {{ $ubicacion->longitud ?? -97.1559 }};
-            
+
             if (window.mapaInstancias && window.mapaInstancias['mapa-ubicacion']) {
                 const mapa = window.mapaInstancias['mapa-ubicacion'];
                 mapa.setView([latActual, lngActual], 15);
             }
         });
 
-        // Actualizar coordenadas cuando se selecciona en el mapa
         setInterval(() => {
             if (window.ubicacionSeleccionada) {
                 latInput.value = window.ubicacionSeleccionada.latitud.toFixed(7);
@@ -158,13 +180,13 @@
             }
         }, 500);
 
-        // Validar formulario
         document.getElementById('formulario-ubicacion').addEventListener('submit', function(e) {
             if (!nombreInput.value.trim()) {
                 e.preventDefault();
                 alert('El nombre del lugar es obligatorio');
                 return false;
             }
+
             if (!latInput.value || !lngInput.value) {
                 e.preventDefault();
                 alert('Debes seleccionar una ubicación en el mapa o elegir una zona recomendada');

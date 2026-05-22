@@ -7,13 +7,13 @@ use Illuminate\Http\Request;
 
 class ProblemaController extends Controller
 {
-    public function index()
+public function index()
 {
     $problemas = Problema::latest()->get();
 
     $tableProblemasRows = $problemas->map(function ($problema) {
         return [
-            '<strong>' . e($problema->nombre) . '</strong>',
+            e($problema->nombre),
             e($problema->descripcion ?? 'Sin descripción'),
         ];
     })->toArray();
@@ -26,7 +26,11 @@ class ProblemaController extends Controller
         ];
     })->toArray();
 
-    return view('problemas.index', compact('problemas', 'tableProblemasRows', 'tableProblemasActions'));
+    return view('problemas.index', compact(
+        'problemas',
+        'tableProblemasRows',
+        'tableProblemasActions'
+    ));
 }
 
     public function create()
@@ -78,4 +82,6 @@ class ProblemaController extends Controller
 {
     return view('problemas.show', compact('problema'));
 }
+
+
 }
