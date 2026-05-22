@@ -26,10 +26,10 @@ RUN composer install --no-dev --optimize-autoloader
 
 RUN npm install && npm run build
 
-RUN mkdir -p /var/data \
+RUN mkdir -p /var/data /var/www/html/database \
+    && touch /var/www/html/database/database.sqlite \
     && touch /var/data/database.sqlite \
-    && chown -R www-data:www-data /var/data \
-    && chown -R www-data:www-data storage bootstrap/cache
+    && chown -R www-data:www-data /var/www/html/database /var/data storage bootstrap/cache
 
 RUN php artisan optimize || true
 
