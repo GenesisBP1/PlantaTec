@@ -31,7 +31,7 @@ RUN mkdir -p /var/data \
     && chown -R www-data:www-data /var/data \
     && chown -R www-data:www-data storage bootstrap/cache
 
-RUN php artisan config:clear || true
+RUN php artisan optimize || true
 
 ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
 
@@ -40,4 +40,4 @@ RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-av
 
 EXPOSE 80
 
-CMD php artisan migrate --force && php artisan storage:link || true && apache2-foreground
+CMD ["apache2-foreground"]
