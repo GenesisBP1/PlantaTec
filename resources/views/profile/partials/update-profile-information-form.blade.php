@@ -1,64 +1,57 @@
-<section>
-    <header>
-        <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
-            {{ __('Profile Information') }}
-        </h2>
-
-        <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-            {{ __("Update your account's profile information and email address.") }}
-        </p>
+<section class="pt-section-form">
+    <header class="pt-form-header">
+        <h2 class="pt-card-title">Información del perfil</h2>
+        <p class="pt-muted">Actualiza tu nombre y correo electrónico.</p>
     </header>
 
-    <form id="send-verification" method="post" action="{{ route('verification.send') }}">
-        @csrf
-    </form>
-
-    <form method="post" action="{{ route('profile.update') }}" class="mt-6 space-y-6">
+    <form method="post" action="{{ route('profile.update') }}" class="pt-form">
         @csrf
         @method('patch')
 
-        <div>
-            <x-input-label for="name" :value="__('Name')" />
-            <x-text-input id="name" name="name" type="text" class="mt-1 block w-full" :value="old('name', $user->name)" required autofocus autocomplete="name" />
-            <x-input-error class="mt-2" :messages="$errors->get('name')" />
+        <div class="pt-form-group full">
+            <label for="name" class="pt-label">Nombre</label>
+            <input id="name" name="name" type="text" class="pt-input" value="{{ old('name', $user->name) }}" required autofocus autocomplete="name">
+            @error('name')
+                <p class="pt-error">{{ $message }}</p>
+            @enderror
         </div>
 
-        <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" name="email" type="email" class="mt-1 block w-full" :value="old('email', $user->email)" required autocomplete="username" />
-            <x-input-error class="mt-2" :messages="$errors->get('email')" />
+        <div class="pt-form-group full">
+            <label for="email" class="pt-label">Correo electrónico</label>
+            <input id="email" name="email" type="email" class="pt-input" value="{{ old('email', $user->email) }}" required autocomplete="username">
+            @error('email')
+                <p class="pt-error">{{ $message }}</p>
+            @enderror
 
             @if ($user instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && ! $user->hasVerifiedEmail())
-                <div>
-                    <p class="text-sm mt-2 text-gray-800 dark:text-gray-200">
-                        {{ __('Your email address is unverified.') }}
-
-                        <button form="send-verification" class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800">
-                            {{ __('Click here to re-send the verification email.') }}
-                        </button>
-                    </p>
-
-                    @if (session('status') === 'verification-link-sent')
-                        <p class="mt-2 font-medium text-sm text-green-600 dark:text-green-400">
-                            {{ __('A new verification link has been sent to your email address.') }}
-                        </p>
-                    @endif
+                <div class="pt-alert-warning mt-3">
+                    <p>Tu correo no está verificado.</p>
+                    <button form="send-verification" class="pt-link green">Reenviar verificación</button>
                 </div>
+                <form id="send-verification" method="post" action="{{ route('verification.send') }}" class="hidden">
+                    @csrf
+                </form>
             @endif
         </div>
 
-        <div class="flex items-center gap-4">
-            <x-primary-button>{{ __('Save') }}</x-primary-button>
-
+        <div class="pt-form-actions">
+            <button type="submit" class="pt-btn pt-btn-green">Guardar cambios</button>
             @if (session('status') === 'profile-updated')
-                <p
-                    x-data="{ show: true }"
-                    x-show="show"
-                    x-transition
-                    x-init="setTimeout(() => show = false, 2000)"
-                    class="text-sm text-gray-600 dark:text-gray-400"
-                >{{ __('Saved.') }}</p>
+                <p class="pt-success-message">Guardado.</p>
             @endif
         </div>
     </form>
 </section>
+
+<style>
+    .pt-section-form { margin-bottom: 1.5rem; }
+    .pt-form-header { margin-bottom: 1.5rem; }
+    .pt-input { width: 100%; padding: 0.75rem 1rem; border-radius: 1rem; border: 1px solid #cde0d4; background: #ffffff; font-family: inherit; font-size: 0.95rem; outline: none; transition: 0.2s; }
+    .pt-input:focus { border-color: #2b7840; box-shadow: 0 0 0 3px rgba(43,120,64,0.1); }
+    .pt-error { color: #dc2626; font-size: 0.75rem; margin-top: 0.25rem; }
+    .pt-success-message { color: #16a34a; font-size: 0.875rem; margin-left: 1rem; }
+    .pt-alert-warning { background: #fef3c7; color: #92400e; border: 1px solid #fde68a; border-radius: 1rem; padding: 1rem; }
+    .pt-link.green { color: #16a34a; text-decoration: none; font-weight: 600; }
+    .pt-link.green:hover { text-decoration: underline; }
+    .hidden { display: none; }
+</style>
