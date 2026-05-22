@@ -2190,6 +2190,252 @@
                 padding: 70px 1rem;
             }
         }
+        /* ===== CORRECCIÓN FORMULARIO REPORTE DE PROBLEMAS ===== */
+
+.pt-form-container {
+    max-width: 900px;
+}
+
+.pt-form-card {
+    background: #ffffff;
+    border-radius: 1.75rem;
+    border: 1px solid #dbe7df;
+    box-shadow: 0 12px 28px rgba(0, 32, 0, 0.08);
+    padding: 2rem;
+    margin-bottom: 2rem;
+}
+
+.pt-form-intro {
+    margin-bottom: 1.8rem;
+}
+
+.pt-form-title {
+    font-size: 2rem;
+    font-weight: 900;
+    color: #1e3a2f;
+    margin: 0.4rem 0;
+}
+
+.pt-form-subtitle {
+    color: #6b7280;
+    font-size: 0.95rem;
+}
+
+.pt-form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem;
+}
+
+.pt-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.pt-form-group.full {
+    grid-column: 1 / -1;
+}
+
+.pt-form-group label {
+    font-weight: 800;
+    color: #374151;
+    font-size: 0.92rem;
+}
+
+.pt-form-group select,
+.pt-form-group input,
+.pt-form-group textarea {
+    width: 100%;
+    padding: 0.85rem 1rem;
+    border-radius: 1rem;
+    border: 1px solid #cde0d4;
+    background: #ffffff;
+    font-family: inherit;
+    font-size: 0.95rem;
+    outline: none;
+}
+
+.pt-form-group select:focus,
+.pt-form-group input:focus,
+.pt-form-group textarea:focus {
+    border-color: #2b7840;
+    box-shadow: 0 0 0 3px rgba(43, 120, 64, 0.1);
+}
+
+.pt-form-actions {
+    margin-top: 2rem;
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.pt-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.7rem 1.1rem;
+    border-radius: 0.9rem;
+    font-size: 0.875rem;
+    font-weight: 800;
+    text-decoration: none;
+    transition: 0.2s ease;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.pt-btn-green {
+    background: #16a34a;
+    color: #ffffff;
+}
+
+.pt-btn-green:hover {
+    background: #15803d;
+}
+
+.pt-btn-dark {
+    background: #475569;
+    color: #ffffff;
+}
+
+.pt-btn-dark:hover {
+    background: #334155;
+}
+
+.pt-btn-outline {
+    background: #f3faf5;
+    border: 2px dashed #2b7840;
+    color: #1e3a2f;
+}
+
+.pt-btn-outline:hover {
+    background: #dcfce7;
+}
+
+.pt-selected-item {
+    margin-top: 0.75rem;
+    font-weight: 700;
+    color: #2b7840;
+}
+
+/* ===== MODAL DE PROBLEMAS ===== */
+
+.pt-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.65);
+    z-index: 99999;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+}
+
+.pt-modal-content {
+    background: #ffffff;
+    width: 90%;
+    max-width: 950px;
+    max-height: 85vh;
+    overflow-y: auto;
+    border-radius: 1.5rem;
+    box-shadow: 0 24px 50px rgba(0, 0, 0, 0.25);
+}
+
+.pt-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.pt-modal-header h4 {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 900;
+    color: #1e3a2f;
+}
+
+.pt-close-modal {
+    cursor: pointer;
+    font-size: 2rem;
+    line-height: 1;
+    color: #6b7280;
+    font-weight: 700;
+}
+
+.pt-close-modal:hover {
+    color: #dc2626;
+}
+
+.pt-modal-body {
+    padding: 1.5rem;
+}
+
+.pt-problemas-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1.25rem;
+}
+
+.pt-problema-card {
+    border: 1px solid #dbe7df;
+    border-radius: 1.1rem;
+    overflow: hidden;
+    cursor: pointer;
+    transition: 0.2s ease;
+    background: #ffffff;
+}
+
+.pt-problema-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.10);
+    border-color: #16a34a;
+}
+
+.pt-problema-card img {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+    display: block;
+}
+
+.pt-problema-card-body {
+    padding: 1rem;
+}
+
+.pt-problema-card-body h5 {
+    margin: 0 0 0.4rem;
+    color: #1e3a2f;
+    font-size: 1rem;
+    font-weight: 900;
+}
+
+.pt-problema-card-body p {
+    margin: 0;
+    color: #6b7280;
+    font-size: 0.85rem;
+    line-height: 1.4;
+}
+
+@media (max-width: 768px) {
+    .pt-form-card {
+        padding: 1.25rem;
+    }
+
+    .pt-form-title {
+        font-size: 1.5rem;
+    }
+
+    .pt-form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .pt-modal-content {
+        width: 95%;
+    }
+}
     </style>
 
     <div class="pt-page">
@@ -2287,23 +2533,39 @@
         </div>
     </div>
 
-    <script>
-        const btnAbrir = document.getElementById('btnAbrirModal');
-        const modal = document.getElementById('modalProblemas');
-        const closeModal = document.querySelector('.pt-close-modal');
-        const idProblemaInput = document.getElementById('id_problema');
-        const problemaSeleccionadoDiv = document.getElementById('problemaSeleccionado');
+   <script>
+document.addEventListener('DOMContentLoaded', function () {
+    const btnAbrir = document.getElementById('btnAbrirModal');
+    const modal = document.getElementById('modalProblemas');
+    const closeModal = document.querySelector('.pt-close-modal');
+    const idProblemaInput = document.getElementById('id_problema');
+    const problemaSeleccionadoDiv = document.getElementById('problemaSeleccionado');
 
-        btnAbrir.onclick = () => { modal.style.display = 'flex'; };
-        closeModal.onclick = () => { modal.style.display = 'none'; };
-        window.onclick = (event) => { if (event.target === modal) modal.style.display = 'none'; };
-
-        document.querySelectorAll('.pt-problema-card').forEach(card => {
-            card.addEventListener('click', () => {
-                idProblemaInput.value = card.dataset.id;
-                problemaSeleccionadoDiv.innerHTML = `<strong>Problema seleccionado:</strong> ${card.dataset.nombre}`;
-                modal.style.display = 'none';
-            });
+    if (btnAbrir && modal) {
+        btnAbrir.addEventListener('click', function () {
+            modal.style.display = 'flex';
         });
-    </script>
+    }
+
+    if (closeModal && modal) {
+        closeModal.addEventListener('click', function () {
+            modal.style.display = 'none';
+        });
+    }
+
+    window.addEventListener('click', function (event) {
+        if (event.target === modal) {
+            modal.style.display = 'none';
+        }
+    });
+
+    document.querySelectorAll('.pt-problema-card').forEach(card => {
+        card.addEventListener('click', function () {
+            idProblemaInput.value = this.dataset.id;
+            problemaSeleccionadoDiv.innerHTML = `<strong>Problema seleccionado:</strong> ${this.dataset.nombre}`;
+            modal.style.display = 'none';
+        });
+    });
+});
+</script>
 </x-app-layout>
