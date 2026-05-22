@@ -147,13 +147,21 @@ class AdopcionController extends Controller
             abort(403, 'No tienes permiso para actualizar esta adopción.');
         }
 
+
         $request->validate([
             'estado_adopcion' => 'required|string',
+            'id_ubicacion' => 'nullable|exists:ubicaciones,id',
         ]);
 
-        $adopcione->update([
+        $data = [
             'estado_adopcion' => $request->estado_adopcion,
-        ]);
+        ];
+
+        if ($request->filled('id_ubicacion')) {
+            $data['id_ubicacion'] = $request->id_ubicacion;
+        }
+
+        $adopcione->update($data);
 
         return redirect()->route('adopciones.index')
             ->with('success', 'Estado actualizado correctamente.');

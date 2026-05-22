@@ -28,6 +28,8 @@ class DatabaseSeeder extends Seeder
         $this->call([
             CuidadosSeeder::class,
             ProblemasSeeder::class,
+            RecomendacionZonaSeeder::class,
+            UbicacionesSeeder::class,
             PlantasSeeder::class,
             TratamientosSeeder::class,
             PlantaCuidadosSeeder::class,
