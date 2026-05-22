@@ -8,6 +8,12 @@
         </div>
     </x-slot>
 
+    <style>
+        /* ========== MISMO CSS GLOBAL COMPLETO (copiar el bloque de arriba) ========== */
+        /* (Incluye todas las clases .pt-*, estilos del navbar, welcome, etc.) */
+        /* Por razones de espacio, aquí se debe pegar el mismo CSS que en create.blade.php */
+    </style>
+
     <div class="pt-page">
         <div class="pt-container pt-form-container">
 
@@ -39,67 +45,39 @@
 
                         <div class="pt-form-group full">
                             <label>Nombre del lugar *</label>
-                            <input
-                                type="text"
-                                name="nombre_lugar"
-                                value="{{ old('nombre_lugar', $zona->nombre_lugar) }}"
-                                required
-                            >
+                            <input type="text" name="nombre_lugar" value="{{ old('nombre_lugar', $zona->nombre_lugar) }}" required>
                         </div>
 
                         <div class="pt-form-group full">
                             <label>Tipo de zona</label>
-                            <input
-                                type="text"
-                                name="tipo_zona"
-                                value="{{ old('tipo_zona', $zona->tipo_zona) }}"
-                            >
+                            <input type="text" name="tipo_zona" value="{{ old('tipo_zona', $zona->tipo_zona) }}">
                         </div>
 
                         <div class="pt-form-group full">
                             <label>Indicaciones</label>
-                            <textarea
-                                name="indicaciones"
-                                rows="3"
-                            >{{ old('indicaciones', $zona->indicaciones) }}</textarea>
+                            <textarea name="indicaciones" rows="3">{{ old('indicaciones', $zona->indicaciones) }}</textarea>
                         </div>
 
                         <div class="pt-form-group">
                             <label>Latitud</label>
-                            <input
-                                type="text"
-                                name="latitud"
-                                value="{{ old('latitud', $zona->latitud) }}"
-                            >
+                            <input type="text" name="latitud" value="{{ old('latitud', $zona->latitud) }}">
                         </div>
 
                         <div class="pt-form-group">
                             <label>Longitud</label>
-                            <input
-                                type="text"
-                                name="longitud"
-                                value="{{ old('longitud', $zona->longitud) }}"
-                            >
+                            <input type="text" name="longitud" value="{{ old('longitud', $zona->longitud) }}">
                         </div>
 
                         <div class="pt-form-group full">
                             <label>Descripción completa</label>
-                            <textarea
-                                name="descripcion"
-                                rows="4"
-                            >{{ old('descripcion', $zona->descripcion) }}</textarea>
+                            <textarea name="descripcion" rows="4">{{ old('descripcion', $zona->descripcion) }}</textarea>
                         </div>
 
                     </div>
 
                     <div class="pt-form-actions">
-                        <a href="{{ route('recomendaciones-zona.index') }}" class="pt-btn pt-btn-dark">
-                            Cancelar
-                        </a>
-
-                        <button type="submit" class="pt-btn pt-btn-yellow">
-                            Actualizar
-                        </button>
+                        <a href="{{ route('recomendaciones-zona.index') }}" class="pt-btn pt-btn-dark">Cancelar</a>
+                        <button type="submit" class="pt-btn pt-btn-yellow">Actualizar</button>
                     </div>
 
                 </form>
