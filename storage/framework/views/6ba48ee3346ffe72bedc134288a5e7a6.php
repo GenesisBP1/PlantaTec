@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="<?php echo e(str_replace('_', '-', app()->getLocale())); ?>">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="csrf-token" content="{{ csrf_token() }}">
+        <meta name="csrf-token" content="<?php echo e(csrf_token()); ?>">
 
-        <title>{{ config('app.name', 'Laravel') }}</title>
+        <title><?php echo e(config('app.name', 'Laravel')); ?></title>
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
@@ -14,29 +14,31 @@
         <!-- Leaflet CSS -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
 
-        <!-- primer cambio -->
-     <link rel="stylesheet" href="{{ asset('css/plantatec.css') }}">
+        <!-- Scripts -->
+        <?php echo app('Illuminate\Foundation\Vite')(['resources/css/app.css', 'resources/js/app.js']); ?>
     </head>
     <body class="font-sans antialiased">
         <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
-            @include('layouts.navigation')
+            <?php echo $__env->make('layouts.navigation', array_diff_key(get_defined_vars(), ['__data' => 1, '__path' => 1]))->render(); ?>
 
             <!-- Page Heading -->
-            @isset($header)
+            <?php if(isset($header)): ?>
                 <header class="bg-white dark:bg-gray-800 shadow">
                     <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                        {{ $header }}
+                        <?php echo e($header); ?>
+
                     </div>
                 </header>
-            @endisset
+            <?php endif; ?>
 
             <!-- Page Content -->
             <main>
-                {{ $slot }}
+                <?php echo e($slot); ?>
+
             </main>
         </div>
 
-        {{-- Definición del store de Toast (Alpine) --}}
+        
         <script>
             document.addEventListener('alpine:init', () => {
                 Alpine.store('toast', {
@@ -64,7 +66,7 @@
             });
         </script>
 
-        {{-- Componente Toast visual --}}
+        
         <div
             x-data
             x-show="$store.toast.visible"
@@ -86,7 +88,7 @@
                     'bg-blue-600 text-white': $store.toast.type === 'info',
                 }"
             >
-                {{-- Ícono dinámico --}}
+                
                 <svg class="w-5 h-5 shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path x-show="$store.toast.type === 'success'"
                           stroke-linecap="round" stroke-linejoin="round"
@@ -112,4 +114,4 @@
         <!-- Leaflet JS -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
     </body>
-</html>
+</html><?php /**PATH C:\Users\danie\Herd\PlantaTec\resources\views/layouts/app.blade.php ENDPATH**/ ?>
