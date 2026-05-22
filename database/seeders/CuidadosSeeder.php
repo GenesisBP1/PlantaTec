@@ -21,7 +21,9 @@ class CuidadosSeeder extends Seeder
         ];
 
         foreach ($cuidados as $cuidado) {
-            Cuidado::create($cuidado);
+            Cuidado::updateOrCreate([
+                'nombre' => $cuidado['nombre'],
+            ], $cuidado);
         }
     }
 }

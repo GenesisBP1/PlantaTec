@@ -23,7 +23,9 @@ class ProblemasSeeder extends Seeder
         ];
 
         foreach ($problemas as $problema) {
-            Problema::create($problema);
+            Problema::updateOrCreate([
+                'nombre' => $problema['nombre'],
+            ], $problema);
         }
     }
 }
