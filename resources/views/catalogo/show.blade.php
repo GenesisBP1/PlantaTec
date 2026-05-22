@@ -420,6 +420,275 @@
                 font-size: 1.7rem;
             }
         }
+        /* ===== CORRECCIÓN DISEÑO ADOPTAR PLANTA ===== */
+
+.pt-adoption-form-card {
+    background: #ffffff;
+    border-radius: 1.75rem;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 12px 28px rgba(0, 32, 0, 0.08);
+    padding: 2rem;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+}
+
+.pt-adoption-form-card .pt-section-title {
+    font-size: 1.35rem;
+    font-weight: 900;
+    color: #111827;
+    margin-bottom: 1.5rem;
+}
+
+#formulario-adopcion {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+/* Grupos del formulario */
+.pt-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.pt-form-group label {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 800;
+    color: #374151;
+}
+
+/* Inputs, selects y textarea */
+.pt-form-group select,
+.pt-form-group input[type="text"],
+.pt-form-group input[type="file"],
+.pt-form-group input[type="number"],
+.pt-form-group textarea,
+#formulario-adopcion select,
+#formulario-adopcion input[type="text"],
+#formulario-adopcion input[type="number"],
+#formulario-adopcion textarea {
+    width: 100%;
+    padding: 0.85rem 1rem;
+    border-radius: 1rem;
+    border: 1px solid #cde0d4;
+    background: #ffffff;
+    color: #1f2937;
+    font-family: inherit;
+    font-size: 0.95rem;
+    outline: none;
+    transition: 0.2s ease;
+}
+
+.pt-form-group select:focus,
+.pt-form-group input:focus,
+.pt-form-group textarea:focus,
+#formulario-adopcion select:focus,
+#formulario-adopcion input:focus,
+#formulario-adopcion textarea:focus {
+    border-color: #2b7840;
+    box-shadow: 0 0 0 3px rgba(43, 120, 64, 0.12);
+}
+
+.pt-form-group textarea,
+#formulario-adopcion textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+/* Radio buttons */
+.pt-radio-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    background: #f4fbf2;
+    padding: 1rem 1.2rem;
+    border-radius: 1.25rem;
+    border: 1px solid #dbe7df;
+}
+
+.pt-radio-group label {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 800;
+    color: #1f2937;
+}
+
+.pt-radio-group input[type="radio"] {
+    width: 18px;
+    height: 18px;
+    accent-color: #16a34a;
+}
+
+/* Textos de ayuda */
+.pt-help-text {
+    font-size: 0.8rem;
+    color: #6b7280;
+    margin-top: 0.35rem;
+}
+
+/* Caja de información */
+.pt-info-message {
+    font-size: 0.875rem;
+    color: #1d4ed8;
+    margin-bottom: 0.75rem;
+    font-weight: 700;
+}
+
+.pt-location-box {
+    margin-top: 0.9rem;
+    padding: 0.9rem 1rem;
+    background: #eff6ff;
+    border-radius: 1rem;
+    border: 1px solid #bfdbfe;
+    color: #1e3a8a;
+    font-size: 0.875rem;
+}
+
+.pt-location-box p {
+    margin: 0;
+}
+
+/* Botón adoptar */
+.pt-submit-btn,
+#formulario-adopcion button[type="submit"] {
+    width: 100%;
+    background: linear-gradient(105deg, #2b7840, #3e8a5a);
+    color: #ffffff;
+    border: none;
+    padding: 1rem 1.25rem;
+    border-radius: 999px;
+    font-weight: 900;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-top: 1rem;
+    font-family: inherit;
+    transition: 0.2s ease;
+}
+
+.pt-submit-btn:hover,
+#formulario-adopcion button[type="submit"]:hover {
+    background: linear-gradient(105deg, #236a3b, #2b7840);
+    transform: translateY(-1px);
+    box-shadow: 0 8px 18px rgba(43, 120, 64, 0.25);
+}
+
+/* Botones de mapa / ubicación */
+.pt-map-btn,
+.obtener-geolocation-btn,
+.buscar-ubicacion-btn {
+    border: none;
+    padding: 0.75rem 1rem;
+    border-radius: 999px;
+    color: #ffffff;
+    font-weight: 800;
+    cursor: pointer;
+    transition: 0.2s ease;
+    font-family: inherit;
+}
+
+.pt-map-btn.blue,
+.obtener-geolocation-btn {
+    background: #2563eb;
+}
+
+.pt-map-btn.blue:hover,
+.obtener-geolocation-btn:hover {
+    background: #1d4ed8;
+}
+
+.pt-map-btn.green,
+.buscar-ubicacion-btn {
+    background: #16a34a;
+}
+
+.pt-map-btn.green:hover,
+.buscar-ubicacion-btn:hover {
+    background: #15803d;
+}
+
+/* Mapa */
+.pt-map-component {
+    position: relative;
+    width: 100%;
+    border-radius: 1rem;
+    overflow: hidden;
+    border: 1px solid #dbe7df;
+    box-shadow: 0 10px 22px rgba(0, 32, 0, 0.08);
+}
+
+.pt-map-canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+.pt-map-toolbar {
+    margin-top: 1rem;
+    padding: 1rem;
+    background: #ffffff;
+    border-radius: 1rem;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.05);
+}
+
+.pt-map-toolbar-grid {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 1rem;
+    align-items: center;
+}
+
+.pt-map-search {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.pt-map-search input {
+    flex: 1;
+    padding: 0.75rem 1rem;
+    border-radius: 999px;
+    border: 1px solid #cde0d4;
+    outline: none;
+    font-family: inherit;
+}
+
+/* Ocultar secciones */
+.hidden {
+    display: none !important;
+}
+
+/* Mejor separación del contenido */
+#ubicacionPublica,
+#ubicacionPrivada,
+#subopcion-zona,
+#subopcion-mapa-publico,
+#subopcion-mapa-privado {
+    margin-top: 0.75rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .pt-adoption-form-card {
+        padding: 1.25rem;
+        border-radius: 1.25rem;
+    }
+
+    .pt-map-toolbar-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .pt-map-search {
+        flex-direction: column;
+    }
+}
     </style>
 </head>
 
