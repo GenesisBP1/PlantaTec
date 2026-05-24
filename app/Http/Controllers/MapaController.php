@@ -20,7 +20,7 @@ class MapaController extends Controller
     /**
      * Obtener ubicaciones públicas y las del usuario (API JSON)
      */
-    public function getUbicaciones()
+    public function getUbicaciones(\Illuminate\Http\Request $request)
     {
         $user = Auth::user();
         
@@ -30,6 +30,12 @@ class MapaController extends Controller
 
         // Construir query base
         $query = Ubicacion::with(['usuario', 'adopciones.planta']);
+
+        // Filtrado por usuario (solo admin puede filtrar por otro usuario)
+        $usuarioId = $request->query('usuario_id');
+        if ($usuarioId && $user && $user->rol === 'admin') {
+            $query->where('id_usuario', $usuarioId);
+        }
 
         // Usar whereRaw con paréntesis para agrupar condiciones
         if ($user->rol === 'admin') {

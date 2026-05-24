@@ -25,12 +25,15 @@ class DashboardController extends Controller
                 ->orderByDesc('adopciones_count')
                 ->first();
 
+            $usuarios = User::where('rol', 'usuario')->get();
+
             return view('dashboard.admin', compact(
                 'totalPlantas',
                 'totalUsuarios',
                 'totalAdopciones',
                 'problemasActivos',
-                'plantaMasAdoptada'
+                'plantaMasAdoptada',
+                'usuarios'
             ));
         }
 

@@ -80,7 +80,11 @@
                         <span>{{ Auth::user()->email }}</span>
                     </div>
 
-                    <a href="{{ route('profile.edit') }}">Mi perfil</a>
+                    @if (Route::has('profile.edit'))
+                        <a href="{{ route('profile.edit') }}">Mi perfil</a>
+                    @else
+                        <a href="#">Mi perfil</a>
+                    @endif
 
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
@@ -141,7 +145,11 @@
             </div>
         </div>
 
-        <a href="{{ route('profile.edit') }}">Mi perfil</a>
+        @if (Route::has('profile.edit'))
+            <a href="{{ route('profile.edit') }}">Mi perfil</a>
+        @else
+            <a href="#">Mi perfil</a>
+        @endif
 
         <form method="POST" action="{{ route('logout') }}">
             @csrf

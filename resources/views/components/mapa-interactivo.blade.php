@@ -88,6 +88,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     let marcadorSeleccionado = null;
     const mapaId = '{{ $id }}';
+    // Mantener lista de marcadores para poder limpiar/filtrar
+    let marcadoresArray_{{ $id }} = [];
 
     // Solo definir y usar URLs de API si las rutas existen
     @if(\Illuminate\Support\Facades\Route::has('api.mapa.ubicaciones'))
@@ -157,6 +159,14 @@ document.addEventListener('DOMContentLoaded', function() {
             .catch(error => console.error('Error cargando zonas recomendadas:', error));
     };
 
+        // Exponer función para recargar ubicaciones filtrando por usuario
+        window.recargarUbicacionesPorUsuario = function(usuarioId) {
+            if (typeof urlUbicaciones === 'undefined') return;
+            const separador = urlUbicaciones.indexOf('?') === -1 ? '?' : '&';
+            const url = usuarioId ? (urlUbicaciones + separador + 'usuario_id=' + encodeURIComponent(usuarioId)) : urlUbicaciones;
+            cargarUbicacionesEnMapa(mapa, mapaId, url);
+        };
+
     @if($canSelectLocation)
     mapa.on('click', function(e) {
         if (marcadorSeleccionado) {
@@ -203,10 +213,17 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-function cargarUbicacionesEnMapa(mapa, mapaId) {
-    if (typeof urlUbicaciones === 'undefined') return;
+function cargarUbicacionesEnMapa(mapa, mapaId, urlOverride) {
+    const fetchUrl = urlOverride || (typeof urlUbicaciones !== 'undefined' ? urlUbicaciones : null);
+    if (!fetchUrl) return;
 
-    fetch(urlUbicaciones)
+    // Limpiar marcadores previos
+    try {
+        marcadoresArray_{{ $id }}.forEach(m => { if (m && mapa.hasLayer(m)) mapa.removeLayer(m); });
+    } catch (e) { /* ignore */ }
+    marcadoresArray_{{ $id }} = [];
+
+    fetch(fetchUrl)
         .then(response => response.json())
         .then(data => {
             if (data.success) {
@@ -236,6 +253,8 @@ function cargarUbicacionesEnMapa(mapa, mapaId) {
                             })
                         }
                     ).addTo(mapa);
+
+                    marcadoresArray_{{ $id }}.push(marcador);
 
                     let popup = `
                         <div class="pt-map-popup">
