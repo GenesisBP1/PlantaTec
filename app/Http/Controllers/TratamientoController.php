@@ -14,29 +14,10 @@ class TratamientoController extends Controller
 {
     $tratamientos = Tratamiento::with(['problema', 'planta', 'cuidado'])
         ->latest()
-        ->get();
-
-    $tableTratamientosRows = $tratamientos->map(function ($tratamiento) {
-        return [
-            $tratamiento->problema->nombre ?? 'Sin problema',
-            $tratamiento->planta->nombre ?? 'General',
-            $tratamiento->cuidado->nombre ?? 'Sin cuidado específico',
-            e($tratamiento->descripcion ?? 'Sin descripción'),
-            e($tratamiento->indicaciones ?? 'Sin indicaciones'),
-        ];
-    })->toArray();
-
-    $tableTratamientosActions = $tratamientos->map(function ($tratamiento) {
-        return [
-            'view' => route('tratamientos.show', $tratamiento->id),
-            'edit' => route('tratamientos.edit', $tratamiento->id),
-            'delete' => route('tratamientos.destroy', $tratamiento->id),
-        ];
-    })->toArray();
-
-    return view('tratamientos.index', compact('tratamientos', 'tableTratamientosRows', 'tableTratamientosActions'));
+        ->paginate(10);
+    
+    return view('tratamientos.index', compact('tratamientos'));
 }
-
     public function create()
     {
         $problemas = Problema::all();

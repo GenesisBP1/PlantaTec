@@ -9,28 +9,8 @@ class ProblemaController extends Controller
 {
 public function index()
 {
-    $problemas = Problema::latest()->get();
-
-    $tableProblemasRows = $problemas->map(function ($problema) {
-        return [
-            e($problema->nombre),
-            e($problema->descripcion ?? 'Sin descripción'),
-        ];
-    })->toArray();
-
-    $tableProblemasActions = $problemas->map(function ($problema) {
-        return [
-            'view' => route('problemas.show', $problema->id),
-            'edit' => route('problemas.edit', $problema->id),
-            'delete' => route('problemas.destroy', $problema->id),
-        ];
-    })->toArray();
-
-    return view('problemas.index', compact(
-        'problemas',
-        'tableProblemasRows',
-        'tableProblemasActions'
-    ));
+    $problemas = Problema::latest()->paginate(10); // 👈 paginación
+    return view('problemas.index', compact('problemas'));
 }
 
     public function create()

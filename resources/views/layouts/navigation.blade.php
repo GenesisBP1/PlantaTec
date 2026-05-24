@@ -28,7 +28,6 @@
                                 <a href="{{ route('ubicaciones.index') }}">Ubicaciones</a>
                                 <a href="{{ route('cuidados.index') }}">Cuidados</a>
                                 <a href="{{ route('planta-cuidados.index') }}">Asignar cuidados</a>
-                                <a href="{{ route('recomendaciones-cuidado.index') }}">Recomendaciones de cuidado</a>
                                 <a href="{{ route('recomendaciones-zona.index') }}">Recomendaciones de zona</a>
                                 <a href="{{ route('problemas.index') }}">Problemas</a>
                                 <a href="{{ route('tratamientos.index') }}">Tratamientos</a>
@@ -113,7 +112,6 @@
             <a href="{{ route('ubicaciones.index') }}">Ubicaciones</a>
             <a href="{{ route('cuidados.index') }}">Cuidados</a>
             <a href="{{ route('planta-cuidados.index') }}">Asignar cuidados</a>
-            <a href="{{ route('recomendaciones-cuidado.index') }}">Recomendaciones de cuidado</a>
             <a href="{{ route('recomendaciones-zona.index') }}">Recomendaciones de zona</a>
             <a href="{{ route('problemas.index') }}">Problemas</a>
             <a href="{{ route('tratamientos.index') }}">Tratamientos</a>
@@ -166,7 +164,7 @@
            ============================================ */
 
         :root {
-            --primary: #7C3AED;
+            --primary: #ffffff;
             --primary-dark: #6D28D9;
             --primary-light: #A78BFA;
             --secondary: #D946EF;
@@ -175,6 +173,7 @@
             --text-dark: #1E1B2E;
             --text-gray: #6B7280;
             --border: #E9E8F0;
+            --warning: #ef4444;  /* <--- Agregado: define el color rojo para el badge */
         }
 
         * {
@@ -184,11 +183,11 @@
         }
 
         body {
-            background-color: var(--background);
+            background-color: rgba(253, 255, 234, 0.29);
         }
 
         .pt-navbar {
-            background: linear-gradient(135deg, var(--primary-dark), var(--primary), var(--secondary));
+            background: white;
             position: sticky;
             top: 0;
             z-index: 50;
@@ -211,11 +210,12 @@
         /* Logo */
         .pt-logo {
             display: flex;
+
             align-items: center;
             gap: 0.5rem;
             font-size: 1.25rem;
             font-weight: 700;
-            color: white;
+            color: #000000;
             text-decoration: none;
         }
 
@@ -238,7 +238,7 @@
         }
 
         .pt-nav-link {
-            color: white;
+            color: #000000;
             text-decoration: none;
             font-weight: 500;
             padding: 0.5rem 1rem;
@@ -247,11 +247,11 @@
         }
 
         .pt-nav-link:hover {
-            background-color: rgba(255, 255, 255, 0.15);
+            background-color: rgba(0, 0, 0, 0.15);
         }
 
         .pt-nav-link.active {
-            background-color: rgba(255, 255, 255, 0.25);
+            background-color: rgba(0, 0, 0, 0.25);
             font-weight: 600;
         }
 
@@ -307,7 +307,7 @@
         }
 
         .pt-dropdown-menu a:hover {
-            background-color: var(--primary-light);
+            background-color: rgba(14, 137, 38, 0.7);
             color: white;
         }
 
@@ -423,7 +423,7 @@
 
         .pt-user-dropdown a:hover,
         .pt-user-dropdown button:hover {
-            background-color: var(--primary-light);
+            background-color: rgba(30, 168, 18, 0.68);
             color: white;
         }
 
@@ -471,14 +471,14 @@
         }
 
         .pt-mobile-menu a.active {
-            background-color: var(--primary-light);
+            background-color: green;
             color: white;
-            font-weight: 600;
+            font-weight: 600; 
         }
 
         .pt-mobile-menu a:hover,
         .pt-mobile-menu button:hover {
-            background-color: var(--primary-light);
+            background-color: rgba(4, 57, 12, 0.54);
             color: white;
         }
 

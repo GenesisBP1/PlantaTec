@@ -1,17 +1,26 @@
-<x-app-layout>
-    <x-slot name="header">
+<?php if (isset($component)) { $__componentOriginal9ac128a9029c0e4701924bd2d73d7f54 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal9ac128a9029c0e4701924bd2d73d7f54 = $attributes; } ?>
+<?php $component = App\View\Components\AppLayout::resolve([] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('app-layout'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\App\View\Components\AppLayout::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
+     <?php $__env->slot('header', null, []); ?> 
         <div class="pt-header">
             <div>
                 <p class="pt-header-label">Zonas públicas</p>
-                <h2 class="pt-header-title">{{ $zona->nombre_lugar }}</h2>
+                <h2 class="pt-header-title"><?php echo e($zona->nombre_lugar); ?></h2>
                 <p class="pt-header-subtitle">Detalle de la zona recomendada</p>
             </div>
             <div class="pt-header-actions">
-                <a href="{{ route('recomendaciones-zona.index') }}" class="pt-btn pt-btn-light">Volver</a>
-                <a href="{{ route('recomendaciones-zona.edit', $zona) }}" class="pt-btn pt-btn-green">Editar</a>
+                <a href="<?php echo e(route('recomendaciones-zona.index')); ?>" class="pt-btn pt-btn-light">Volver</a>
+                <a href="<?php echo e(route('recomendaciones-zona.edit', $zona)); ?>" class="pt-btn pt-btn-green">Editar</a>
             </div>
         </div>
-    </x-slot>
+     <?php $__env->endSlot(); ?>
     <style>
     /* =========================
    ACOMODAR CONTENIDO GENERAL
@@ -303,35 +312,44 @@
                     <div class="pt-info-grid-small">
                         <div class="pt-info-box">
                             <strong>Nombre del lugar</strong>
-                            <span>{{ $zona->nombre_lugar }}</span>
+                            <span><?php echo e($zona->nombre_lugar); ?></span>
                         </div>
                         <div class="pt-info-box">
                             <strong>Tipo de zona</strong>
-                            <span>{{ $zona->tipo_zona ?? 'No especificado' }}</span>
+                            <span><?php echo e($zona->tipo_zona ?? 'No especificado'); ?></span>
                         </div>
                         <div class="pt-info-box">
                             <strong>Latitud</strong>
-                            <span>{{ $zona->latitud ?? '—' }}</span>
+                            <span><?php echo e($zona->latitud ?? '—'); ?></span>
                         </div>
                         <div class="pt-info-box">
                             <strong>Longitud</strong>
-                            <span>{{ $zona->longitud ?? '—' }}</span>
+                            <span><?php echo e($zona->longitud ?? '—'); ?></span>
                         </div>
                     </div>
-                    @if($zona->descripcion)
+                    <?php if($zona->descripcion): ?>
                         <div class="pt-description">
                             <strong>Descripción:</strong>
-                            <p>{{ $zona->descripcion }}</p>
+                            <p><?php echo e($zona->descripcion); ?></p>
                         </div>
-                    @endif
-                    @if($zona->indicaciones)
+                    <?php endif; ?>
+                    <?php if($zona->indicaciones): ?>
                         <div class="pt-description">
                             <strong>Indicaciones:</strong>
-                            <p>{{ $zona->indicaciones }}</p>
+                            <p><?php echo e($zona->indicaciones); ?></p>
                         </div>
-                    @endif
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
     </div>
-</x-app-layout>
+ <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal9ac128a9029c0e4701924bd2d73d7f54)): ?>
+<?php $attributes = $__attributesOriginal9ac128a9029c0e4701924bd2d73d7f54; ?>
+<?php unset($__attributesOriginal9ac128a9029c0e4701924bd2d73d7f54); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal9ac128a9029c0e4701924bd2d73d7f54)): ?>
+<?php $component = $__componentOriginal9ac128a9029c0e4701924bd2d73d7f54; ?>
+<?php unset($__componentOriginal9ac128a9029c0e4701924bd2d73d7f54); ?>
+<?php endif; ?><?php /**PATH C:\Users\Admin\Documents\8\Prog de backend\Laravel Herd\PlantaTec\resources\views/recomendaciones-zona/show.blade.php ENDPATH**/ ?>

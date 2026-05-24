@@ -1,5 +1,14 @@
-<x-app-layout>
-    <x-slot name="header">
+<?php if (isset($component)) { $__componentOriginal9ac128a9029c0e4701924bd2d73d7f54 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal9ac128a9029c0e4701924bd2d73d7f54 = $attributes; } ?>
+<?php $component = App\View\Components\AppLayout::resolve([] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('app-layout'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\App\View\Components\AppLayout::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
+     <?php $__env->slot('header', null, []); ?> 
         <div class="pt-header">
             <div>
                 <p class="pt-header-label">Tratamientos</p>
@@ -7,10 +16,10 @@
                 <p class="pt-header-subtitle">Panel de administración</p>
             </div>
             <div class="pt-header-actions">
-                <a href="{{ route('tratamientos.create') }}" class="pt-btn pt-btn-green">+ Registrar tratamiento</a>
+                <a href="<?php echo e(route('tratamientos.create')); ?>" class="pt-btn pt-btn-green">+ Registrar tratamiento</a>
             </div>
         </div>
-    </x-slot>
+     <?php $__env->endSlot(); ?>
 
     <style>
       /* ========== ESTILOS ESPECÍFICOS PARA TRATAMIENTOS ========== */
@@ -434,35 +443,45 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @forelse($tratamientos as $tratamiento)
+                            <?php $__empty_1 = true; $__currentLoopData = $tratamientos; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $tratamiento): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
                                 <tr>
-                                    <td>{{ $tratamiento->problema->nombre ?? 'Sin problema' }}</td>
-                                    <td>{{ $tratamiento->planta->nombre ?? 'General' }}</td>
-                                    <td>{{ $tratamiento->cuidado->nombre ?? 'Sin cuidado' }}</td>
-                                    <td>{{ Str::limit($tratamiento->descripcion, 50) }}</td>
-                                    <td>{{ Str::limit($tratamiento->indicaciones, 50) }}</td>
+                                    <td><?php echo e($tratamiento->problema->nombre ?? 'Sin problema'); ?></td>
+                                    <td><?php echo e($tratamiento->planta->nombre ?? 'General'); ?></td>
+                                    <td><?php echo e($tratamiento->cuidado->nombre ?? 'Sin cuidado'); ?></td>
+                                    <td><?php echo e(Str::limit($tratamiento->descripcion, 50)); ?></td>
+                                    <td><?php echo e(Str::limit($tratamiento->indicaciones, 50)); ?></td>
                                     <td class="pt-table-actions">
-                                        <a href="{{ route('tratamientos.show', $tratamiento) }}" class="pt-action-btn view">Ver</a>
-                                        <a href="{{ route('tratamientos.edit', $tratamiento) }}" class="pt-action-btn edit">Editar</a>
-                                        <form action="{{ route('tratamientos.destroy', $tratamiento) }}" method="POST" style="display:inline;">
-                                            @csrf
-                                            @method('DELETE')
+                                        <a href="<?php echo e(route('tratamientos.show', $tratamiento)); ?>" class="pt-action-btn view">Ver</a>
+                                        <a href="<?php echo e(route('tratamientos.edit', $tratamiento)); ?>" class="pt-action-btn edit">Editar</a>
+                                        <form action="<?php echo e(route('tratamientos.destroy', $tratamiento)); ?>" method="POST" style="display:inline;">
+                                            <?php echo csrf_field(); ?>
+                                            <?php echo method_field('DELETE'); ?>
                                             <button type="submit" class="pt-action-btn delete" onclick="return confirm('¿Eliminar este tratamiento?')">Eliminar</button>
                                         </form>
                                     </td>
                                 </tr>
-                            @empty
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                                 <tr>
                                     <td colspan="6" class="pt-empty center">No hay tratamientos registrados.</td>
                                 </tr>
-                            @endforelse
+                            <?php endif; ?>
                         </tbody>
                     </table>
                 </div>
                 <div class="pt-pagination">
-                    {{ $tratamientos->links() }}
+                    <?php echo e($tratamientos->links()); ?>
+
                 </div>
             </div>
         </div>
     </div>
-</x-app-layout>
+ <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal9ac128a9029c0e4701924bd2d73d7f54)): ?>
+<?php $attributes = $__attributesOriginal9ac128a9029c0e4701924bd2d73d7f54; ?>
+<?php unset($__attributesOriginal9ac128a9029c0e4701924bd2d73d7f54); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal9ac128a9029c0e4701924bd2d73d7f54)): ?>
+<?php $component = $__componentOriginal9ac128a9029c0e4701924bd2d73d7f54; ?>
+<?php unset($__componentOriginal9ac128a9029c0e4701924bd2d73d7f54); ?>
+<?php endif; ?><?php /**PATH C:\Users\Admin\Documents\8\Prog de backend\Laravel Herd\PlantaTec\resources\views/tratamientos/index.blade.php ENDPATH**/ ?>

@@ -322,7 +322,7 @@
             <div class="pt-map-card" style="margin-top: 1rem; margin-bottom: 2rem;">
                 <div class="pt-map-header">
                     <div>
-                        <h3 class="pt-section-title">🗺️ Mapa de ubicaciones</h3>
+                        <h3 class="pt-section-title"> Mapa de ubicaciones</h3>
                         <p class="pt-card-subtitle">Adopciones y zonas públicas recomendadas</p>
                     </div>
                     <?php if(\Illuminate\Support\Facades\Route::has('mapa.index')): ?>
@@ -401,7 +401,7 @@
                         </div>
                     <?php else: ?>
                         <div class="pt-empty center">
-                            <div class="pt-empty-icon">📍</div>
+                            <div class="pt-empty-icon"></div>
                             <p class="pt-empty-title">No hay zonas recomendadas configuradas</p>
                         </div>
                     <?php endif; ?>

@@ -1,32 +1,28 @@
-<!DOCTYPE html>
-<html lang="<?php echo e(str_replace('_', '-', app()->getLocale())); ?>">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>PlantaTec — Mis adopciones</title>
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700;9..40,800&display=swap" rel="stylesheet">
-
-    <!-- Font Awesome para iconos -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-
-    <!-- Alpine.js para el dropdown -->
-    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+<?php if (isset($component)) { $__componentOriginal9ac128a9029c0e4701924bd2d73d7f54 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal9ac128a9029c0e4701924bd2d73d7f54 = $attributes; } ?>
+<?php $component = App\View\Components\AppLayout::resolve([] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('app-layout'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\App\View\Components\AppLayout::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
+     <?php $__env->slot('header', null, []); ?> 
+        <div class="pt-header">
+            <div>
+                <p class="pt-header-label">Mis plantas</p>
+                <h2 class="pt-header-title"> Plantas adoptadas</h2>
+                <p class="pt-header-subtitle">Registra el cuidado diario y reporta problemas de cada planta</p>
+            </div>
+            <div class="pt-header-actions">
+                <a href="<?php echo e(route('catalogo.plantas')); ?>" class="pt-btn pt-btn-green">+ Adoptar nueva planta</a>
+            </div>
+        </div>
+     <?php $__env->endSlot(); ?>
 
     <style>
-        /* ========== ESTILOS GLOBALES PLANTA TEC ========== */
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            margin: 0;
-            font-family: 'DM Sans', 'Figtree', sans-serif;
-            background: #f6f8f5;
-            color: #1f2937;
-        }
-        .pt-app { min-height: 100vh; }
-
-        /* Colores y sombras globales */
+        /* ========== ESTILOS ESPECÍFICOS DE "MIS ADOPCIONES" ========== */
         :root {
             --verde-profundo: #1e3a2f;
             --verde-medio: #2b7840;
@@ -40,119 +36,23 @@
             --border-radius-card: 36px;
             --transition: all 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
         }
-
-        /* ========== BARRA DE NAVEGACIÓN (común) ========== */
-        .pt-navbar {
-            background: #ffffff;
-            border-bottom: 1px solid #e5e7eb;
-            position: sticky;
-            top: 0;
-            z-index: 50;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+        .pt-page {
+            padding: 1rem 0;
         }
-        .pt-nav-container { max-width: 1280px; margin: 0 auto; padding: 0 1rem; }
-        .pt-nav-inner { height: 64px; display: flex; align-items: center; justify-content: space-between; }
-        .pt-nav-left { display: flex; align-items: center; gap: 2rem; }
-        .pt-logo { display: flex; align-items: center; gap: 0.6rem; text-decoration: none; color: #1f2937; font-size: 1.25rem; font-weight: 900; }
-        .pt-logo-icon { width: 34px; height: 34px; border-radius: 0.9rem; background: linear-gradient(135deg, #16a34a, #047857); color: #ffffff; display: flex; align-items: center; justify-content: center; }
-        .pt-desktop-menu { display: flex; align-items: center; gap: 0.25rem; }
-        .pt-nav-link {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.35rem;
-            padding: 0.6rem 0.85rem;
-            border-radius: 0.75rem;
-            color: #374151;
-            text-decoration: none;
-            font-size: 0.9rem;
-            font-weight: 700;
-            background: transparent;
-            border: none;
-            cursor: pointer;
-        }
-        .pt-nav-link:hover, .pt-nav-link.active { background: #f0fdf4; color: #15803d; }
-        .pt-dropdown { position: relative; }
-        .pt-dropdown-menu, .pt-user-dropdown {
-            position: absolute;
-            top: 115%;
-            background: #ffffff;
-            border: 1px solid #e5e7eb;
-            border-radius: 1rem;
-            box-shadow: 0 16px 32px rgba(0,0,0,0.12);
-            overflow: hidden;
-            z-index: 100;
-            min-width: 220px;
-        }
-        .pt-dropdown-menu a, .pt-user-dropdown a, .pt-user-dropdown button {
-            display: block;
-            width: 100%;
-            padding: 0.75rem 1rem;
-            color: #374151;
-            text-decoration: none;
-            font-size: 0.875rem;
+        .pt-header-label {
+            color: var(--verde-medio);
             font-weight: 600;
-            text-align: left;
-            background: transparent;
-            border: none;
-            cursor: pointer;
         }
-        .pt-dropdown-menu a:hover, .pt-user-dropdown a:hover, .pt-user-dropdown button:hover { background: #f0fdf4; color: #15803d; }
-        .pt-dropdown-menu hr { margin: 0.35rem 0; border-top: 1px solid #e5e7eb; }
-        .pt-nav-notification { padding-right: 1.3rem; }
-        .pt-nav-badge { background: #ef4444; color: #ffffff; border-radius: 999px; font-size: 0.68rem; padding: 0.1rem 0.4rem; margin-left: 0.3rem; }
-        .pt-user-menu { position: relative; }
-        .pt-user-btn { display: flex; align-items: center; gap: 0.65rem; padding: 0.45rem 0.7rem; border-radius: 0.9rem; background: #f9fafb; border: 1px solid #e5e7eb; cursor: pointer; }
-        .pt-user-btn:hover { background: #f3f4f6; }
-        .pt-avatar { width: 34px; height: 34px; border-radius: 999px; background: linear-gradient(135deg, #16a34a, #047857); color: #ffffff; display: flex; align-items: center; justify-content: center; font-weight: 900; }
-        .pt-user-text p { margin: 0; font-weight: 800; color: #1f2937; font-size: 0.875rem; }
-        .pt-user-text span { font-size: 0.75rem; color: #6b7280; }
-        .pt-user-arrow { color: #6b7280; }
-        .pt-user-dropdown { right: 0; }
-        .pt-user-info { padding: 1rem; border-bottom: 1px solid #e5e7eb; }
-        .pt-user-info p { margin: 0; font-weight: 800; }
-        .pt-user-info span { display: block; font-size: 0.75rem; color: #6b7280; }
-        .pt-mobile-btn { display: none; background: #f3f4f6; border: none; width: 40px; height: 40px; border-radius: 0.75rem; font-size: 1.4rem; cursor: pointer; }
-        .pt-mobile-menu { display: none; background: #ffffff; border-top: 1px solid #e5e7eb; padding: 0.75rem 1rem; }
-        .pt-mobile-menu a, .pt-mobile-menu button { display: block; width: 100%; padding: 0.75rem; border-radius: 0.75rem; color: #374151; text-decoration: none; font-weight: 700; background: transparent; border: none; text-align: left; cursor: pointer; }
-        .pt-mobile-menu a:hover, .pt-mobile-menu button:hover { background: #f0fdf4; color: #15803d; }
-        .pt-mobile-user { display: flex; align-items: center; gap: 0.75rem; padding: 1rem 0.75rem; border-top: 1px solid #e5e7eb; margin-top: 0.5rem; }
-        @media (max-width: 768px) {
-            .pt-desktop-menu, .pt-user-menu { display: none; }
-            .pt-mobile-btn { display: flex; align-items: center; justify-content: center; }
-            .pt-mobile-menu { display: block; }
+        .pt-header-title {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--verde-profundo);
         }
 
-        /* ========== UTILIDADES BÁSICAS ========== */
-        .py-8 { padding-top: 2rem; padding-bottom: 2rem; }
-        .bg-green-100.text-green-700.p-4.rounded.mb-4 {
-            background: #dcfce7;
-            color: #166534;
-            padding: 1rem;
-            border-radius: 0.75rem;
-            margin-bottom: 1rem;
-        }
-
-        /* ========== ESTILOS PROPIOS DE MIS ADOPCIONES ========== */
         .adopciones-container {
             max-width: 1300px;
             margin: 0 auto;
-            padding: 1rem 2rem;
-        }
-        .titulo-principal {
-            font-size: 2.5rem;
-            font-weight: 800;
-            background: linear-gradient(125deg, #1c593f, var(--verde-medio));
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            margin-bottom: 0.5rem;
-        }
-        .descripcion-pagina {
-            font-size: 1.15rem;
-            color: var(--gris-verde);
-            margin-bottom: 2rem;
-            border-left: 5px solid var(--verde-suave);
-            padding-left: 1.2rem;
+            padding: 1rem 0;
         }
         .plantas-list {
             display: flex;
@@ -344,7 +244,6 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Mensaje vacío */
         .empty-state {
             background: var(--blanco);
             border-radius: 1.5rem;
@@ -376,165 +275,76 @@
             }
         }
     </style>
-</head>
-<body class="pt-app">
 
-    <!-- ========== BARRA DE NAVEGACIÓN (con Alpine.js) ========== -->
-    <nav x-data="{ open: false }" class="pt-navbar">
-        <div class="pt-nav-container">
-            <div class="pt-nav-inner">
-                <div class="pt-nav-left">
-                    <a href="<?php echo e(route('dashboard')); ?>" class="pt-logo">
-                        <div class="pt-logo-icon">🌿</div>
-                        <span>PlantaTec</span>
-                    </a>
-                    <div class="pt-desktop-menu">
-                        <a href="<?php echo e(route('dashboard')); ?>" class="pt-nav-link <?php echo e(request()->routeIs('dashboard') ? 'active' : ''); ?>">Dashboard</a>
-                        <?php if(auth()->user()->rol === 'admin'): ?>
-                            <div class="pt-dropdown" x-data="{ adminOpen: false }">
-                                <button @click="adminOpen = !adminOpen" @click.away="adminOpen = false" class="pt-nav-link pt-dropdown-btn">Administración <span>⌄</span></button>
-                                <div x-show="adminOpen" x-transition class="pt-dropdown-menu" style="display:none;">
-                                    <a href="<?php echo e(route('plantas.index')); ?>">Plantas</a>
-                                    <a href="<?php echo e(route('adopciones.index')); ?>">Adopciones</a>
-                                    <a href="<?php echo e(route('ubicaciones.index')); ?>">Ubicaciones</a>
-                                    <a href="<?php echo e(route('cuidados.index')); ?>">Cuidados</a>
-                                    <a href="<?php echo e(route('planta-cuidados.index')); ?>">Asignar cuidados</a>
-                                    <a href="<?php echo e(route('recomendaciones-cuidado.index')); ?>">Recomendaciones de cuidado</a>
-                                    <a href="<?php echo e(route('recomendaciones-zona.index')); ?>">Recomendaciones de zona</a>
-                                    <a href="<?php echo e(route('problemas.index')); ?>">Problemas</a>
-                                    <a href="<?php echo e(route('tratamientos.index')); ?>">Tratamientos</a>
-                                    <hr>
-                                    <a href="<?php echo e(route('reporte-problemas.index')); ?>">Reportes de problemas</a>
-                                    <a href="<?php echo e(route('admin.usuarios.index')); ?>">Usuarios</a>
-                                </div>
-                            </div>
-                        <?php else: ?>
-                            <a href="<?php echo e(route('catalogo.plantas')); ?>" class="pt-nav-link <?php echo e(request()->routeIs('catalogo.plantas') ? 'active' : ''); ?>">Catálogo</a>
-                            <a href="<?php echo e(route('adopciones.index')); ?>" class="pt-nav-link <?php echo e(request()->routeIs('adopciones.*') ? 'active' : ''); ?>">Mis adopciones</a>
-                            <?php $notificacionesNoLeidas = \App\Models\Notificacion::where('id_usuario', auth()->id())->where('leida', false)->count(); ?>
-                            <a href="<?php echo e(route('notificaciones.index')); ?>" class="pt-nav-link pt-nav-notification <?php echo e(request()->routeIs('notificaciones.*') ? 'active' : ''); ?>">
-                                Notificaciones
-                                <?php if($notificacionesNoLeidas > 0): ?>
-                                    <span class="pt-nav-badge"><?php echo e($notificacionesNoLeidas > 9 ? '9+' : $notificacionesNoLeidas); ?></span>
-                                <?php endif; ?>
-                            </a>
-                        <?php endif; ?>
-                    </div>
-                </div>
-                <div class="pt-user-menu" x-data="{ dropdownOpen: false }">
-                    <button @click="dropdownOpen = !dropdownOpen" @click.away="dropdownOpen = false" class="pt-user-btn">
-                        <div class="pt-avatar"><?php echo e(strtoupper(substr(Auth::user()->name, 0, 1))); ?></div>
-                        <div class="pt-user-text"><p><?php echo e(Auth::user()->name); ?></p><span><?php echo e(Auth::user()->rol === 'admin' ? 'Administrador' : 'Usuario'); ?></span></div>
-                        <span class="pt-user-arrow">⌄</span>
-                    </button>
-                    <div x-show="dropdownOpen" x-transition class="pt-user-dropdown" style="display:none;">
-                        <div class="pt-user-info"><p><?php echo e(Auth::user()->name); ?></p><span><?php echo e(Auth::user()->email); ?></span></div>
-                        <a href="<?php echo e(route('profile.edit')); ?>">Mi perfil</a>
-                        <form method="POST" action="<?php echo e(route('logout')); ?>"><?php echo csrf_field(); ?><button type="submit">Cerrar sesión</button></form>
-                    </div>
-                </div>
-                <button @click="open = !open" class="pt-mobile-btn"><span x-show="!open">☰</span><span x-show="open" style="display:none;">×</span></button>
-            </div>
-        </div>
-        <div x-show="open" x-transition class="pt-mobile-menu" style="display:none;">
-            <a href="<?php echo e(route('dashboard')); ?>">Dashboard</a>
-            <?php if(auth()->user()->rol === 'admin'): ?>
-                <a href="<?php echo e(route('plantas.index')); ?>">Plantas</a>
-                <a href="<?php echo e(route('adopciones.index')); ?>">Adopciones</a>
-                <a href="<?php echo e(route('ubicaciones.index')); ?>">Ubicaciones</a>
-                <a href="<?php echo e(route('cuidados.index')); ?>">Cuidados</a>
-                <a href="<?php echo e(route('planta-cuidados.index')); ?>">Asignar cuidados</a>
-                <a href="<?php echo e(route('recomendaciones-cuidado.index')); ?>">Recomendaciones de cuidado</a>
-                <a href="<?php echo e(route('recomendaciones-zona.index')); ?>">Recomendaciones de zona</a>
-                <a href="<?php echo e(route('problemas.index')); ?>">Problemas</a>
-                <a href="<?php echo e(route('tratamientos.index')); ?>">Tratamientos</a>
-                <a href="<?php echo e(route('reporte-problemas.index')); ?>">Reportes de problemas</a>
-                <a href="<?php echo e(route('admin.usuarios.index')); ?>">Usuarios</a>
-            <?php else: ?>
-                <a href="<?php echo e(route('catalogo.plantas')); ?>">Catálogo</a>
-                <a href="<?php echo e(route('adopciones.index')); ?>">Mis adopciones</a>
-                <a href="<?php echo e(route('notificaciones.index')); ?>">Notificaciones</a>
-            <?php endif; ?>
-            <div class="pt-mobile-user">
-                <div class="pt-avatar"><?php echo e(strtoupper(substr(Auth::user()->name, 0, 1))); ?></div>
-                <div><p><?php echo e(Auth::user()->name); ?></p><span><?php echo e(Auth::user()->email); ?></span></div>
-            </div>
-            <a href="<?php echo e(route('profile.edit')); ?>">Mi perfil</a>
-            <form method="POST" action="<?php echo e(route('logout')); ?>"><?php echo csrf_field(); ?><button type="submit">Cerrar sesión</button></form>
-        </div>
-    </nav>
+    <div class="pt-page">
+        <div class="pt-container">
+            <div class="adopciones-container">
+                <?php if(session('success')): ?>
+                    <div class="pt-alert-success" style="background: #dcfce7; color: #166534; padding: 1rem; border-radius: 0.75rem; margin-bottom: 1rem;">
+                        <?php echo e(session('success')); ?>
 
-    <!-- ========== CONTENIDO PRINCIPAL ========== -->
-    <div class="py-8">
-        <div class="adopciones-container">
-            <h1 class="titulo-principal">🌱 Mis plantas adoptadas</h1>
-            <p class="descripcion-pagina">Registra el cuidado diario y reporta problemas de cada planta.</p>
-
-            <?php if(session('success')): ?>
-                <div class="bg-green-100 text-green-700 p-4 rounded mb-4">
-                    <?php echo e(session('success')); ?>
-
-                </div>
-            <?php endif; ?>
-
-            <div class="plantas-list">
-                <?php $__empty_1 = true; $__currentLoopData = $adopciones; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $adopcion): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
-                    <?php
-                        $planta = $adopcion->planta;
-                        $cuidadosAsignados = $planta->plantaCuidados ?? collect();
-                        $ultimoRegistro = $adopcion->registrosCuidados->sortByDesc('created_at')->first();
-                    ?>
-
-                    <div class="planta-card">
-                        <a href="<?php echo e(route('adopciones.show', $adopcion)); ?>">
-                            <?php if($planta->imagen): ?>
-                                <img class="planta-img" src="<?php echo e($planta->imagen); ?>" alt="<?php echo e($planta->nombre); ?>">
-                            <?php else: ?>
-                                <div class="sin-imagen">Sin imagen registrada</div>
-                            <?php endif; ?>
-                        </a>
-
-                        <div class="info-planta">
-                            <h3><a href="<?php echo e(route('adopciones.show', $adopcion)); ?>"><?php echo e($planta->nombre); ?></a></h3>
-                            <div class="especie"><?php echo e($planta->especie ?? 'Sin especie registrada'); ?></div>
-
-                            <div class="cuidados-list">
-                                <?php $__empty_2 = true; $__currentLoopData = $cuidadosAsignados; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $pc): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_2 = false; ?>
-                                    <span class="cuidado-badge"><?php echo e($pc->cuidado->nombre ?? 'Cuidado'); ?> cada <?php echo e($pc->frecuencia); ?> días</span>
-                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_2): ?>
-                                    <span class="cuidado-badge">Sin cuidados asignados</span>
-                                <?php endif; ?>
-                            </div>
-
-                            <?php if($ultimoRegistro): ?>
-                                <div class="ultima-evidencia">
-                                    <?php if($ultimoRegistro->imagen): ?>
-                                        <img src="<?php echo e(asset('storage/' . $ultimoRegistro->imagen)); ?>" alt="evidencia">
-                                    <?php else: ?>
-                                        <i class="fas fa-leaf"></i>
-                                    <?php endif; ?>
-                                    <span>Última evidencia: <?php echo e($ultimoRegistro->created_at->diffForHumans()); ?></span>
-                                </div>
-                            <?php else: ?>
-                                <div class="ultima-evidencia">
-                                    <i class="fas fa-info-circle"></i>
-                                    <span>Aún no hay registros de cuidado</span>
-                                </div>
-                            <?php endif; ?>
-                        </div>
-
-                        <div class="acciones">
-                            <a href="<?php echo e(route('adopciones.show', $adopcion)); ?>" class="btn-detalle"><i class="fas fa-eye"></i> Ver detalle</a>
-                            <button class="btn-evidencia" data-adopcion-id="<?php echo e($adopcion->id); ?>" data-planta-nombre="<?php echo e($planta->nombre); ?>"><i class="fas fa-camera"></i> Subir evidencia</button>
-                            <a href="<?php echo e(route('reporte-problemas.create', ['adopcion_id' => $adopcion->id])); ?>" class="btn-problema"><i class="fas fa-exclamation-triangle"></i> Reportar problema</a>
-                        </div>
-                    </div>
-                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
-                    <div class="empty-state">
-                        No tienes plantas adoptadas aún.
-                        <a href="<?php echo e(route('catalogo.plantas')); ?>">¡Adopta una!</a>
                     </div>
                 <?php endif; ?>
+
+                <div class="plantas-list">
+                    <?php $__empty_1 = true; $__currentLoopData = $adopciones; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $adopcion): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
+                        <?php
+                            $planta = $adopcion->planta;
+                            $cuidadosAsignados = $planta->plantaCuidados ?? collect();
+                            $ultimoRegistro = $adopcion->registrosCuidados->sortByDesc('created_at')->first();
+                        ?>
+
+                        <div class="planta-card">
+                            <a href="<?php echo e(route('adopciones.show', $adopcion)); ?>">
+                                <?php if($planta->imagen): ?>
+                                    <img class="planta-img" src="<?php echo e($planta->imagen); ?>" alt="<?php echo e($planta->nombre); ?>">
+                                <?php else: ?>
+                                    <div class="sin-imagen">Sin imagen registrada</div>
+                                <?php endif; ?>
+                            </a>
+
+                            <div class="info-planta">
+                                <h3><a href="<?php echo e(route('adopciones.show', $adopcion)); ?>"><?php echo e($planta->nombre); ?></a></h3>
+                                <div class="especie"><?php echo e($planta->especie ?? 'Sin especie registrada'); ?></div>
+
+                                <div class="cuidados-list">
+                                    <?php $__empty_2 = true; $__currentLoopData = $cuidadosAsignados; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $pc): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_2 = false; ?>
+                                        <span class="cuidado-badge"><?php echo e($pc->cuidado->nombre ?? 'Cuidado'); ?> cada <?php echo e($pc->frecuencia); ?> días</span>
+                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_2): ?>
+                                        <span class="cuidado-badge">Sin cuidados asignados</span>
+                                    <?php endif; ?>
+                                </div>
+
+                                <?php if($ultimoRegistro): ?>
+                                    <div class="ultima-evidencia">
+                                        <?php if($ultimoRegistro->imagen): ?>
+                                            <img src="<?php echo e(asset('storage/' . $ultimoRegistro->imagen)); ?>" alt="evidencia">
+                                        <?php else: ?>
+                                            <i class="fas fa-leaf"></i>
+                                        <?php endif; ?>
+                                        <span>Última evidencia: <?php echo e($ultimoRegistro->created_at->diffForHumans()); ?></span>
+                                    </div>
+                                <?php else: ?>
+                                    <div class="ultima-evidencia">
+                                        <i class="fas fa-info-circle"></i>
+                                        <span>Aún no hay registros de cuidado</span>
+                                    </div>
+                                <?php endif; ?>
+                            </div>
+
+                            <div class="acciones">
+                                <a href="<?php echo e(route('adopciones.show', $adopcion)); ?>" class="btn-detalle"><i class="fas fa-eye"></i> Ver detalle</a>
+                                <button class="btn-evidencia" data-adopcion-id="<?php echo e($adopcion->id); ?>" data-planta-nombre="<?php echo e($planta->nombre); ?>"><i class="fas fa-camera"></i> Subir evidencia</button>
+                                <a href="<?php echo e(route('reporte-problemas.create', ['adopcion_id' => $adopcion->id])); ?>" class="btn-problema"><i class="fas fa-exclamation-triangle"></i> Reportar problema</a>
+                            </div>
+                        </div>
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
+                        <div class="empty-state">
+                            No tienes plantas adoptadas aún.
+                            <a href="<?php echo e(route('catalogo.plantas')); ?>">¡Adopta una!</a>
+                        </div>
+                    <?php endif; ?>
+                </div>
             </div>
         </div>
     </div>
@@ -574,6 +384,7 @@
         </div>
     </div>
 
+    <?php $__env->startPush('scripts'); ?>
     <script>
         document.querySelectorAll('.btn-evidencia').forEach(btn => {
             btn.addEventListener('click', async function () {
@@ -606,6 +417,14 @@
             }
         };
     </script>
-
-</body>
-</html><?php /**PATH C:\Users\Admin\Documents\8\Prog de backend\Laravel Herd\PlantaTec\resources\views/adopciones/index_user.blade.php ENDPATH**/ ?>
+    <?php $__env->stopPush(); ?>
+ <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal9ac128a9029c0e4701924bd2d73d7f54)): ?>
+<?php $attributes = $__attributesOriginal9ac128a9029c0e4701924bd2d73d7f54; ?>
+<?php unset($__attributesOriginal9ac128a9029c0e4701924bd2d73d7f54); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal9ac128a9029c0e4701924bd2d73d7f54)): ?>
+<?php $component = $__componentOriginal9ac128a9029c0e4701924bd2d73d7f54; ?>
+<?php unset($__componentOriginal9ac128a9029c0e4701924bd2d73d7f54); ?>
+<?php endif; ?><?php /**PATH C:\Users\Admin\Documents\8\Prog de backend\Laravel Herd\PlantaTec\resources\views/adopciones/index_user.blade.php ENDPATH**/ ?>
