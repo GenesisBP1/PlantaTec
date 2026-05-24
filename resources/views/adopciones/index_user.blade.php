@@ -1,13 +1,61 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            Mis adopciones
-        </h2>
-    </x-slot>
+<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>PlantaTec — Mis adopciones</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700;9..40,800&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome para iconos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <!-- Alpine.js para el dropdown -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;600;700;800&display=swap');
+        /* ========== ESTILOS GLOBALES PLANTA TEC (barra de navegación) ========== */
+        body { margin: 0; font-family: 'DM Sans', 'Figtree', sans-serif; background: #f6f8f5; color: #1f2937; }
+        .pt-app { min-height: 100vh; }
+        .pt-navbar { background: #ffffff; border-bottom: 1px solid #e5e7eb; position: sticky; top: 0; z-index: 50; box-shadow: 0 2px 12px rgba(0,0,0,0.04); }
+        .pt-nav-container { max-width: 1280px; margin: 0 auto; padding: 0 1rem; }
+        .pt-nav-inner { height: 64px; display: flex; align-items: center; justify-content: space-between; }
+        .pt-nav-left { display: flex; align-items: center; gap: 2rem; }
+        .pt-logo { display: flex; align-items: center; gap: 0.6rem; text-decoration: none; color: #1f2937; font-size: 1.25rem; font-weight: 900; }
+        .pt-logo-icon { width: 34px; height: 34px; border-radius: 0.9rem; background: linear-gradient(135deg, #16a34a, #047857); color: #ffffff; display: flex; align-items: center; justify-content: center; }
+        .pt-desktop-menu { display: flex; align-items: center; gap: 0.25rem; }
+        .pt-nav-link { display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.6rem 0.85rem; border-radius: 0.75rem; color: #374151; text-decoration: none; font-size: 0.9rem; font-weight: 700; background: transparent; border: none; cursor: pointer; }
+        .pt-nav-link:hover, .pt-nav-link.active { background: #f0fdf4; color: #15803d; }
+        .pt-dropdown { position: relative; }
+        .pt-dropdown-menu, .pt-user-dropdown { position: absolute; top: 115%; background: #ffffff; border: 1px solid #e5e7eb; border-radius: 1rem; box-shadow: 0 16px 32px rgba(0,0,0,0.12); overflow: hidden; z-index: 100; min-width: 220px; }
+        .pt-dropdown-menu a, .pt-user-dropdown a, .pt-user-dropdown button { display: block; width: 100%; padding: 0.75rem 1rem; color: #374151; text-decoration: none; font-size: 0.875rem; font-weight: 600; text-align: left; background: transparent; border: none; cursor: pointer; }
+        .pt-dropdown-menu a:hover, .pt-user-dropdown a:hover, .pt-user-dropdown button:hover { background: #f0fdf4; color: #15803d; }
+        .pt-dropdown-menu hr { margin: 0.35rem 0; border-top: 1px solid #e5e7eb; }
+        .pt-nav-notification { padding-right: 1.3rem; }
+        .pt-nav-badge { background: #ef4444; color: #ffffff; border-radius: 999px; font-size: 0.68rem; padding: 0.1rem 0.4rem; margin-left: 0.3rem; }
+        .pt-user-menu { position: relative; }
+        .pt-user-btn { display: flex; align-items: center; gap: 0.65rem; padding: 0.45rem 0.7rem; border-radius: 0.9rem; background: #f9fafb; border: 1px solid #e5e7eb; cursor: pointer; }
+        .pt-user-btn:hover { background: #f3f4f6; }
+        .pt-avatar { width: 34px; height: 34px; border-radius: 999px; background: linear-gradient(135deg, #16a34a, #047857); color: #ffffff; display: flex; align-items: center; justify-content: center; font-weight: 900; }
+        .pt-user-text p { margin: 0; font-weight: 800; color: #1f2937; font-size: 0.875rem; }
+        .pt-user-text span { font-size: 0.75rem; color: #6b7280; }
+        .pt-user-arrow { color: #6b7280; }
+        .pt-user-dropdown { right: 0; }
+        .pt-user-info { padding: 1rem; border-bottom: 1px solid #e5e7eb; }
+        .pt-user-info p { margin: 0; font-weight: 800; }
+        .pt-user-info span { display: block; font-size: 0.75rem; color: #6b7280; }
+        .pt-mobile-btn { display: none; background: #f3f4f6; border: none; width: 40px; height: 40px; border-radius: 0.75rem; font-size: 1.4rem; cursor: pointer; }
+        .pt-mobile-menu { display: none; background: #ffffff; border-top: 1px solid #e5e7eb; padding: 0.75rem 1rem; }
+        .pt-mobile-menu a, .pt-mobile-menu button { display: block; width: 100%; padding: 0.75rem; border-radius: 0.75rem; color: #374151; text-decoration: none; font-weight: 700; background: transparent; border: none; text-align: left; cursor: pointer; }
+        .pt-mobile-menu a:hover, .pt-mobile-menu button:hover { background: #f0fdf4; color: #15803d; }
+        .pt-mobile-user { display: flex; align-items: center; gap: 0.75rem; padding: 1rem 0.75rem; border-top: 1px solid #e5e7eb; margin-top: 0.5rem; }
+        @media (max-width: 768px) { .pt-desktop-menu, .pt-user-menu { display: none; } .pt-mobile-btn { display: flex; align-items: center; justify-content: center; } .pt-mobile-menu { display: block; } }
+        * { box-sizing: border-box; }
+        p, h1, h2, h3, h4 { margin-top: 0; }
 
+        /* ========== ESTILOS PROPIOS DE LA PÁGINA (Mis adopciones) ========== */
         :root {
             --verde-profundo: #1e3a2f;
             --verde-medio: #2b7840;
@@ -293,15 +341,8 @@
         }
 
         @keyframes fadeSlideUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         @media (max-width: 850px) {
@@ -309,21 +350,131 @@
                 flex-direction: column;
                 text-align: center;
             }
-
             .info-planta .cuidados-list {
                 justify-content: center;
             }
-
             .ultima-evidencia {
                 margin: 0 auto;
             }
-
             .acciones {
                 width: 100%;
             }
         }
-    </style>
 
+        .bg-white.rounded-2xl.p-10.text-center.text-gray-500 {
+            background: var(--blanco);
+            border-radius: 1.5rem;
+            padding: 2.5rem;
+            text-align: center;
+            color: var(--gris-verde);
+            box-shadow: var(--sombra-suave);
+        }
+        .bg-white.rounded-2xl.p-10.text-center.text-gray-500 a {
+            color: var(--verde-medio);
+            text-decoration: none;
+            font-weight: 700;
+        }
+        .bg-white.rounded-2xl.p-10.text-center.text-gray-500 a:hover {
+            text-decoration: underline;
+        }
+        .bg-green-100.text-green-700.p-4.rounded.mb-4 {
+            background: #dcfce7;
+            color: #166534;
+            padding: 1rem;
+            border-radius: 0.75rem;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+
+<body class="pt-app">
+
+    <!-- ========== BARRA DE NAVEGACIÓN (con Alpine.js) ========== -->
+    <nav x-data="{ open: false }" class="pt-navbar">
+        <div class="pt-nav-container">
+            <div class="pt-nav-inner">
+                <div class="pt-nav-left">
+                    <a href="{{ route('dashboard') }}" class="pt-logo">
+                        <div class="pt-logo-icon">🌿</div>
+                        <span>PlantaTec</span>
+                    </a>
+                    <div class="pt-desktop-menu">
+                        <a href="{{ route('dashboard') }}" class="pt-nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">Dashboard</a>
+                        @if(auth()->user()->rol === 'admin')
+                            <div class="pt-dropdown" x-data="{ adminOpen: false }">
+                                <button @click="adminOpen = !adminOpen" @click.away="adminOpen = false" class="pt-nav-link pt-dropdown-btn">Administración <span>⌄</span></button>
+                                <div x-show="adminOpen" x-transition class="pt-dropdown-menu" style="display:none;">
+                                    <a href="{{ route('plantas.index') }}">Plantas</a>
+                                    <a href="{{ route('adopciones.index') }}">Adopciones</a>
+                                    <a href="{{ route('ubicaciones.index') }}">Ubicaciones</a>
+                                    <a href="{{ route('cuidados.index') }}">Cuidados</a>
+                                    <a href="{{ route('planta-cuidados.index') }}">Asignar cuidados</a>
+                                    <a href="{{ route('recomendaciones-cuidado.index') }}">Recomendaciones de cuidado</a>
+                                    <a href="{{ route('recomendaciones-zona.index') }}">Recomendaciones de zona</a>
+                                    <a href="{{ route('problemas.index') }}">Problemas</a>
+                                    <a href="{{ route('tratamientos.index') }}">Tratamientos</a>
+                                    <hr>
+                                    <a href="{{ route('reporte-problemas.index') }}">Reportes de problemas</a>
+                                    <a href="{{ route('admin.usuarios.index') }}">Usuarios</a>
+                                </div>
+                            </div>
+                        @else
+                            <a href="{{ route('catalogo.plantas') }}" class="pt-nav-link {{ request()->routeIs('catalogo.plantas') ? 'active' : '' }}">Catálogo</a>
+                            <a href="{{ route('adopciones.index') }}" class="pt-nav-link {{ request()->routeIs('adopciones.*') ? 'active' : '' }}">Mis adopciones</a>
+                            @php $notificacionesNoLeidas = \App\Models\Notificacion::where('id_usuario', auth()->id())->where('leida', false)->count(); @endphp
+                            <a href="{{ route('notificaciones.index') }}" class="pt-nav-link pt-nav-notification {{ request()->routeIs('notificaciones.*') ? 'active' : '' }}">
+                                Notificaciones
+                                @if($notificacionesNoLeidas > 0)
+                                    <span class="pt-nav-badge">{{ $notificacionesNoLeidas > 9 ? '9+' : $notificacionesNoLeidas }}</span>
+                                @endif
+                            </a>
+                        @endif
+                    </div>
+                </div>
+                <div class="pt-user-menu" x-data="{ dropdownOpen: false }">
+                    <button @click="dropdownOpen = !dropdownOpen" @click.away="dropdownOpen = false" class="pt-user-btn">
+                        <div class="pt-avatar">{{ strtoupper(substr(Auth::user()->name, 0, 1)) }}</div>
+                        <div class="pt-user-text"><p>{{ Auth::user()->name }}</p><span>{{ Auth::user()->rol === 'admin' ? 'Administrador' : 'Usuario' }}</span></div>
+                        <span class="pt-user-arrow">⌄</span>
+                    </button>
+                    <div x-show="dropdownOpen" x-transition class="pt-user-dropdown" style="display:none;">
+                        <div class="pt-user-info"><p>{{ Auth::user()->name }}</p><span>{{ Auth::user()->email }}</span></div>
+                        <a href="{{ route('profile.edit') }}">Mi perfil</a>
+                        <form method="POST" action="{{ route('logout') }}">@csrf<button type="submit">Cerrar sesión</button></form>
+                    </div>
+                </div>
+                <button @click="open = !open" class="pt-mobile-btn"><span x-show="!open">☰</span><span x-show="open" style="display:none;">×</span></button>
+            </div>
+        </div>
+        <div x-show="open" x-transition class="pt-mobile-menu" style="display:none;">
+            <a href="{{ route('dashboard') }}">Dashboard</a>
+            @if(auth()->user()->rol === 'admin')
+                <a href="{{ route('plantas.index') }}">Plantas</a>
+                <a href="{{ route('adopciones.index') }}">Adopciones</a>
+                <a href="{{ route('ubicaciones.index') }}">Ubicaciones</a>
+                <a href="{{ route('cuidados.index') }}">Cuidados</a>
+                <a href="{{ route('planta-cuidados.index') }}">Asignar cuidados</a>
+                <a href="{{ route('recomendaciones-cuidado.index') }}">Recomendaciones de cuidado</a>
+                <a href="{{ route('recomendaciones-zona.index') }}">Recomendaciones de zona</a>
+                <a href="{{ route('problemas.index') }}">Problemas</a>
+                <a href="{{ route('tratamientos.index') }}">Tratamientos</a>
+                <a href="{{ route('reporte-problemas.index') }}">Reportes de problemas</a>
+                <a href="{{ route('admin.usuarios.index') }}">Usuarios</a>
+            @else
+                <a href="{{ route('catalogo.plantas') }}">Catálogo</a>
+                <a href="{{ route('adopciones.index') }}">Mis adopciones</a>
+                <a href="{{ route('notificaciones.index') }}">Notificaciones</a>
+            @endif
+            <div class="pt-mobile-user">
+                <div class="pt-avatar">{{ strtoupper(substr(Auth::user()->name, 0, 1)) }}</div>
+                <div><p>{{ Auth::user()->name }}</p><span>{{ Auth::user()->email }}</span></div>
+            </div>
+            <a href="{{ route('profile.edit') }}">Mi perfil</a>
+            <form method="POST" action="{{ route('logout') }}">@csrf<button type="submit">Cerrar sesión</button></form>
+        </div>
+    </nav>
+
+    <!-- ========== CONTENIDO PRINCIPAL ========== -->
     <div class="py-8">
         <div class="adopciones-container">
             <h1 class="titulo-principal">🌱 Mis plantas adoptadas</h1>
@@ -431,6 +582,7 @@
         </div>
     </div>
 
+    <!-- Modal para registrar cuidado -->
     <div id="modalCuidado" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -439,9 +591,8 @@
             </div>
 
             <div class="modal-body">
-                <form id="formRegistroCuidado" method="POST" enctype="multipart/form-data">
+                <form id="formRegistroCuidado" method="POST" enctype="multipart/form-data" action="{{ route('registro-cuidados.store') }}">
                     @csrf
-
                     <input type="hidden" name="id_adopcion" id="modal_adopcion_id">
 
                     <div class="form-group">
@@ -479,49 +630,46 @@
         </div>
     </div>
 
-    @push('scripts')
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script>
+        document.querySelectorAll('.btn-evidencia').forEach(btn => {
+            btn.addEventListener('click', async function () {
+                const adopcionId = this.dataset.adopcionId;
 
-        <script>
-            document.querySelectorAll('.btn-evidencia').forEach(btn => {
-                btn.addEventListener('click', async function () {
-                    const adopcionId = this.dataset.adopcionId;
+                document.getElementById('modal_adopcion_id').value = adopcionId;
 
-                    document.getElementById('modal_adopcion_id').value = adopcionId;
+                const selectCuidado = document.getElementById('modal_cuidado_id');
+                selectCuidado.innerHTML = '<option value="">Cargando...</option>';
 
-                    const selectCuidado = document.getElementById('modal_cuidado_id');
-                    selectCuidado.innerHTML = '<option value="">Cargando...</option>';
+                try {
+                    const response = await fetch(`/api/plantas-cuidados/${adopcionId}`);
+                    const cuidados = await response.json();
 
-                    try {
-                        const response = await fetch(`/api/plantas-cuidados/${adopcionId}`);
-                        const cuidados = await response.json();
+                    selectCuidado.innerHTML = '<option value="">Selecciona un cuidado</option>';
 
-                        selectCuidado.innerHTML = '<option value="">Selecciona un cuidado</option>';
-
-                        cuidados.forEach(c => {
-                            const option = document.createElement('option');
-                            option.value = c.id;
-                            option.textContent = `${c.nombre} cada ${c.frecuencia} días`;
-                            selectCuidado.appendChild(option);
-                        });
-                    } catch (error) {
-                        selectCuidado.innerHTML = '<option value="">Error al cargar cuidados</option>';
-                    }
-
-                    document.getElementById('formRegistroCuidado').action = "{{ route('registro-cuidados.store') }}";
-                    document.getElementById('modalCuidado').style.display = 'flex';
-                });
-            });
-
-            document.querySelector('.close-modal').onclick = () => {
-                document.getElementById('modalCuidado').style.display = 'none';
-            };
-
-            window.onclick = (event) => {
-                if (event.target === document.getElementById('modalCuidado')) {
-                    document.getElementById('modalCuidado').style.display = 'none';
+                    cuidados.forEach(c => {
+                        const option = document.createElement('option');
+                        option.value = c.id;
+                        option.textContent = `${c.nombre} cada ${c.frecuencia} días`;
+                        selectCuidado.appendChild(option);
+                    });
+                } catch (error) {
+                    selectCuidado.innerHTML = '<option value="">Error al cargar cuidados</option>';
                 }
-            };
-        </script>
-    @endpush
-</x-app-layout>
+
+                document.getElementById('modalCuidado').style.display = 'flex';
+            });
+        });
+
+        document.querySelector('.close-modal').onclick = () => {
+            document.getElementById('modalCuidado').style.display = 'none';
+        };
+
+        window.onclick = (event) => {
+            if (event.target === document.getElementById('modalCuidado')) {
+                document.getElementById('modalCuidado').style.display = 'none';
+            }
+        };
+    </script>
+
+</body>
+</html>
