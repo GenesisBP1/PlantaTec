@@ -813,14 +813,7 @@
             @endif
 
             <div class="pt-card">
-                <div class="pt-card-header">
-                    <div>
-                        <h3 class="pt-card-title">Listado de cuidados</h3>
-                        <p class="pt-card-subtitle">
-                            Todos los cuidados registrados en el sistema
-                        </p>
-                    </div>
-                </div>
+            
 
                 <div class="pt-card-body">
                     @if(count($tableCuidadosRows) > 0)

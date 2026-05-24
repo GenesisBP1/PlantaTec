@@ -22,10 +22,12 @@
 /* =========================
    ESPACIADO GENERAL
 ========================= */
-
+.pt{
+    background: var(--background);
+}
 .pt-page {
     padding: 2.5rem 0 3.5rem;
-    background: #f6f3fb;
+    background: #ffffff;
     min-height: calc(100vh - 80px);
 }
 
@@ -33,6 +35,7 @@
     max-width: 1400px;
     margin: 0 auto;
     padding: 0 1.5rem;
+    background: transparent;
 }
 
 /* =========================

@@ -238,11 +238,16 @@
             gap: 1rem;
             margin-bottom: 1.5rem;
         }
+        .pt-card-title{
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: #111827;
+        }
 
         .pt-card-title,
         .pt-section-title {
             font-size: 1.05rem;
-            font-weight: 800;
+            font-weight: 300;
             color: #111827;
         }
 
@@ -2233,7 +2238,7 @@
             <!-- Tarjeta de información general + imagen -->
             <div class="pt-card">
                 <div class="pt-card-header">
-                    <h3 class="pt-card-title"><?php echo e($adopcion->planta->nombre); ?></h3>
+                    <!--h3 class="pt-card-title"><?php echo e($adopcion->planta->nombre); ?></h3-->
                 </div>
 
                 <div class="pt-card-body">
@@ -2291,6 +2296,20 @@
                                 <a href="<?php echo e(route('reporte-problemas.create', ['adopcion_id' => $adopcion->id])); ?>" class="pt-btn pt-btn-red">
                                     Reportar problema
                                 </a>
+
+                                 
+                <?php if($adopcion->estado_adopcion === 'activa'): ?>
+                    <form action="<?php echo e(route('adopciones.destroy', $adopcion)); ?>" method="POST" style="display:inline;">
+                        <?php echo csrf_field(); ?>
+                        <?php echo method_field('DELETE'); ?>
+                        <button type="submit" class="pt-btn pt-btn-white" onclick="return confirm('¿Estás seguro de que quieres abandonar esta planta? Los cuidados y notificaciones se detendrán.')">
+                            Abandonar
+                        </button>
+                    </form>
+                <?php else: ?>
+                    <span class="pt-muted">Esta adopción ya está cancelada.</span>
+                <?php endif; ?>
+            
                             </div>
                         </div>
                     </div>

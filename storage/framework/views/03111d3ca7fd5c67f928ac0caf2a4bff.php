@@ -169,10 +169,10 @@
 
         :root {
             --primary: #ffffff;
-            --primary-dark: #6D28D9;
-            --primary-light: #A78BFA;
-            --secondary: #D946EF;
-            --background: #F8F4FF;
+            --primary-dark: #fefff5;
+            --primary-light: #fefff5;
+            --secondary: #fefff5;
+            --background: #f9faf1;
             --card-bg: #FFFFFF;
             --text-dark: #1E1B2E;
             --text-gray: #6B7280;

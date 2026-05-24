@@ -16,7 +16,6 @@
                 <p class="pt-header-subtitle">Panel de administración</p>
             </div>
             <div class="pt-header-actions">
-                <a href="<?php echo e(route('ubicaciones.create')); ?>" class="pt-btn pt-btn-green">+ Registrar ubicación</a>
             </div>
         </div>
      <?php $__env->endSlot(); ?>

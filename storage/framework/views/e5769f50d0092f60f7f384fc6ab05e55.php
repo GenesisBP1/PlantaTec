@@ -20,16 +20,23 @@
             </div>
             <div class="pt-modal-body">
                 <p class="pt-muted">Esta acción eliminará permanentemente tu cuenta, adopciones, registros de cuidados y reportes. No podrás recuperarlos.</p>
-                <form method="post" action="{{ route('profile.destroy') }}" class="pt-form">
-                    @csrf
-                    @method('delete')
+                <form method="post" action="<?php echo e(route('profile.destroy')); ?>" class="pt-form">
+                    <?php echo csrf_field(); ?>
+                    <?php echo method_field('delete'); ?>
 
                     <div class="pt-form-group full">
                         <label for="delete_password" class="pt-label">Contraseña actual</label>
                         <input id="delete_password" name="password" type="password" class="pt-input" placeholder="Ingresa tu contraseña" required>
-                        @error('password', 'userDeletion')
-                            <p class="pt-error">{{ $message }}</p>
-                        @enderror
+                        <?php $__errorArgs = ['password', 'userDeletion'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                            <p class="pt-error"><?php echo e($message); ?></p>
+                        <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
                     </div>
 
                     <div class="pt-form-actions pt-modal-actions">
@@ -181,4 +188,4 @@
     window.onclick = (event) => {
         if (event.target === modal) modal.style.display = 'none';
     };
-</script>
+</script><?php /**PATH C:\Users\Admin\Documents\8\Prog de backend\Laravel Herd\PlantaTec\resources\views/profile/partials/delete-user-form.blade.php ENDPATH**/ ?>

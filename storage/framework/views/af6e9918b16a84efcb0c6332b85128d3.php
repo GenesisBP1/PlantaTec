@@ -7,41 +7,55 @@
         </div>
     </div>
 
-    <form method="post" action="{{ route('profile.update') }}" class="pt-form">
-        @csrf
-        @method('patch')
+    <form method="post" action="<?php echo e(route('profile.update')); ?>" class="pt-form">
+        <?php echo csrf_field(); ?>
+        <?php echo method_field('patch'); ?>
 
         <div class="pt-form-group full">
             <label for="name" class="pt-label">Nombre completo</label>
-            <input id="name" name="name" type="text" class="pt-input" value="{{ old('name', $user->name) }}" required autofocus autocomplete="name">
-            @error('name')
-                <p class="pt-error">{{ $message }}</p>
-            @enderror
+            <input id="name" name="name" type="text" class="pt-input" value="<?php echo e(old('name', $user->name)); ?>" required autofocus autocomplete="name">
+            <?php $__errorArgs = ['name'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                <p class="pt-error"><?php echo e($message); ?></p>
+            <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
         </div>
 
         <div class="pt-form-group full">
             <label for="email" class="pt-label">Correo electrónico</label>
-            <input id="email" name="email" type="email" class="pt-input" value="{{ old('email', $user->email) }}" required autocomplete="username">
-            @error('email')
-                <p class="pt-error">{{ $message }}</p>
-            @enderror
+            <input id="email" name="email" type="email" class="pt-input" value="<?php echo e(old('email', $user->email)); ?>" required autocomplete="username">
+            <?php $__errorArgs = ['email'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                <p class="pt-error"><?php echo e($message); ?></p>
+            <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
 
-            @if ($user instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && ! $user->hasVerifiedEmail())
+            <?php if($user instanceof \Illuminate\Contracts\Auth\MustVerifyEmail && ! $user->hasVerifiedEmail()): ?>
                 <div class="pt-alert-warning mt-3">
                     <p>Tu correo electrónico no está verificado.</p>
                     <button form="send-verification" class="pt-link green">Reenviar verificación</button>
                 </div>
-                <form id="send-verification" method="post" action="{{ route('verification.send') }}" class="hidden">
-                    @csrf
+                <form id="send-verification" method="post" action="<?php echo e(route('verification.send')); ?>" class="hidden">
+                    <?php echo csrf_field(); ?>
                 </form>
-            @endif
+            <?php endif; ?>
         </div>
 
         <div class="pt-form-actions">
             <button type="submit" class="pt-btn pt-btn-green">Guardar cambios</button>
-            @if (session('status') === 'profile-updated')
+            <?php if(session('status') === 'profile-updated'): ?>
                 <span class="pt-success-message">✓ Perfil actualizado</span>
-            @endif
+            <?php endif; ?>
         </div>
     </form>
 </section>
@@ -159,4 +173,4 @@
             text-align: center;
         }
     }
-</style>
+</style><?php /**PATH C:\Users\Admin\Documents\8\Prog de backend\Laravel Herd\PlantaTec\resources\views/profile/partials/update-profile-information-form.blade.php ENDPATH**/ ?>

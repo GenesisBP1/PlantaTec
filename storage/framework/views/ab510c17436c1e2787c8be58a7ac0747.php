@@ -7,39 +7,60 @@
         </div>
     </div>
 
-    <form method="post" action="{{ route('password.update') }}" class="pt-form">
-        @csrf
-        @method('put')
+    <form method="post" action="<?php echo e(route('password.update')); ?>" class="pt-form">
+        <?php echo csrf_field(); ?>
+        <?php echo method_field('put'); ?>
 
         <div class="pt-form-group full">
             <label for="update_password_current_password" class="pt-label">Contraseña actual</label>
             <input id="update_password_current_password" name="current_password" type="password" class="pt-input" autocomplete="current-password">
-            @error('current_password', 'updatePassword')
-                <p class="pt-error">{{ $message }}</p>
-            @enderror
+            <?php $__errorArgs = ['current_password', 'updatePassword'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                <p class="pt-error"><?php echo e($message); ?></p>
+            <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
         </div>
 
         <div class="pt-form-group full">
             <label for="update_password_password" class="pt-label">Nueva contraseña</label>
             <input id="update_password_password" name="password" type="password" class="pt-input" autocomplete="new-password">
-            @error('password', 'updatePassword')
-                <p class="pt-error">{{ $message }}</p>
-            @enderror
+            <?php $__errorArgs = ['password', 'updatePassword'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                <p class="pt-error"><?php echo e($message); ?></p>
+            <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
         </div>
 
         <div class="pt-form-group full">
             <label for="update_password_password_confirmation" class="pt-label">Confirmar nueva contraseña</label>
             <input id="update_password_password_confirmation" name="password_confirmation" type="password" class="pt-input" autocomplete="new-password">
-            @error('password_confirmation', 'updatePassword')
-                <p class="pt-error">{{ $message }}</p>
-            @enderror
+            <?php $__errorArgs = ['password_confirmation', 'updatePassword'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                <p class="pt-error"><?php echo e($message); ?></p>
+            <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
         </div>
 
         <div class="pt-form-actions">
             <button type="submit" class="pt-btn pt-btn-green">Actualizar contraseña</button>
-            @if (session('status') === 'password-updated')
+            <?php if(session('status') === 'password-updated'): ?>
                 <span class="pt-success-message">✓ Contraseña actualizada</span>
-            @endif
+            <?php endif; ?>
         </div>
     </form>
 </section>
@@ -143,4 +164,4 @@
             text-align: center;
         }
     }
-</style>
+</style><?php /**PATH C:\Users\Admin\Documents\8\Prog de backend\Laravel Herd\PlantaTec\resources\views/profile/partials/update-password-form.blade.php ENDPATH**/ ?>

@@ -13,6 +13,7 @@ class AdopcionController extends Controller
         // Vista para usuario normal
         if (auth()->user()->rol !== 'admin') {
             $adopciones = Adopcion::where('id_usuario', auth()->id())
+               ->where('estado_adopcion', 'activa')  
                 ->with([
                     'planta.plantaCuidados.cuidado',
                     'ubicacion',
@@ -127,22 +128,21 @@ class AdopcionController extends Controller
         return view('adopciones.show', compact('adopcion', 'planta', 'zonasRecomendadas'));
     }
 
-    public function destroy(Adopcion $adopcione)
-    {
-        $adopcion = $adopcione;
+   public function destroy(Adopcion $adopcione)
+{
+    $adopcion = $adopcione;
 
-        // Administrador puede cancelar cualquier adopción; usuario normal solo las suyas
-        if (auth()->user()->rol !== 'admin' && $adopcion->id_usuario !== auth()->id()) {
-            abort(403, 'No tienes permiso para cancelar esta adopción.');
-        }
-
-        $adopcion->update([
-            'estado_adopcion' => 'cancelada',
-        ]);
-
-        return redirect()->route('adopciones.index')
-            ->with('success', 'Adopción cancelada correctamente.');
+    if (auth()->user()->rol !== 'admin' && $adopcion->id_usuario !== auth()->id()) {
+        abort(403, 'No tienes permiso para cancelar esta adopción.');
     }
+
+    $adopcion->update([
+        'estado_adopcion' => 'cancelada',
+    ]);
+
+    return redirect()->route('adopciones.index')
+        ->with('success', 'Adopción cancelada correctamente.');
+}
 
     public function update(Request $request, Adopcion $adopcione)
     {
