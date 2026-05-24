@@ -632,18 +632,6 @@
                 </div>
 
                 <div class="pt-map-body">
-                    @if(isset($usuarios) && $usuarios->count() > 0)
-                        <div style="margin-bottom:12px; display:flex; gap:8px; align-items:center;">
-                            <label style="font-weight:700;">Filtrar por usuario:</label>
-                            <select id="filtro-usuario" style="padding:8px;border-radius:6px;border:1px solid #e5e7eb;" onchange="window.recargarUbicacionesPorUsuario(this.value)">
-                                <option value="">Todos</option>
-                                @foreach($usuarios as $u)
-                                    <option value="{{ $u->id }}">{{ $u->name }} — {{ $u->email }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                    @endif
-
                     <x-mapa-interactivo 
                         id="mapa-admin"
                         :can-select-location="false"
