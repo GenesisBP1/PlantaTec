@@ -148,4 +148,352 @@
             <button type="submit">Cerrar sesión</button>
         </form>
     </div>
+
+    <style>
+        /* ============================================
+           StarClass - Navbar (Morado / Fucsia)
+           Coherente con la app móvil
+           ============================================ */
+
+        :root {
+            --primary: #7C3AED;
+            --primary-dark: #6D28D9;
+            --primary-light: #A78BFA;
+            --secondary: #D946EF;
+            --background: #F8F4FF;
+            --card-bg: #FFFFFF;
+            --text-dark: #1E1B2E;
+            --text-gray: #6B7280;
+            --border: #E9E8F0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--background);
+        }
+
+        .pt-navbar {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary), var(--secondary));
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .pt-nav-container {
+            max-width: 80rem;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .pt-nav-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 4rem;
+        }
+
+        /* Logo */
+        .pt-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: white;
+            text-decoration: none;
+        }
+
+        .pt-logo-icon {
+            font-size: 1.5rem;
+        }
+
+        /* Desktop menu */
+        .pt-desktop-menu {
+            display: none;
+            align-items: center;
+            gap: 0.5rem;
+            margin-left: 2rem;
+        }
+
+        @media (min-width: 768px) {
+            .pt-desktop-menu {
+                display: flex;
+            }
+        }
+
+        .pt-nav-link {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            transition: all 0.2s ease;
+        }
+
+        .pt-nav-link:hover {
+            background-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .pt-nav-link.active {
+            background-color: rgba(255, 255, 255, 0.25);
+            font-weight: 600;
+        }
+
+        .pt-nav-notification {
+            position: relative;
+        }
+
+        .pt-nav-badge {
+            position: absolute;
+            top: -0.25rem;
+            right: -0.25rem;
+            background-color: var(--warning);
+            color: white;
+            font-size: 0.7rem;
+            font-weight: bold;
+            padding: 0.1rem 0.4rem;
+            border-radius: 9999px;
+        }
+
+        /* Dropdown admin */
+        .pt-dropdown {
+            position: relative;
+        }
+
+        .pt-dropdown-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            cursor: pointer;
+        }
+
+        .pt-dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            margin-top: 0.5rem;
+            background-color: var(--card-bg);
+            border-radius: 0.75rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            min-width: 220px;
+            z-index: 10;
+            border: 1px solid var(--border);
+            overflow: hidden;
+        }
+
+        .pt-dropdown-menu a {
+            display: block;
+            padding: 0.6rem 1rem;
+            color: var(--text-dark);
+            text-decoration: none;
+            font-size: 0.875rem;
+            transition: background 0.2s;
+        }
+
+        .pt-dropdown-menu a:hover {
+            background-color: var(--primary-light);
+            color: white;
+        }
+
+        .pt-dropdown-menu hr {
+            margin: 0.5rem 0;
+            border-color: var(--border);
+        }
+
+        /* User menu */
+        .pt-user-menu {
+            position: relative;
+            display: none;
+        }
+
+        @media (min-width: 768px) {
+            .pt-user-menu {
+                display: block;
+            }
+        }
+
+        .pt-user-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            transition: background 0.2s;
+        }
+
+        .pt-user-btn:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .pt-avatar {
+            width: 2rem;
+            height: 2rem;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 9999px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+        }
+
+        .pt-user-text {
+            text-align: left;
+            color: white;
+        }
+
+        .pt-user-text p {
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .pt-user-text span {
+            font-size: 0.7rem;
+            opacity: 0.8;
+        }
+
+        .pt-user-arrow {
+            color: white;
+            font-size: 0.8rem;
+        }
+
+        .pt-user-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 0.5rem;
+            background-color: var(--card-bg);
+            border-radius: 0.75rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            min-width: 220px;
+            z-index: 10;
+            border: 1px solid var(--border);
+        }
+
+        .pt-user-info {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .pt-user-info p {
+            font-weight: bold;
+            color: var(--text-dark);
+            margin: 0;
+        }
+
+        .pt-user-info span {
+            font-size: 0.75rem;
+            color: var(--text-gray);
+        }
+
+        .pt-user-dropdown a,
+        .pt-user-dropdown button {
+            display: block;
+            width: 100%;
+            text-align: left;
+            padding: 0.75rem 1rem;
+            color: var(--text-dark);
+            text-decoration: none;
+            font-size: 0.875rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .pt-user-dropdown a:hover,
+        .pt-user-dropdown button:hover {
+            background-color: var(--primary-light);
+            color: white;
+        }
+
+        /* Mobile button */
+        .pt-mobile-btn {
+            display: block;
+            background: none;
+            border: none;
+            font-size: 1.8rem;
+            color: white;
+            cursor: pointer;
+        }
+
+        @media (min-width: 768px) {
+            .pt-mobile-btn {
+                display: none;
+            }
+        }
+
+        /* Mobile menu */
+        .pt-mobile-menu {
+            display: flex;
+            flex-direction: column;
+            background-color: white;
+            border-bottom-left-radius: 1rem;
+            border-bottom-right-radius: 1rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 1rem;
+            gap: 0.5rem;
+        }
+
+        .pt-mobile-menu a,
+        .pt-mobile-menu button {
+            display: block;
+            padding: 0.75rem;
+            color: var(--text-dark);
+            text-decoration: none;
+            border-radius: 0.5rem;
+            transition: background 0.2s;
+            text-align: left;
+            background: none;
+            border: none;
+            width: 100%;
+            cursor: pointer;
+        }
+
+        .pt-mobile-menu a.active {
+            background-color: var(--primary-light);
+            color: white;
+            font-weight: 600;
+        }
+
+        .pt-mobile-menu a:hover,
+        .pt-mobile-menu button:hover {
+            background-color: var(--primary-light);
+            color: white;
+        }
+
+        .pt-mobile-user {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            border-top: 1px solid var(--border);
+            margin-top: 0.5rem;
+        }
+
+        .pt-mobile-user .pt-avatar {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .pt-mobile-user p {
+            font-weight: bold;
+            margin: 0;
+        }
+
+        .pt-mobile-user span {
+            font-size: 0.7rem;
+            color: var(--text-gray);
+        }
+    </style>
 </nav>

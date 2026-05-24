@@ -9,12 +9,15 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700;9..40,800&display=swap" rel="stylesheet">
 
-    <!-- Alpine.js para el dropdown (solo funcionalidad, no estilos) -->
+    <!-- ========== LEAFLET (necesario para el mapa) ========== -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <!-- Alpine.js para el dropdown -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
     <style>
         /* ========== ESTILOS GLOBALES PLANTA TEC ========== */
-        /* Mismo bloque completo que en las páginas anteriores */
         .pt-page { padding: 3.5rem 0; }
         .pt-container { max-width: 1280px; margin: 0 auto; padding: 0 1.5rem; }
         .pt-header { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
