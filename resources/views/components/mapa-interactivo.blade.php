@@ -10,6 +10,11 @@
     #{{ $id }}-container {
         height: {{ $height }};
     }
+    /* Asegura que el canvas del mapa llene el contenedor padre */
+    #{{ $id }} {
+        height: 100%;
+        width: 100%;
+    }
 </style>
 
 <div id="{{ $id }}-container" class="pt-map-component">
