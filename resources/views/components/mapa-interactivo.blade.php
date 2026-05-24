@@ -55,12 +55,12 @@
 @endif
 
 <div id="info-marcador-{{ $id }}" class="hidden pt-map-info">
-    <p><strong>Ubicación:</strong> <span id="info-nombre"></span></p>
-    <p><strong>Descripción:</strong> <span id="info-descripcion"></span></p>
-    <p><strong>Tipo:</strong> <span id="info-tipo"></span></p>
-    <p><strong>Usuario:</strong> <span id="info-usuario"></span></p>
-    <p><strong>Plantas:</strong> <span id="info-plantas"></span></p>
-    <p><strong>Coordenadas:</strong> <span id="info-coords"></span></p>
+    <p><strong>Ubicación:</strong> <span id="info-nombre-{{ $id }}"></span></p>
+    <p><strong>Descripción:</strong> <span id="info-descripcion-{{ $id }}"></span></p>
+    <p><strong>Tipo:</strong> <span id="info-tipo-{{ $id }}"></span></p>
+    <p><strong>Usuario:</strong> <span id="info-usuario-{{ $id }}"></span></p>
+    <p><strong>Plantas:</strong> <span id="info-plantas-{{ $id }}"></span></p>
+    <p><strong>Coordenadas:</strong> <span id="info-coords-{{ $id }}"></span></p>
 
     <button type="button" onclick="cerrarInfoMarcador('{{ $id }}')" class="pt-small-btn green">
         Cerrar
@@ -75,6 +75,11 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     const mapa = L.map('{{ $id }}').setView([25.5095, -97.1559], 13);
+
+    // Forzar recalculo de tamaño por si el contenedor cambia al renderizar
+    setTimeout(function() {
+        try { mapa.invalidateSize(); } catch (e) { /* ignore */ }
+    }, 300);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '© OpenStreetMap contributors',
@@ -189,11 +194,20 @@ function cargarUbicacionesEnMapa(mapa, mapaId) {
         .then(data => {
             if (data.success) {
                 data.data.forEach(ubicacion => {
+                    const lat = parseFloat(ubicacion.latitud);
+                    const lng = parseFloat(ubicacion.longitud);
+
+                    if (isNaN(lat) || isNaN(lng)) {
+                        return;
+                    }
+
+                    const adopciones = ubicacion.adopciones || [];
+
                     let iconColor = ubicacion.es_publica ? 'blue' : 'red';
                     let iconUrl = `https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-${iconColor}.png`;
 
                     const marcador = L.marker(
-                        [ubicacion.latitud, ubicacion.longitud],
+                        [lat, lng],
                         {
                             icon: L.icon({
                                 iconUrl: iconUrl,
@@ -208,16 +222,19 @@ function cargarUbicacionesEnMapa(mapa, mapaId) {
 
                     let popup = `
                         <div class="pt-map-popup">
-                            <h4>${ubicacion.nombre_lugar}</h4>
+                            <h4>${ubicacion.nombre_lugar || 'Sin nombre'}</h4>
                             <p>${ubicacion.descripcion || 'Sin descripción'}</p>
+
                             <span class="pt-popup-badge ${ubicacion.es_publica ? 'blue' : 'red'}">
                                 ${ubicacion.es_publica ? 'Pública' : 'Privada'}
                             </span>
-                            <p>Usuario: ${ubicacion.usuario_nombre}</p>
-                            ${ubicacion.adopciones.length > 0 ? `
+
+                            <p>Usuario: ${ubicacion.usuario_nombre || 'Sin usuario'}</p>
+
+                            ${adopciones.length > 0 ? `
                                 <strong>Plantas:</strong>
                                 <ul>
-                                    ${ubicacion.adopciones.map(a => `<li>🌱 ${a.planta_nombre} (${a.fecha_adopcion})</li>`).join('')}
+                                    ${adopciones.map(a => `<li>🌱 ${a.planta_nombre || 'Planta'} (${a.fecha_adopcion || 'Sin fecha'})</li>`).join('')}
                                 </ul>
                             ` : ''}
                         </div>

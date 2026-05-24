@@ -13,6 +13,8 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
+    @stack('styles')
+
     <!-- Alpine.js para el dropdown -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
@@ -628,15 +630,17 @@
                 <div class="pt-map-body">
                     <x-mapa-interactivo 
                         id="mapa-admin"
-                        :canSelectLocation="false"
-                        showToolbar="false"
+                        :can-select-location="false"
+                        :show-toolbar="false"
                         height="550px"
                     />
                 </div>
             </div>
 
         </div>
-    </div>
+</div>
+
+@stack('scripts')
 
 </body>
 </html>
