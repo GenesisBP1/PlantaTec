@@ -604,10 +604,12 @@
                     @endphp
 
                     @foreach($accesos as $item)
-                        <a href="{{ route($item['route']) }}" class="pt-access-btn {{ $item['color'] }}">
-                            <span class="pt-access-icon">{{ $item['icon'] }}</span>
-                            <span>{{ $item['label'] }}</span>
-                        </a>
+                        @if(\Illuminate\Support\Facades\Route::has($item['route']))
+                            <a href="{{ route($item['route']) }}" class="pt-access-btn {{ $item['color'] }}">
+                                <span class="pt-access-icon">{{ $item['icon'] }}</span>
+                                <span>{{ $item['label'] }}</span>
+                            </a>
+                        @endif
                     @endforeach
                 </div>
             </div>
@@ -622,9 +624,11 @@
                         </p>
                     </div>
 
-                    <a href="{{ route('mapa.index') }}" class="pt-link green">
-                        Ver mapa completo →
-                    </a>
+                    @if(\Illuminate\Support\Facades\Route::has('mapa.index'))
+                        <a href="{{ route('mapa.index') }}" class="pt-link green">
+                            Ver mapa completo →
+                        </a>
+                    @endif
                 </div>
 
                 <div class="pt-map-body">

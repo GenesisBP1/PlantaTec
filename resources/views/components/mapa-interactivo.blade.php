@@ -89,11 +89,24 @@ document.addEventListener('DOMContentLoaded', function() {
     let marcadorSeleccionado = null;
     const mapaId = '{{ $id }}';
 
-    cargarUbicacionesEnMapa(mapa, mapaId);
+    // Solo definir y usar URLs de API si las rutas existen
+    @if(\Illuminate\Support\Facades\Route::has('api.mapa.ubicaciones'))
+        const urlUbicaciones = "{{ route('api.mapa.ubicaciones') }}";
+    @endif
 
-    setTimeout(function() {
-        cargarZonasRecomendadas(mapa);
-    }, 500);
+    @if(\Illuminate\Support\Facades\Route::has('api.mapa.zonas-recomendadas'))
+        const urlZonasRecomendadas = "{{ route('api.mapa.zonas-recomendadas') }}";
+    @endif
+
+    if (typeof urlUbicaciones !== 'undefined') {
+        cargarUbicacionesEnMapa(mapa, mapaId);
+    }
+
+    if (typeof urlZonasRecomendadas !== 'undefined') {
+        setTimeout(function() {
+            cargarZonasRecomendadas(mapa);
+        }, 500);
+    }
 
     window.cargarZonasRecomendadas = function(mapaRef) {
         const mapToUse = mapaRef || (window.mapaInstancias ? window.mapaInstancias[mapaId] : null);
@@ -103,7 +116,9 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
-        fetch('{{ route("api.mapa.zonas-recomendadas") }}')
+        if (typeof urlZonasRecomendadas === 'undefined') return Promise.resolve();
+
+        return fetch(urlZonasRecomendadas)
             .then(response => response.json())
             .then(data => {
                 if (data.success && data.data && data.data.length > 0) {
@@ -189,7 +204,9 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function cargarUbicacionesEnMapa(mapa, mapaId) {
-    fetch('{{ route("api.mapa.ubicaciones") }}')
+    if (typeof urlUbicaciones === 'undefined') return;
+
+    fetch(urlUbicaciones)
         .then(response => response.json())
         .then(data => {
             if (data.success) {
