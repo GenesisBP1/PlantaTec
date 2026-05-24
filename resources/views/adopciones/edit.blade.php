@@ -9,87 +9,245 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700;9..40,800&display=swap" rel="stylesheet">
 
-    <!-- Alpine.js para el dropdown -->
+    <!-- Alpine.js para dropdowns -->
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
     <style>
         /* ========== ESTILOS GLOBALES PLANTA TEC ========== */
-        /* Mismo bloque global que en todas las páginas previas */
-        .pt-page { padding: 3.5rem 0; }
-        .pt-container { max-width: 1280px; margin: 0 auto; padding: 0 1.5rem; }
-        .pt-header { display: flex; align-items: center; justify-content: space-between; gap: 1rem; background: #ffffff; padding: 1rem 1.5rem; border-radius: 1rem; box-shadow: 0 2px 8px rgba(0,0,0,0.05); margin-bottom: 2rem; }
-        .pt-header-label { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: #16a34a; margin-bottom: 0.25rem; }
-        .pt-header-title { font-size: 1.5rem; font-weight: 800; color: #111827; line-height: 1.2; }
-        .pt-header-subtitle, .pt-card-subtitle { font-size: 0.875rem; color: #6b7280; margin-top: 0.25rem; }
-        .pt-header-actions { display: flex; align-items: center; gap: 0.75rem; }
-        .pt-btn { display: inline-flex; align-items: center; justify-content: center; padding: 0.6rem 1rem; border-radius: 0.9rem; font-size: 0.875rem; font-weight: 700; text-decoration: none; transition: 0.2s ease; }
-        .pt-btn-green { background: #16a34a; color: #ffffff; }
-        .pt-btn-green:hover { background: #15803d; }
-        .pt-btn-light { background: #ffffff; color: #374151; border: 1px solid #e5e7eb; }
-        .pt-btn-light:hover { background: #f9fafb; }
-        .pt-btn-dark { background: #475569; color: white; }
-        .pt-btn-dark:hover { background: #334155; }
-        .pt-card { background: #ffffff; border: 1px solid #f3f4f6; border-radius: 1.25rem; padding: 1.75rem; box-shadow: 0 4px 14px rgba(0,0,0,0.04); }
-        .pt-card-header { border-bottom: 1px solid #e5e7eb; padding-bottom: 1rem; margin-bottom: 1.5rem; }
-        .pt-card-title { font-size: 1.25rem; font-weight: 800; color: #111827; }
-        .pt-form-group { margin-bottom: 1.5rem; }
-        .pt-form-group label { display: block; font-weight: 800; color: #374151; font-size: 0.9rem; margin-bottom: 0.5rem; }
-        .pt-form-group select, .pt-form-group input { width: 100%; padding: 0.75rem 1rem; border-radius: 1rem; border: 1px solid #d1d5db; background: #ffffff; font-family: inherit; font-size: 0.95rem; transition: 0.2s; }
-        .pt-form-group select:focus, .pt-form-group input:focus { outline: none; border-color: #16a34a; box-shadow: 0 0 0 3px rgba(22,163,74,0.1); }
-        .pt-alert-error { background: #fee2e2; color: #b91c1c; border: 1px solid #fecaca; padding: 1rem; border-radius: 1rem; margin-bottom: 1.5rem; }
-        .pt-alert-error ul { margin: 0.5rem 0 0 1.5rem; }
-        .pt-submit-btn { width: 100%; background: linear-gradient(105deg, #2b7840, #3e8a5a); color: white; border: none; padding: 0.9rem 1.2rem; border-radius: 999px; font-weight: 900; font-size: 1rem; cursor: pointer; margin-top: 0.5rem; transition: 0.2s; }
-        .pt-submit-btn:hover { background: linear-gradient(105deg, #236a3b, #2b7840); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(43,120,64,0.3); }
-        @media (max-width: 768px) { .pt-card { padding: 1.25rem; } }
-
-        /* Barra de navegación (igual a páginas anteriores) */
-        body { margin: 0; font-family: 'DM Sans', 'Figtree', sans-serif; background: #f6f8f5; color: #1f2937; }
+        /* Incluye reset, tipografía, navbar, utilidades, botones, tarjetas, etc. */
+        /* (Aquí va el mismo bloque global unificado que ya definimos antes) */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            margin: 0;
+            font-family: 'DM Sans', 'Figtree', sans-serif;
+            background: #f6f8f5;
+            color: #1f2937;
+        }
         .pt-app { min-height: 100vh; }
-        .pt-navbar { background: #ffffff; border-bottom: 1px solid #e5e7eb; position: sticky; top: 0; z-index: 50; box-shadow: 0 2px 12px rgba(0,0,0,0.04); }
+
+        /* Colores y sombras globales */
+        :root {
+            --verde-profundo: #1e3a2f;
+            --verde-medio: #2b7840;
+            --verde-suave: #4c9f6e;
+            --verde-claro: #e2f0e6;
+            --blanco: #ffffff;
+            --sombra-suave: 0 12px 28px rgba(0, 32, 0, 0.08);
+        }
+
+        /* ========== BARRA DE NAVEGACIÓN (común a todas) ========== */
+        .pt-navbar {
+            background: #ffffff;
+            border-bottom: 1px solid #e5e7eb;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+        }
         .pt-nav-container { max-width: 1280px; margin: 0 auto; padding: 0 1rem; }
         .pt-nav-inner { height: 64px; display: flex; align-items: center; justify-content: space-between; }
         .pt-nav-left { display: flex; align-items: center; gap: 2rem; }
         .pt-logo { display: flex; align-items: center; gap: 0.6rem; text-decoration: none; color: #1f2937; font-size: 1.25rem; font-weight: 900; }
         .pt-logo-icon { width: 34px; height: 34px; border-radius: 0.9rem; background: linear-gradient(135deg, #16a34a, #047857); color: #ffffff; display: flex; align-items: center; justify-content: center; }
         .pt-desktop-menu { display: flex; align-items: center; gap: 0.25rem; }
-        .pt-nav-link { position: relative; display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.6rem 0.85rem; border-radius: 0.75rem; color: #374151; text-decoration: none; font-size: 0.9rem; font-weight: 700; border: none; background: transparent; cursor: pointer; }
+        .pt-nav-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.6rem 0.85rem;
+            border-radius: 0.75rem;
+            color: #374151;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 700;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+        }
         .pt-nav-link:hover, .pt-nav-link.active { background: #f0fdf4; color: #15803d; }
         .pt-dropdown { position: relative; }
-        .pt-dropdown-menu, .pt-user-dropdown { position: absolute; top: 115%; background: #ffffff; border: 1px solid #e5e7eb; border-radius: 1rem; box-shadow: 0 16px 32px rgba(0,0,0,0.12); overflow: hidden; z-index: 100; }
-        .pt-dropdown-menu { left: 0; width: 270px; padding: 0.4rem; }
-        .pt-dropdown-menu a, .pt-user-dropdown a, .pt-user-dropdown button { display: block; width: 100%; padding: 0.75rem 1rem; color: #374151; text-decoration: none; font-size: 0.875rem; font-weight: 600; background: transparent; border: none; text-align: left; cursor: pointer; }
+        .pt-dropdown-menu, .pt-user-dropdown {
+            position: absolute;
+            top: 115%;
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 1rem;
+            box-shadow: 0 16px 32px rgba(0,0,0,0.12);
+            overflow: hidden;
+            z-index: 100;
+            min-width: 220px;
+        }
+        .pt-dropdown-menu a, .pt-user-dropdown a, .pt-user-dropdown button {
+            display: block;
+            width: 100%;
+            padding: 0.75rem 1rem;
+            color: #374151;
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 600;
+            text-align: left;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+        }
         .pt-dropdown-menu a:hover, .pt-user-dropdown a:hover, .pt-user-dropdown button:hover { background: #f0fdf4; color: #15803d; }
-        .pt-dropdown-menu hr { border: none; border-top: 1px solid #e5e7eb; margin: 0.35rem 0; }
+        .pt-dropdown-menu hr { margin: 0.35rem 0; border-top: 1px solid #e5e7eb; }
         .pt-nav-notification { padding-right: 1.3rem; }
-        .pt-nav-badge { background: #ef4444; color: #ffffff; border-radius: 999px; font-size: 0.68rem; font-weight: 900; padding: 0.1rem 0.4rem; margin-left: 0.3rem; }
+        .pt-nav-badge { background: #ef4444; color: #ffffff; border-radius: 999px; font-size: 0.68rem; padding: 0.1rem 0.4rem; margin-left: 0.3rem; }
         .pt-user-menu { position: relative; }
         .pt-user-btn { display: flex; align-items: center; gap: 0.65rem; padding: 0.45rem 0.7rem; border-radius: 0.9rem; background: #f9fafb; border: 1px solid #e5e7eb; cursor: pointer; }
         .pt-user-btn:hover { background: #f3f4f6; }
         .pt-avatar { width: 34px; height: 34px; border-radius: 999px; background: linear-gradient(135deg, #16a34a, #047857); color: #ffffff; display: flex; align-items: center; justify-content: center; font-weight: 900; }
-        .pt-user-text { text-align: left; }
-        .pt-user-text p { margin: 0; color: #1f2937; font-size: 0.875rem; font-weight: 800; }
-        .pt-user-text span { color: #6b7280; font-size: 0.75rem; }
+        .pt-user-text p { margin: 0; font-weight: 800; color: #1f2937; font-size: 0.875rem; }
+        .pt-user-text span { font-size: 0.75rem; color: #6b7280; }
         .pt-user-arrow { color: #6b7280; }
-        .pt-user-dropdown { right: 0; width: 230px; }
+        .pt-user-dropdown { right: 0; }
         .pt-user-info { padding: 1rem; border-bottom: 1px solid #e5e7eb; }
-        .pt-user-info p { margin: 0; font-weight: 800; color: #111827; }
-        .pt-user-info span { display: block; color: #6b7280; font-size: 0.75rem; overflow: hidden; text-overflow: ellipsis; }
-        .pt-user-dropdown button { color: #dc2626; }
-        .pt-mobile-btn { display: none; border: none; background: #f3f4f6; color: #374151; width: 40px; height: 40px; border-radius: 0.75rem; font-size: 1.4rem; cursor: pointer; }
+        .pt-user-info p { margin: 0; font-weight: 800; }
+        .pt-user-info span { display: block; font-size: 0.75rem; color: #6b7280; }
+        .pt-mobile-btn { display: none; background: #f3f4f6; border: none; width: 40px; height: 40px; border-radius: 0.75rem; font-size: 1.4rem; cursor: pointer; }
         .pt-mobile-menu { display: none; background: #ffffff; border-top: 1px solid #e5e7eb; padding: 0.75rem 1rem; }
-        .pt-mobile-menu a, .pt-mobile-menu button { display: block; width: 100%; padding: 0.75rem; border-radius: 0.75rem; color: #374151; text-decoration: none; font-weight: 700; border: none; background: transparent; text-align: left; }
-        .pt-mobile-menu a:hover, .pt-mobile-menu a.active, .pt-mobile-menu button:hover { background: #f0fdf4; color: #15803d; }
+        .pt-mobile-menu a, .pt-mobile-menu button { display: block; width: 100%; padding: 0.75rem; border-radius: 0.75rem; color: #374151; text-decoration: none; font-weight: 700; background: transparent; border: none; text-align: left; cursor: pointer; }
+        .pt-mobile-menu a:hover, .pt-mobile-menu button:hover { background: #f0fdf4; color: #15803d; }
         .pt-mobile-user { display: flex; align-items: center; gap: 0.75rem; padding: 1rem 0.75rem; border-top: 1px solid #e5e7eb; margin-top: 0.5rem; }
-        .pt-mobile-user p { margin: 0; font-weight: 800; color: #111827; }
-        .pt-mobile-user span { font-size: 0.8rem; color: #6b7280; }
-        @media (max-width: 768px) { .pt-desktop-menu, .pt-user-menu { display: none; } .pt-mobile-btn { display: flex; align-items: center; justify-content: center; } .pt-mobile-menu { display: block; } }
-        * { box-sizing: border-box; }
-        p, h1, h2, h3, h4 { margin-top: 0; }
+        @media (max-width: 768px) {
+            .pt-desktop-menu, .pt-user-menu { display: none; }
+            .pt-mobile-btn { display: flex; align-items: center; justify-content: center; }
+            .pt-mobile-menu { display: block; }
+        }
+
+        /* ========== LAYOUT Y COMPONENTES COMUNES ========== */
+        .pt-container { max-width: 1280px; margin: 0 auto; padding: 0 1.5rem; }
+        .pt-page { padding: 3.5rem 0; }
+        .pt-card {
+            background: #ffffff;
+            border: 1px solid #f3f4f6;
+            border-radius: 1.25rem;
+            padding: 1.75rem;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.04);
+        }
+        .pt-card-header {
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .pt-card-title {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: #111827;
+        }
+        .pt-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.6rem 1rem;
+            border-radius: 0.9rem;
+            font-size: 0.875rem;
+            font-weight: 700;
+            text-decoration: none;
+            transition: 0.2s ease;
+        }
+        .pt-btn-green { background: #16a34a; color: #ffffff; }
+        .pt-btn-green:hover { background: #15803d; }
+        .pt-btn-light { background: #ffffff; color: #374151; border: 1px solid #e5e7eb; }
+        .pt-btn-light:hover { background: #f9fafb; }
+
+        /* ========== ESTILOS ESPECÍFICOS DE EDITAR ADOPCIÓN ========== */
+        .pt-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            background: #ffffff;
+            padding: 1rem 1.5rem;
+            border-radius: 1rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            margin-bottom: 2rem;
+        }
+        .pt-header-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: #16a34a;
+            margin-bottom: 0.25rem;
+        }
+        .pt-header-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #111827;
+            line-height: 1.2;
+        }
+        .pt-header-subtitle {
+            font-size: 0.875rem;
+            color: #6b7280;
+            margin-top: 0.25rem;
+        }
+        .pt-form-group {
+            margin-bottom: 1.5rem;
+        }
+        .pt-form-group label {
+            display: block;
+            font-weight: 800;
+            color: #374151;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+        .pt-form-group select,
+        .pt-form-group input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border-radius: 1rem;
+            border: 1px solid #d1d5db;
+            background: #ffffff;
+            font-family: inherit;
+            font-size: 0.95rem;
+            transition: 0.2s;
+        }
+        .pt-form-group select:focus,
+        .pt-form-group input:focus {
+            outline: none;
+            border-color: #16a34a;
+            box-shadow: 0 0 0 3px rgba(22,163,74,0.1);
+        }
+        .pt-alert-error {
+            background: #fee2e2;
+            color: #b91c1c;
+            border: 1px solid #fecaca;
+            padding: 1rem;
+            border-radius: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .pt-alert-error ul {
+            margin: 0.5rem 0 0 1.5rem;
+        }
+        .pt-submit-btn {
+            width: 100%;
+            background: linear-gradient(105deg, #2b7840, #3e8a5a);
+            color: white;
+            border: none;
+            padding: 0.9rem 1.2rem;
+            border-radius: 999px;
+            font-weight: 900;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-top: 0.5rem;
+            transition: 0.2s;
+        }
+        .pt-submit-btn:hover {
+            background: linear-gradient(105deg, #236a3b, #2b7840);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(43,120,64,0.3);
+        }
+        @media (max-width: 768px) {
+            .pt-card { padding: 1.25rem; }
+            .pt-header { flex-direction: column; align-items: flex-start; }
+        }
     </style>
 </head>
 <body class="pt-app">
 
-    <!-- Barra de navegación -->
+    <!-- ========== BARRA DE NAVEGACIÓN (con Alpine.js) ========== -->
     <nav x-data="{ open: false }" class="pt-navbar">
         <div class="pt-nav-container">
             <div class="pt-nav-inner">
@@ -172,11 +330,11 @@
         </div>
     </nav>
 
-    <!-- Contenido principal -->
+    <!-- ========== CONTENIDO PRINCIPAL ========== -->
     <div class="pt-page">
         <div class="pt-container">
 
-            <!-- Cabecera de la página (similar a otras páginas de admin) -->
+            <!-- Cabecera de la página -->
             <div class="pt-header">
                 <div>
                     <p class="pt-header-label">Adopciones</p>
