@@ -1,12 +1,21 @@
-<x-app-layout>
-    <x-slot name="header">
+<?php if (isset($component)) { $__componentOriginal9ac128a9029c0e4701924bd2d73d7f54 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal9ac128a9029c0e4701924bd2d73d7f54 = $attributes; } ?>
+<?php $component = App\View\Components\AppLayout::resolve([] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('app-layout'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\App\View\Components\AppLayout::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
+     <?php $__env->slot('header', null, []); ?> 
         <div class="pt-header">
             <div>
                 <p class="pt-header-label">Notificaciones</p>
                 <h2 class="pt-header-title">Mis notificaciones</h2>
             </div>
         </div>
-    </x-slot>
+     <?php $__env->endSlot(); ?>
 
     <style>
         /* Espacio para que no quede pegado al nav/header */
@@ -282,15 +291,16 @@ span{
     <div class="pt-page">
         <div class="pt-container">
 
-            @if(session('success'))
+            <?php if(session('success')): ?>
                 <div class="pt-alert-success">
-                    {{ session('success') }}
+                    <?php echo e(session('success')); ?>
+
                 </div>
-            @endif
+            <?php endif; ?>
 
             <div class="pt-notifications-list">
-                @forelse($notificaciones as $notificacion)
-                    @php
+                <?php $__empty_1 = true; $__currentLoopData = $notificaciones; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $notificacion): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
+                    <?php
                         $tipo = $notificacion->tipo ?? 'general';
                         $tipoClase = 'general';
 
@@ -315,58 +325,70 @@ span{
                                 })
                                 ->first();
                         }
-                    @endphp
+                    ?>
 
-                    <div class="pt-notification-card {{ $tipoClase }}">
+                    <div class="pt-notification-card <?php echo e($tipoClase); ?>">
                         <div class="pt-notification-content">
                             <div class="pt-notification-main">
                                 <div class="pt-notification-top">
-                                    <h3>{{ $notificacion->titulo }}</h3>
+                                    <h3><?php echo e($notificacion->titulo); ?></h3>
 
-                                    <span class="pt-notification-badge {{ $tipoClase }}">
-                                        {{ ucfirst(str_replace('_', ' ', $tipo)) }}
+                                    <span class="pt-notification-badge <?php echo e($tipoClase); ?>">
+                                        <?php echo e(ucfirst(str_replace('_', ' ', $tipo))); ?>
+
                                     </span>
                                 </div>
 
                                 <p class="pt-notification-message">
-                                    {{ $notificacion->mensaje }}
+                                    <?php echo e($notificacion->mensaje); ?>
+
                                 </p>
 
                                 <p class="pt-notification-time">
-                                    {{ $notificacion->fecha_envio->diffForHumans() }}
+                                    <?php echo e($notificacion->fecha_envio->diffForHumans()); ?>
+
                                 </p>
                             </div>
 
                             <div class="pt-notification-actions">
-                                @if(!$notificacion->leida)
-                                    <form action="{{ route('notificaciones.update', $notificacion) }}" method="POST">
-                                        @csrf
-                                        @method('PUT')
+                                <?php if(!$notificacion->leida): ?>
+                                    <form action="<?php echo e(route('notificaciones.update', $notificacion)); ?>" method="POST">
+                                        <?php echo csrf_field(); ?>
+                                        <?php echo method_field('PUT'); ?>
 
                                         <button type="submit" class="pt-small-btn green">
                                             Marcar leída
                                         </button>
                                     </form>
-                                @endif
+                                <?php endif; ?>
 
-                                @if($adopcion)
-                                    <a href="{{ route('adopciones.show', $adopcion) }}" class="pt-small-btn blue">
+                                <?php if($adopcion): ?>
+                                    <a href="<?php echo e(route('adopciones.show', $adopcion)); ?>" class="pt-small-btn blue">
                                         Ver planta
                                     </a>
-                                @endif
+                                <?php endif; ?>
                             </div>
                         </div>
                     </div>
 
-                @empty
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
                     <div class="pt-empty-state">
                         <div class="pt-empty-icon">🔔</div>
                         <h3>No tienes notificaciones</h3>
                         <p>Aquí aparecerán recordatorios y avisos importantes.</p>
                     </div>
-                @endforelse
+                <?php endif; ?>
             </div>
 
         </div>
     </div>
-</x-app-layout>
+ <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal9ac128a9029c0e4701924bd2d73d7f54)): ?>
+<?php $attributes = $__attributesOriginal9ac128a9029c0e4701924bd2d73d7f54; ?>
+<?php unset($__attributesOriginal9ac128a9029c0e4701924bd2d73d7f54); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal9ac128a9029c0e4701924bd2d73d7f54)): ?>
+<?php $component = $__componentOriginal9ac128a9029c0e4701924bd2d73d7f54; ?>
+<?php unset($__componentOriginal9ac128a9029c0e4701924bd2d73d7f54); ?>
+<?php endif; ?><?php /**PATH C:\Users\Admin\Documents\8\Prog de backend\Laravel Herd\PlantaTec\resources\views/notificaciones/index.blade.php ENDPATH**/ ?>

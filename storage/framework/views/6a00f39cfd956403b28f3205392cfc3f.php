@@ -1,25 +1,21 @@
-<x-app-layout>
-    <x-slot name="header">
+<?php if (isset($component)) { $__componentOriginal9ac128a9029c0e4701924bd2d73d7f54 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal9ac128a9029c0e4701924bd2d73d7f54 = $attributes; } ?>
+<?php $component = App\View\Components\AppLayout::resolve([] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('app-layout'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\App\View\Components\AppLayout::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
+     <?php $__env->slot('header', null, []); ?> 
         <div class="pt-header">
             <div>
-                <p class="pt-header-label">Detalle de adopción</p>
-                <h2 class="pt-header-title">{{ $adopcion->planta->nombre }}</h2>
-                <p class="pt-header-subtitle">
-                    Información general, cuidados, problemas y tratamientos de la planta adoptada
-                </p>
-            </div>
-
-            <div class="pt-header-actions">
-                <a href="{{ route('adopciones.index') }}" class="pt-btn pt-btn-light">
-                    Volver
-                </a>
-
-                <a href="{{ route('registro-cuidados.create', ['adopcion_id' => $adopcion->id]) }}" class="pt-btn pt-btn-green">
-                    Registrar cuidado
-                </a>
+                <p class="pt-header-label">Reporte de problemas</p>
+                <h2 class="pt-header-title">Reportar problema</h2>
             </div>
         </div>
-    </x-slot>
+     <?php $__env->endSlot(); ?>
 
     <style>
         /* ========== ESTILOS GLOBALES PLANTA TEC ========== */
@@ -215,8 +211,7 @@
             background: #ffffff;
             border: 1px solid #f3f4f6;
             border-radius: 1.25rem;
-            padding: 1.5rem;
-              margin-bottom: 1.5rem;
+            padding: 1.75rem;
             box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
         }
 
@@ -977,7 +972,7 @@
         }
 
         .pt-card-body {
-            padding: 1rem;
+            padding: 1.75rem;
         }
 
         .pt-adoption-detail {
@@ -1216,7 +1211,7 @@
 
         @media (max-width: 768px) {
             .pt-card-body {
-                padding: 1rem;
+                padding: 1.1rem;
             }
 
             .pt-adoption-flex {
@@ -2204,348 +2199,391 @@
                 padding: 70px 1rem;
             }
         }
+        /* ===== CORRECCIÓN FORMULARIO REPORTE DE PROBLEMAS ===== */
 
-        .pt-margin-top-small {
-    margin-top: 0.3rem;
+.pt-form-container {
+    max-width: 900px;
 }
 
-.pt-margin-top-medium {
-    margin-top: 0.8rem;
+.pt-form-card {
+    background: #ffffff;
+    border-radius: 1.75rem;
+    border: 1px solid #dbe7df;
+    box-shadow: 0 12px 28px rgba(0, 32, 0, 0.08);
+    padding: 2rem;
+    margin-bottom: 2rem;
 }
 
-.pt-margin-bottom-medium {
-    margin-bottom: 1rem;
+.pt-form-intro {
+    margin-bottom: 1.8rem;
+}
+
+.pt-form-title {
+    font-size: 2rem;
+    font-weight: 900;
+    color: #1e3a2f;
+    margin: 0.4rem 0;
+}
+
+.pt-form-subtitle {
+    color: #6b7280;
+    font-size: 0.95rem;
+}
+
+.pt-form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem;
+}
+
+.pt-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.pt-form-group.full {
+    grid-column: 1 / -1;
+}
+
+.pt-form-group label {
+    font-weight: 800;
+    color: #374151;
+    font-size: 0.92rem;
+}
+
+.pt-form-group select,
+.pt-form-group input,
+.pt-form-group textarea {
+    width: 100%;
+    padding: 0.85rem 1rem;
+    border-radius: 1rem;
+    border: 1px solid #cde0d4;
+    background: #ffffff;
+    font-family: inherit;
+    font-size: 0.95rem;
+    outline: none;
+}
+
+.pt-form-group select:focus,
+.pt-form-group input:focus,
+.pt-form-group textarea:focus {
+    border-color: #2b7840;
+    box-shadow: 0 0 0 3px rgba(43, 120, 64, 0.1);
+}
+
+.pt-form-actions {
+    margin-top: 2rem;
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.pt-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.7rem 1.1rem;
+    border-radius: 0.9rem;
+    font-size: 0.875rem;
+    font-weight: 800;
+    text-decoration: none;
+    transition: 0.2s ease;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.pt-btn-green {
+    background: #16a34a;
+    color: #ffffff;
+}
+
+.pt-btn-green:hover {
+    background: #15803d;
+}
+
+.pt-btn-dark {
+    background: #475569;
+    color: #ffffff;
+}
+
+.pt-btn-dark:hover {
+    background: #334155;
+}
+
+.pt-btn-outline {
+    background: #f3faf5;
+    border: 2px dashed #2b7840;
+    color: #1e3a2f;
+}
+
+.pt-btn-outline:hover {
+    background: #dcfce7;
+}
+
+.pt-selected-item {
+    margin-top: 0.75rem;
+    font-weight: 700;
+    color: #2b7840;
+}
+
+/* ===== MODAL DE PROBLEMAS ===== */
+
+.pt-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.65);
+    z-index: 99999;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+}
+
+.pt-modal-content {
+    background: #ffffff;
+    width: 90%;
+    max-width: 950px;
+    max-height: 85vh;
+    overflow-y: auto;
+    border-radius: 1.5rem;
+    box-shadow: 0 24px 50px rgba(0, 0, 0, 0.25);
+}
+
+.pt-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.pt-modal-header h4 {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 900;
+    color: #1e3a2f;
+}
+
+.pt-close-modal {
+    cursor: pointer;
+    font-size: 2rem;
+    line-height: 1;
+    color: #6b7280;
+    font-weight: 700;
+}
+
+.pt-close-modal:hover {
+    color: #dc2626;
+}
+
+.pt-modal-body {
+    padding: 1.5rem;
+}
+
+.pt-problemas-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1.25rem;
+}
+
+.pt-problema-card {
+    border: 1px solid #dbe7df;
+    border-radius: 1.1rem;
+    overflow: hidden;
+    cursor: pointer;
+    transition: 0.2s ease;
+    background: #ffffff;
+}
+
+.pt-problema-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.10);
+    border-color: #16a34a;
+}
+
+.pt-problema-card img {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+    display: block;
+}
+
+.pt-problema-card-body {
+    padding: 1rem;
+}
+
+.pt-problema-card-body h5 {
+    margin: 0 0 0.4rem;
+    color: #1e3a2f;
+    font-size: 1rem;
+    font-weight: 900;
+}
+
+.pt-problema-card-body p {
+    margin: 0;
+    color: #6b7280;
+    font-size: 0.85rem;
+    line-height: 1.4;
+}
+
+@media (max-width: 768px) {
+    .pt-form-card {
+        padding: 1.25rem;
+    }
+
+    .pt-form-title {
+        font-size: 1.5rem;
+    }
+
+    .pt-form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .pt-modal-content {
+        width: 95%;
+    }
 }
     </style>
 
     <div class="pt-page">
-        <div class="pt-container">
+        <div class="pt-container pt-form-container">
 
-            <!-- Tarjeta de información general + imagen -->
-            <div class="pt-card">
-                <div class="pt-card-header">
-                    <h3 class="pt-card-title">{{ $adopcion->planta->nombre }}</h3>
-                </div>
-
-                <div class="pt-card-body">
-                    <div class="pt-adoption-flex">
-                        <div class="pt-adoption-image">
-                            @php
-                                $imagenUrl = 'https://images.unsplash.com/photo-1592150621744-aca64f48394a?w=300&fit=crop';
-
-                                if ($adopcion->planta->imagen) {
-                                    if (filter_var($adopcion->planta->imagen, FILTER_VALIDATE_URL)) {
-                                        $imagenUrl = $adopcion->planta->imagen;
-                                    } elseif (file_exists(public_path('storage/' . $adopcion->planta->imagen))) {
-                                        $imagenUrl = asset('storage/' . $adopcion->planta->imagen);
-                                    }
-                                }
-                            @endphp
-
-                            <img src="{{ $imagenUrl }}" alt="{{ $adopcion->planta->nombre }}">
-                        </div>
-
-                        <div class="pt-adoption-info">
-                            <div class="pt-info-grid-small">
-                                <div class="pt-info-box">
-                                    <strong>Especie</strong>
-                                    <span>{{ $adopcion->planta->especie }}</span>
-                                </div>
-
-                                <div class="pt-info-box">
-                                    <strong>Estado adopción</strong>
-                                    <span>{{ ucfirst($adopcion->estado_adopcion) }}</span>
-                                </div>
-
-                                <div class="pt-info-box">
-                                    <strong>Ubicación</strong>
-                                    <span>{{ $adopcion->ubicacion->nombre_lugar ?? 'No registrada' }}</span>
-                                </div>
-
-                                <div class="pt-info-box">
-                                    <strong>Fecha adopción</strong>
-                                    <span>{{ \Carbon\Carbon::parse($adopcion->fecha_adopcion)->format('d/m/Y') }}</span>
-                                </div>
-                            </div>
-
-                            <p class="pt-description">
-                                <strong>Descripción:</strong>
-                                {{ $adopcion->planta->descripcion ?? 'Sin descripción.' }}
-                            </p>
-
-                            <div class="pt-btn-group">
-                                <a href="{{ route('registro-cuidados.create', ['adopcion_id' => $adopcion->id]) }}" class="pt-btn pt-btn-green">
-                                    Registrar cuidado general
-                                </a>
-
-                                <a href="{{ route('reporte-problemas.create', ['adopcion_id' => $adopcion->id]) }}" class="pt-btn pt-btn-red">
-                                    Reportar problema
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Plan de cuidados -->
-            <div class="pt-card">
-                <div class="pt-card-header">
-                    <h3 class="pt-card-title">Plan de cuidados</h3>
-                </div>
-
-                <div class="pt-card-body">
-                    @php
-                        $cuidadosAsignados = $adopcion->planta->plantaCuidados;
-                    @endphp
-
-                    @if($cuidadosAsignados->count())
-                        <div class="pt-table-wrapper">
-                            <table class="pt-table">
-                                <thead>
-                                    <tr>
-                                        <th>Cuidado</th>
-                                        <th>Frecuencia</th>
-                                        <th>Próxima fecha sugerida</th>
-                                        <th>Registrar</th>
-                                    </tr>
-                                </thead>
-
-                                <tbody>
-                                    @foreach($cuidadosAsignados as $pc)
-                                        @php
-                                            $ultimoRegistro = $adopcion->registrosCuidados()
-                                                ->where('id_planta_cuidado', $pc->id)
-                                                ->latest()
-                                                ->first();
-
-                                            if ($ultimoRegistro) {
-                                                $proximaFecha = \Carbon\Carbon::parse($ultimoRegistro->fecha)->addDays($pc->frecuencia);
-                                            } else {
-                                                $proximaFecha = \Carbon\Carbon::parse($adopcion->fecha_adopcion)->addDays($pc->frecuencia);
-                                            }
-                                        @endphp
-
-                                        <tr>
-                                            <td>
-                                                <strong>{{ $pc->cuidado->nombre }}</strong>
-
-                                                @if($pc->instrucciones_esp)
-                                                    <br>
-                                                    <span class="pt-muted">
-                                                        {{ Str::limit($pc->instrucciones_esp, 80) }}
-                                                    </span>
-                                                @endif
-                                            </td>
-
-                                            <td>
-                                                Cada {{ $pc->frecuencia }} días
-                                            </td>
-
-                                            <td>
-                                                {{ $proximaFecha->format('d/m/Y') }}
-                                            </td>
-
-                                            <td>
-                                                <a href="{{ route('registro-cuidados.create', ['adopcion_id' => $adopcion->id, 'cuidado_id' => $pc->id]) }}" class="pt-small-btn green">
-                                                    Registrar
-                                                </a>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                    @else
-                        <p class="pt-muted">No hay cuidados asignados a esta planta.</p>
-                    @endif
-                </div>
-            </div>
-
-            <!-- Historial de cuidados -->
-            <div class="pt-card">
-                <div class="pt-card-header">
-                    <h3 class="pt-card-title">Historial de cuidados</h3>
-                </div>
-
-                <div class="pt-card-body">
-                    @forelse($adopcion->registrosCuidados as $registro)
-                        <div class="pt-history-item">
-                            <div class="pt-history-content">
-                                <div class="pt-history-title">
-                                    {{ $registro->plantaCuidado->cuidado->nombre }}
-                                    <span>{{ \Carbon\Carbon::parse($registro->fecha)->format('d/m/Y H:i') }}</span>
-                                </div>
-
-                                <div class="pt-history-text">
-                                    {{ $registro->descripcion ?? 'Sin descripción' }}
-                                </div>
-
-                                @if($registro->estado_observado)
-                                    <div class="pt-muted pt-margin-top-small">
-                                        Estado observado: {{ $registro->estado_observado }}
-                                    </div>
-                                @endif
-                            </div>
-
-                            @if($registro->imagen)
-                                <div>
-                                    <img src="{{ asset('storage/' . $registro->imagen) }}" class="pt-history-image" alt="Evidencia">
-                                </div>
-                            @endif
-                        </div>
-                    @empty
-                        <p class="pt-muted">Aún no se han registrado cuidados.</p>
-                    @endforelse
-                </div>
-            </div>
-
-            <!-- Problemas reportados -->
-            <div class="pt-card">
-                <div class="pt-card-header">
-                    <h3 class="pt-card-title">Problemas reportados</h3>
-                </div>
-
-                <div class="pt-card-body">
-                    @forelse($adopcion->reportesProblemas as $reporte)
-                        <div class="pt-problem-item">
-                            <div class="pt-problem-header">
-                                <div>
-                                    <strong>{{ $reporte->problema->nombre }}</strong>
-
-                                    <span class="pt-status-badge 
-                                        @if($reporte->estado === 'activo') active 
-                                        @elseif($reporte->estado === 'en_revision') review 
-                                        @else solved 
-                                        @endif">
-                                        {{ ucfirst(str_replace('_', ' ', $reporte->estado)) }}
-                                    </span>
-                                </div>
-
-                                <span class="pt-muted">
-                                    Gravedad: {{ ucfirst($reporte->gravedad) }}
-                                </span>
-                            </div>
-
-                            <div class="pt-text pt-margin-top-small">
-                                {{ $reporte->descripcion ?? 'Sin descripción' }}
-                            </div>
-
-                            <div class="pt-margin-top-medium">
-                                <a href="{{ route('reporte-problemas.show', $reporte) }}" class="pt-small-btn green">
-                                    Ver diagnóstico
-                                </a>
-                            </div>
-                        </div>
-                    @empty
-                        <p class="pt-muted">No hay problemas reportados.</p>
-                    @endforelse
-                </div>
-            </div>
-
-            <!-- Tratamientos aplicados -->
-            <div class="pt-card">
-                <div class="pt-card-header">
-                    <h3 class="pt-card-title">Tratamientos aplicados</h3>
-                </div>
-
-                <div class="pt-card-body">
-                    <p class="pt-muted pt-margin-bottom-medium">
-                        Tratamientos registrados derivados de los problemas reportados.
+            <div class="pt-form-card">
+                <div class="pt-form-intro">
+                    <p class="pt-header-label">Nuevo reporte</p>
+                    <h3 class="pt-form-title"><?php echo e($adopcion->planta->nombre); ?></h3>
+                    <p class="pt-form-subtitle">
+                        Reporta un problema detectado en esta planta adoptada.
                     </p>
-
-                    @php
-                        $tratamientosReporte = $adopcion->reportesProblemas->flatMap(function ($reporte) {
-                            return $reporte->tratamientosReportes->map(function ($tratamientoReporte) use ($reporte) {
-                                $tratamientoReporte->reporte_original = $reporte;
-                                return $tratamientoReporte;
-                            });
-                        });
-                    @endphp
-
-                    @if($tratamientosReporte->count() > 0)
-                        <div class="pt-table-wrapper">
-                            <table class="pt-table">
-                                <thead>
-                                    <tr>
-                                        <th>Problema</th>
-                                        <th>Tratamiento</th>
-                                        <th>Frecuencia</th>
-                                        <th>Fecha registro</th>
-                                        <th>Estado</th>
-                                        <th>Evidencia</th>
-                                        <th>Acción</th>
-                                    </tr>
-                                </thead>
-
-                                <tbody>
-                                    @foreach($tratamientosReporte as $tr)
-                                        @php
-                                            $estadoTratamiento = strtolower($tr->estado ?? 'pendiente');
-                                            $fechaRegistro = $tr->updated_at ?? $tr->created_at;
-                                        @endphp
-
-                                        <tr>
-                                            <td>
-                                                <strong>{{ $tr->reporte_original->problema->nombre ?? 'Problema' }}</strong>
-                                                <br>
-                                                <span class="pt-muted">
-                                                    Gravedad: {{ ucfirst($tr->reporte_original->gravedad ?? '-') }}
-                                                </span>
-                                            </td>
-
-                                            <td>
-                                                <strong>{{ $tr->tratamiento->descripcion ?? 'Tratamiento' }}</strong>
-
-                                                @if($tr->descripcion)
-                                                    <br>
-                                                    <span class="pt-muted">
-                                                        Último: {{ $tr->descripcion }}
-                                                    </span>
-                                                @endif
-                                            </td>
-
-                                            <td>
-                                                Cada {{ $tr->frecuencia_dias ?? 1 }} días
-                                            </td>
-
-                                            <td>
-                                                {{ $fechaRegistro ? \Carbon\Carbon::parse($fechaRegistro)->format('d/m/Y') : 'Sin fecha' }}
-                                            </td>
-
-                                            <td>
-                                                <span class="pt-status-badge @if($estadoTratamiento === 'pendiente') review @else solved @endif">
-                                                    {{ ucfirst($tr->estado ?? 'pendiente') }}
-                                                </span>
-                                            </td>
-
-                                            <td>
-                                                @if($tr->imagen)
-                                                    <img src="{{ asset('storage/' . $tr->imagen) }}" alt="Evidencia" class="pt-table-image">
-                                                @else
-                                                    <span class="pt-muted">—</span>
-                                                @endif
-                                            </td>
-
-                                            <td>
-                                                <a href="{{ route('reporte-problemas.show', $tr->reporte_original->id) }}" class="pt-small-btn green">
-                                                    Ver diagnóstico
-                                                </a>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                    @else
-                        <div class="pt-empty">
-                            <div class="pt-empty-icon"></div>
-                            <div class="pt-empty-title">Sin tratamientos</div>
-                            <p class="pt-muted">No hay tratamientos asignados todavía.</p>
-                        </div>
-                    @endif
                 </div>
+
+                <?php if($errors->any()): ?>
+                    <div class="pt-alert-error">
+                        <p><strong>Revisa los campos del formulario:</strong></p>
+                        <ul>
+                            <?php $__currentLoopData = $errors->all(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $error): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                <li><?php echo e($error); ?></li>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                        </ul>
+                    </div>
+                <?php endif; ?>
+
+                <form action="<?php echo e(route('reporte-problemas.store')); ?>" method="POST" enctype="multipart/form-data">
+                    <?php echo csrf_field(); ?>
+
+                    <input type="hidden" name="id_adopcion" value="<?php echo e($adopcion->id); ?>">
+                    <input type="hidden" name="id_problema" id="id_problema" required>
+
+                    <div class="pt-form-grid">
+
+                        <div class="pt-form-group full">
+                            <label>Problema detectado</label>
+                            <button type="button" class="pt-btn pt-btn-outline" id="btnAbrirModal">
+                                Seleccionar tipo de problema
+                            </button>
+                            <div id="problemaSeleccionado" class="pt-selected-item"></div>
+                        </div>
+
+                        <div class="pt-form-group full">
+                            <label>Gravedad</label>
+                            <select name="gravedad" required>
+                                <option value="leve">Leve</option>
+                                <option value="media">Media</option>
+                                <option value="grave">Grave</option>
+                            </select>
+                        </div>
+
+                        <div class="pt-form-group full">
+                            <label>Descripción adicional</label>
+                            <textarea name="descripcion" rows="5" placeholder="Describe lo que observas en la planta..."><?php echo e(old('descripcion')); ?></textarea>
+                        </div>
+
+                        <div class="pt-form-group full">
+                            <label>Imagen (opcional)</label>
+                            <input type="file" name="imagen" accept="image/*">
+                        </div>
+
+                    </div>
+
+                    <div class="pt-form-actions">
+                        <a href="<?php echo e(route('adopciones.show', $adopcion)); ?>" class="pt-btn pt-btn-dark">Cancelar</a>
+                        <button type="submit" class="pt-btn pt-btn-green">Reportar problema</button>
+                    </div>
+
+                </form>
             </div>
 
         </div>
     </div>
-</x-app-layout>
+
+    <!-- MODAL -->
+    <div id="modalProblemas" class="pt-modal">
+        <div class="pt-modal-content">
+            <div class="pt-modal-header">
+                <h4>Selecciona un problema</h4>
+                <span class="pt-close-modal">&times;</span>
+            </div>
+
+            <div class="pt-modal-body">
+                <div class="pt-problemas-grid">
+                    <?php $__currentLoopData = $problemas; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $problema): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        <div class="pt-problema-card" data-id="<?php echo e($problema->id); ?>" data-nombre="<?php echo e($problema->nombre); ?>">
+                            <img src="<?php echo e($problema->imagen ?? 'https://via.placeholder.com/300x160?text=Sin+imagen'); ?>" alt="<?php echo e($problema->nombre); ?>">
+                            <div class="pt-problema-card-body">
+                                <h5><?php echo e($problema->nombre); ?></h5>
+                                <p><?php echo e(Str::limit($problema->descripcion, 60)); ?></p>
+                            </div>
+                        </div>
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                </div>
+            </div>
+        </div>
+    </div>
+
+   <script>
+document.addEventListener('DOMContentLoaded', function () {
+    const btnAbrir = document.getElementById('btnAbrirModal');
+    const modal = document.getElementById('modalProblemas');
+    const closeModal = document.querySelector('.pt-close-modal');
+    const idProblemaInput = document.getElementById('id_problema');
+    const problemaSeleccionadoDiv = document.getElementById('problemaSeleccionado');
+
+    if (btnAbrir && modal) {
+        btnAbrir.addEventListener('click', function () {
+            modal.style.display = 'flex';
+        });
+    }
+
+    if (closeModal && modal) {
+        closeModal.addEventListener('click', function () {
+            modal.style.display = 'none';
+        });
+    }
+
+    window.addEventListener('click', function (event) {
+        if (event.target === modal) {
+            modal.style.display = 'none';
+        }
+    });
+
+    document.querySelectorAll('.pt-problema-card').forEach(card => {
+        card.addEventListener('click', function () {
+            idProblemaInput.value = this.dataset.id;
+            problemaSeleccionadoDiv.innerHTML = `<strong>Problema seleccionado:</strong> ${this.dataset.nombre}`;
+            modal.style.display = 'none';
+        });
+    });
+});
+</script>
+ <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal9ac128a9029c0e4701924bd2d73d7f54)): ?>
+<?php $attributes = $__attributesOriginal9ac128a9029c0e4701924bd2d73d7f54; ?>
+<?php unset($__attributesOriginal9ac128a9029c0e4701924bd2d73d7f54); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal9ac128a9029c0e4701924bd2d73d7f54)): ?>
+<?php $component = $__componentOriginal9ac128a9029c0e4701924bd2d73d7f54; ?>
+<?php unset($__componentOriginal9ac128a9029c0e4701924bd2d73d7f54); ?>
+<?php endif; ?><?php /**PATH C:\Users\Admin\Documents\8\Prog de backend\Laravel Herd\PlantaTec\resources\views/reporte_problemas/create.blade.php ENDPATH**/ ?>

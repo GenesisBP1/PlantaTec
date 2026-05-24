@@ -7,6 +7,7 @@ use App\Models\Adopcion;
 use App\Models\RegistroCuidado;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class NotificacionController extends Controller
 {
@@ -31,10 +32,12 @@ class NotificacionController extends Controller
 
     /**
      * Genera notificaciones de cuidados pendientes (hoy, mañana, atrasos)
+     * para el usuario autenticado.
      */
-    private function generarNotificacionesCuidados()
+   private function generarNotificacionesCuidados()
 {
-    $hoy = Carbon::today(); // solo fecha, sin horas
+    // Fecha de hoy en UTC, inicio del día (hora 00:00:00)
+    $hoyUTC = Carbon::now('UTC')->startOfDay();
     $usuarioId = auth()->id();
 
     $adopciones = Adopcion::where('id_usuario', $usuarioId)
@@ -44,21 +47,24 @@ class NotificacionController extends Controller
 
     foreach ($adopciones as $adopcion) {
         foreach ($adopcion->planta->plantaCuidados as $plantaCuidado) {
-            // Obtener último registro
             $ultimoRegistro = RegistroCuidado::where('id_adopcion', $adopcion->id)
                 ->where('id_planta_cuidado', $plantaCuidado->id)
                 ->latest('fecha')
                 ->first();
 
-            // Calcular próxima fecha (sin horas)
             if ($ultimoRegistro) {
-                $proximaFecha = Carbon::parse($ultimoRegistro->fecha)->startOfDay()->addDays($plantaCuidado->frecuencia);
+                // Convertir a inicio del día antes de sumar días
+                $proximaFechaUTC = Carbon::parse($ultimoRegistro->fecha)
+                    ->startOfDay()
+                    ->addDays($plantaCuidado->frecuencia);
             } else {
-                $proximaFecha = Carbon::parse($adopcion->fecha_adopcion)->startOfDay()->addDays($plantaCuidado->frecuencia);
+                $proximaFechaUTC = Carbon::parse($adopcion->fecha_adopcion)
+                    ->startOfDay()
+                    ->addDays($plantaCuidado->frecuencia);
             }
 
-            // Diferencia en días enteros (negativa si atrasado)
-            $diferencia = $hoy->diffInDays($proximaFecha, false); // ya devuelve entero
+            // Calcular diferencia ENTERA (forzar int)
+            $diferencia = (int) $hoyUTC->diffInDays($proximaFechaUTC, false);
 
             $titulo = null;
             $mensaje = null;
@@ -75,7 +81,7 @@ class NotificacionController extends Controller
             } elseif ($diferencia < -1) {
                 $diasAtraso = abs($diferencia);
                 $titulo = "Cuidado atrasado {$diasAtraso} días";
-                $mensaje = "Estás {$diasAtraso} días atrasado con el cuidado: {$plantaCuidado->cuidado->nombre} para tu planta {$adopcion->planta->nombre}. Registra el cuidado lo antes posible.";
+                $mensaje = "Estás {$diasAtraso} días atrasado con el cuidado: {$plantaCuidado->cuidado->nombre} para tu planta {$adopcion->planta->nombre}.";
                 $tipo = 'atraso';
             } elseif ($diferencia == 1) {
                 $titulo = "Cuidado programado para mañana";
@@ -84,10 +90,11 @@ class NotificacionController extends Controller
             }
 
             if ($titulo) {
-                // Evitar duplicados en el mismo día
+                // Evitar duplicados en el mismo día usando rango de fechas UTC
                 $existe = Notificacion::where('id_usuario', $usuarioId)
                     ->where('titulo', $titulo)
-                    ->whereDate('fecha_envio', $hoy)
+                    ->where('fecha_envio', '>=', $hoyUTC)
+                    ->where('fecha_envio', '<', $hoyUTC->copy()->addDay())
                     ->exists();
 
                 if (!$existe) {
@@ -97,7 +104,7 @@ class NotificacionController extends Controller
                         'mensaje' => $mensaje,
                         'tipo' => $tipo,
                         'leida' => false,
-                        'fecha_envio' => now(),
+                        'fecha_envio' => Carbon::now('UTC'), // UTC
                     ]);
                 }
             }

@@ -1,17 +1,26 @@
-<x-app-layout>
-    <x-slot name="header">
+<?php if (isset($component)) { $__componentOriginal9ac128a9029c0e4701924bd2d73d7f54 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal9ac128a9029c0e4701924bd2d73d7f54 = $attributes; } ?>
+<?php $component = App\View\Components\AppLayout::resolve([] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('app-layout'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\App\View\Components\AppLayout::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
+     <?php $__env->slot('header', null, []); ?> 
         <div class="pt-header">
             <div>
                 <p class="pt-header-label">Panel de Control</p>
-                <h2 class="pt-header-title">Bienvenido, {{ Auth::user()->name }}</h2>
-                <p class="pt-header-subtitle">Resumen general del sistema · {{ now()->format('d M Y') }}</p>
+                <h2 class="pt-header-title">Bienvenido, <?php echo e(Auth::user()->name); ?></h2>
+                <p class="pt-header-subtitle">Resumen general del sistema · <?php echo e(now()->format('d M Y')); ?></p>
             </div>
             <div class="pt-header-actions">
-                <a href="{{ route('plantas.create') }}" class="pt-btn pt-btn-green">Nueva planta</a>
-                <a href="{{ route('recomendaciones-cuidado.index') }}" class="pt-btn pt-btn-light">Recomendaciones</a>
+                <a href="<?php echo e(route('plantas.create')); ?>" class="pt-btn pt-btn-green">Nueva planta</a>
+                <a href="<?php echo e(route('recomendaciones-cuidado.index')); ?>" class="pt-btn pt-btn-light">Recomendaciones</a>
             </div>
         </div>
-    </x-slot>
+     <?php $__env->endSlot(); ?>
 
     <style>
         /* ========== ESTILOS GLOBALES PLANTA TEC (VERDES) ========== */
@@ -272,8 +281,8 @@
                             <img src="https://images.vexels.com/media/users/3/131782/isolated/preview/4833130cb7d9b85e4134262733da8b6d-icono-de-planta.png?w=360" alt="Plantas">
                         </div>
                         <p class="pt-label">Plantas</p>
-                        <p class="pt-number">{{ $totalPlantas }}</p>
-                        <a href="{{ route('plantas.index') }}" class="pt-link green">Ver todas →</a>
+                        <p class="pt-number"><?php echo e($totalPlantas); ?></p>
+                        <a href="<?php echo e(route('plantas.index')); ?>" class="pt-link green">Ver todas →</a>
                     </div>
                 </div>
                 <div class="pt-metric-card blue">
@@ -283,8 +292,8 @@
                             <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Usuarios">
                         </div>
                         <p class="pt-label">Usuarios registrados</p>
-                        <p class="pt-number">{{ $totalUsuarios }}</p>
-                        <a href="{{ route('admin.usuarios.index') }}" class="pt-link blue">Ver detalles →</a>
+                        <p class="pt-number"><?php echo e($totalUsuarios); ?></p>
+                        <a href="<?php echo e(route('admin.usuarios.index')); ?>" class="pt-link blue">Ver detalles →</a>
                     </div>
                 </div>
                 <div class="pt-metric-card violet">
@@ -294,7 +303,7 @@
                             <img src="https://images.vexels.com/media/users/3/131782/isolated/preview/4833130cb7d9b85e4134262733da8b6d-icono-de-planta.png?w=360" alt="Adopciones">
                         </div>
                         <p class="pt-label">Plantas adoptadas</p>
-                        <p class="pt-number">{{ $totalAdopciones }}</p>
+                        <p class="pt-number"><?php echo e($totalAdopciones); ?></p>
                     </div>
                 </div>
                 <div class="pt-metric-card amber">
@@ -304,7 +313,7 @@
                             <img src="https://cdn-icons-png.flaticon.com/512/190/190411.png" alt="Problemas">
                         </div>
                         <p class="pt-label">Problemas activos</p>
-                        <p class="pt-number">{{ $problemasActivos }}</p>
+                        <p class="pt-number"><?php echo e($problemasActivos); ?></p>
                     </div>
                 </div>
             </div>
@@ -316,9 +325,9 @@
                         <h3 class="pt-section-title">🗺️ Mapa de ubicaciones</h3>
                         <p class="pt-card-subtitle">Adopciones y zonas públicas recomendadas</p>
                     </div>
-                    @if(\Illuminate\Support\Facades\Route::has('mapa.index'))
-                        <a href="{{ route('mapa.index') }}" class="pt-link green">Ver mapa completo →</a>
-                    @endif
+                    <?php if(\Illuminate\Support\Facades\Route::has('mapa.index')): ?>
+                        <a href="<?php echo e(route('mapa.index')); ?>" class="pt-link green">Ver mapa completo →</a>
+                    <?php endif; ?>
                 </div>
                 <div class="pt-map-body">
                     <div id="mapa-admin-custom"></div>
@@ -335,20 +344,20 @@
                         </div>
                         <span class="pt-badge green">Real</span>
                     </div>
-                    @if($plantaMasAdoptada)
+                    <?php if($plantaMasAdoptada): ?>
                         <div class="pt-plant-row">
                             <div class="pt-plant-image">
-                                <img src="{{ $plantaMasAdoptada->imagen ? (str_starts_with($plantaMasAdoptada->imagen, 'http') ? $plantaMasAdoptada->imagen : asset('storage/' . $plantaMasAdoptada->imagen)) : 'https://images.unsplash.com/photo-1592150621744-aca64f48394a?w=400&h=250&fit=crop' }}" alt="{{ $plantaMasAdoptada->nombre }}">
+                                <img src="<?php echo e($plantaMasAdoptada->imagen ? (str_starts_with($plantaMasAdoptada->imagen, 'http') ? $plantaMasAdoptada->imagen : asset('storage/' . $plantaMasAdoptada->imagen)) : 'https://images.unsplash.com/photo-1592150621744-aca64f48394a?w=400&h=250&fit=crop'); ?>" alt="<?php echo e($plantaMasAdoptada->nombre); ?>">
                             </div>
                             <div class="pt-plant-info">
-                                <p class="pt-plant-name">{{ $plantaMasAdoptada->nombre }}</p>
-                                <p class="pt-text">{{ $plantaMasAdoptada->adopciones_count }} adopciones registradas</p>
-                                <p class="pt-muted">Zona: {{ $plantaMasAdoptada->tipo_zona ?? 'No definida' }}</p>
+                                <p class="pt-plant-name"><?php echo e($plantaMasAdoptada->nombre); ?></p>
+                                <p class="pt-text"><?php echo e($plantaMasAdoptada->adopciones_count); ?> adopciones registradas</p>
+                                <p class="pt-muted">Zona: <?php echo e($plantaMasAdoptada->tipo_zona ?? 'No definida'); ?></p>
                             </div>
                         </div>
-                    @else
+                    <?php else: ?>
                         <div class="pt-empty">Aún no hay adopciones registradas para calcular este dato.</div>
-                    @endif
+                    <?php endif; ?>
                 </div>
 
                 <!-- Zonas recomendadas (solo 3 + enlace) -->
@@ -358,44 +367,44 @@
                             <h3 class="pt-card-title">Zonas recomendadas disponibles</h3>
                             <p class="pt-card-subtitle">Ubicaciones públicas sugeridas</p>
                         </div>
-                        <a href="{{ route('recomendaciones-zona.index') }}" class="pt-link green">Ver todas →</a>
+                        <a href="<?php echo e(route('recomendaciones-zona.index')); ?>" class="pt-link green">Ver todas →</a>
                     </div>
 
-                    @php
+                    <?php
                         $zonas = \App\Models\RecomendacionZona::orderBy('nombre_lugar')->limit(3)->get();
                         $totalZonas = \App\Models\RecomendacionZona::count();
-                    @endphp
+                    ?>
 
-                    @if($zonas->count() > 0)
+                    <?php if($zonas->count() > 0): ?>
                         <div class="pt-zone-list">
-                            @foreach($zonas as $zona)
+                            <?php $__currentLoopData = $zonas; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $zona): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                 <div class="pt-zone-item">
                                     <div class="pt-zone-main">
-                                        <p class="pt-zone-title">{{ $zona->nombre_lugar }}</p>
+                                        <p class="pt-zone-title"><?php echo e($zona->nombre_lugar); ?></p>
                                         <div class="pt-zone-tags">
-                                            <span class="pt-badge blue">{{ $zona->tipo_zona }}</span>
-                                            @if($zona->descripcion)
-                                                <span class="pt-zone-description">{{ \Illuminate\Support\Str::limit($zona->descripcion, 50) }}</span>
-                                            @endif
+                                            <span class="pt-badge blue"><?php echo e($zona->tipo_zona); ?></span>
+                                            <?php if($zona->descripcion): ?>
+                                                <span class="pt-zone-description"><?php echo e(\Illuminate\Support\Str::limit($zona->descripcion, 50)); ?></span>
+                                            <?php endif; ?>
                                         </div>
                                     </div>
                                     <div class="pt-zone-coords">
-                                        <p class="pt-code">{{ number_format($zona->latitud, 4) }}, {{ number_format($zona->longitud, 4) }}</p>
+                                        <p class="pt-code"><?php echo e(number_format($zona->latitud, 4)); ?>, <?php echo e(number_format($zona->longitud, 4)); ?></p>
                                     </div>
                                 </div>
-                            @endforeach
-                            @if($totalZonas > 3)
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                            <?php if($totalZonas > 3): ?>
                                 <div class="pt-muted" style="text-align: center; margin-top: 0.5rem;">
-                                    + {{ $totalZonas - 3 }} zonas más
+                                    + <?php echo e($totalZonas - 3); ?> zonas más
                                 </div>
-                            @endif
+                            <?php endif; ?>
                         </div>
-                    @else
+                    <?php else: ?>
                         <div class="pt-empty center">
                             <div class="pt-empty-icon">📍</div>
                             <p class="pt-empty-title">No hay zonas recomendadas configuradas</p>
                         </div>
-                    @endif
+                    <?php endif; ?>
                 </div>
             </div>
 
@@ -408,7 +417,7 @@
                     </div>
                 </div>
                 <div class="pt-access-grid">
-                    @php
+                    <?php
                     $accesos = [
                         ['route' => 'plantas.index', 'label' => 'Plantas', 'icon' => '🌿', 'color' => 'green'],
                         ['route' => 'ubicaciones.index', 'label' => 'Ubicaciones', 'icon' => '📍', 'color' => 'blue'],
@@ -421,22 +430,22 @@
                         ['route' => 'notificaciones.index', 'label' => 'Notificaciones', 'icon' => '🔔', 'color' => 'gray'],
                         ['route' => 'reporte-problemas.index', 'label' => 'Reportes de problemas', 'icon' => '🚨', 'color' => 'pink'],
                     ];
-                    @endphp
-                    @foreach($accesos as $item)
-                        @if(\Illuminate\Support\Facades\Route::has($item['route']))
-                            <a href="{{ route($item['route']) }}" class="pt-access-btn {{ $item['color'] }}">
-                                <span class="pt-access-icon">{{ $item['icon'] }}</span>
-                                <span>{{ $item['label'] }}</span>
+                    ?>
+                    <?php $__currentLoopData = $accesos; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $item): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                        <?php if(\Illuminate\Support\Facades\Route::has($item['route'])): ?>
+                            <a href="<?php echo e(route($item['route'])); ?>" class="pt-access-btn <?php echo e($item['color']); ?>">
+                                <span class="pt-access-icon"><?php echo e($item['icon']); ?></span>
+                                <span><?php echo e($item['label']); ?></span>
                             </a>
-                        @endif
-                    @endforeach
+                        <?php endif; ?>
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 </div>
             </div>
 
         </div>
     </div>
 
-    @push('styles')
+    <?php $__env->startPush('styles'); ?>
         <style>
             /* Asegurar que el mapa tenga altura fija y no se superponga */
             #mapa-admin-custom {
@@ -452,9 +461,9 @@
                 }
             }
         </style>
-    @endpush
+    <?php $__env->stopPush(); ?>
 
-    @push('scripts')
+    <?php $__env->startPush('scripts'); ?>
         <script>
             document.addEventListener('DOMContentLoaded', function () {
                 const map = L.map('mapa-admin-custom').setView([23.6345, -102.5528], 5);
@@ -462,8 +471,8 @@
                     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> & CartoDB'
                 }).addTo(map);
 
-                const adopciones = @json($adopcionesConUbicacion ?? []);
-                const zonas = @json($zonasRecomendadas ?? []);
+                const adopciones = <?php echo json_encode($adopcionesConUbicacion ?? [], 15, 512) ?>;
+                const zonas = <?php echo json_encode($zonasRecomendadas ?? [], 15, 512) ?>;
 
                 const iconoAdopcion = L.icon({
                     iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
@@ -520,5 +529,14 @@
                 else map.setView([23.6345, -102.5528], 5);
             });
         </script>
-    @endpush
-</x-app-layout>
+    <?php $__env->stopPush(); ?>
+ <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal9ac128a9029c0e4701924bd2d73d7f54)): ?>
+<?php $attributes = $__attributesOriginal9ac128a9029c0e4701924bd2d73d7f54; ?>
+<?php unset($__attributesOriginal9ac128a9029c0e4701924bd2d73d7f54); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal9ac128a9029c0e4701924bd2d73d7f54)): ?>
+<?php $component = $__componentOriginal9ac128a9029c0e4701924bd2d73d7f54; ?>
+<?php unset($__componentOriginal9ac128a9029c0e4701924bd2d73d7f54); ?>
+<?php endif; ?><?php /**PATH C:\Users\Admin\Documents\8\Prog de backend\Laravel Herd\PlantaTec\resources\views/dashboard/admin.blade.php ENDPATH**/ ?>

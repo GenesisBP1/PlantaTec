@@ -1,25 +1,13 @@
-<x-app-layout>
-    <x-slot name="header">
-        <div class="pt-header">
-            <div>
-                <p class="pt-header-label">Detalle de adopción</p>
-                <h2 class="pt-header-title">{{ $adopcion->planta->nombre }}</h2>
-                <p class="pt-header-subtitle">
-                    Información general, cuidados, problemas y tratamientos de la planta adoptada
-                </p>
-            </div>
+<!DOCTYPE html>
+<html lang="<?php echo e(str_replace('_', '-', app()->getLocale())); ?>">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>PlantaTec — Tu huella verde</title>
 
-            <div class="pt-header-actions">
-                <a href="{{ route('adopciones.index') }}" class="pt-btn pt-btn-light">
-                    Volver
-                </a>
-
-                <a href="{{ route('registro-cuidados.create', ['adopcion_id' => $adopcion->id]) }}" class="pt-btn pt-btn-green">
-                    Registrar cuidado
-                </a>
-            </div>
-        </div>
-    </x-slot>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700;9..40,800&display=swap" rel="stylesheet">
 
     <style>
         /* ========== ESTILOS GLOBALES PLANTA TEC ========== */
@@ -215,8 +203,7 @@
             background: #ffffff;
             border: 1px solid #f3f4f6;
             border-radius: 1.25rem;
-            padding: 1.5rem;
-              margin-bottom: 1.5rem;
+            padding: 1.75rem;
             box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
         }
 
@@ -977,7 +964,7 @@
         }
 
         .pt-card-body {
-            padding: 1rem;
+            padding: 1.75rem;
         }
 
         .pt-adoption-detail {
@@ -1216,7 +1203,7 @@
 
         @media (max-width: 768px) {
             .pt-card-body {
-                padding: 1rem;
+                padding: 1.1rem;
             }
 
             .pt-adoption-flex {
@@ -2204,348 +2191,207 @@
                 padding: 70px 1rem;
             }
         }
-
-        .pt-margin-top-small {
-    margin-top: 0.3rem;
-}
-
-.pt-margin-top-medium {
-    margin-top: 0.8rem;
-}
-
-.pt-margin-bottom-medium {
-    margin-bottom: 1rem;
-}
     </style>
+</head>
 
-    <div class="pt-page">
-        <div class="pt-container">
+<body class="pt-welcome-body">
 
-            <!-- Tarjeta de información general + imagen -->
-            <div class="pt-card">
-                <div class="pt-card-header">
-                    <h3 class="pt-card-title">{{ $adopcion->planta->nombre }}</h3>
-                </div>
+    <nav class="pt-welcome-nav">
+        <a href="/" class="pt-welcome-logo">
+            <svg width="28" height="28" viewBox="0 0 32 32" fill="none">
+                <path d="M16 4C16 4 6 10 6 19C6 24.52 10.48 29 16 29C21.52 29 26 24.52 26 19C26 10 16 4 16 4Z" fill="#16a34a"/>
+                <path d="M16 29V16M16 16C16 16 11 20 8 24" stroke="white" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+            PlantaTec
+        </a>
 
-                <div class="pt-card-body">
-                    <div class="pt-adoption-flex">
-                        <div class="pt-adoption-image">
-                            @php
-                                $imagenUrl = 'https://images.unsplash.com/photo-1592150621744-aca64f48394a?w=300&fit=crop';
+        <div class="pt-welcome-links">
+            <?php if(Route::has('login')): ?>
+                <?php if(auth()->guard()->check()): ?>
+                    <a href="<?php echo e(url('/dashboard')); ?>" class="pt-welcome-nav-btn">Ir al panel</a>
+                <?php else: ?>
+                    <a href="<?php echo e(route('login')); ?>" class="pt-welcome-nav-link">Iniciar sesión</a>
 
-                                if ($adopcion->planta->imagen) {
-                                    if (filter_var($adopcion->planta->imagen, FILTER_VALIDATE_URL)) {
-                                        $imagenUrl = $adopcion->planta->imagen;
-                                    } elseif (file_exists(public_path('storage/' . $adopcion->planta->imagen))) {
-                                        $imagenUrl = asset('storage/' . $adopcion->planta->imagen);
-                                    }
-                                }
-                            @endphp
-
-                            <img src="{{ $imagenUrl }}" alt="{{ $adopcion->planta->nombre }}">
-                        </div>
-
-                        <div class="pt-adoption-info">
-                            <div class="pt-info-grid-small">
-                                <div class="pt-info-box">
-                                    <strong>Especie</strong>
-                                    <span>{{ $adopcion->planta->especie }}</span>
-                                </div>
-
-                                <div class="pt-info-box">
-                                    <strong>Estado adopción</strong>
-                                    <span>{{ ucfirst($adopcion->estado_adopcion) }}</span>
-                                </div>
-
-                                <div class="pt-info-box">
-                                    <strong>Ubicación</strong>
-                                    <span>{{ $adopcion->ubicacion->nombre_lugar ?? 'No registrada' }}</span>
-                                </div>
-
-                                <div class="pt-info-box">
-                                    <strong>Fecha adopción</strong>
-                                    <span>{{ \Carbon\Carbon::parse($adopcion->fecha_adopcion)->format('d/m/Y') }}</span>
-                                </div>
-                            </div>
-
-                            <p class="pt-description">
-                                <strong>Descripción:</strong>
-                                {{ $adopcion->planta->descripcion ?? 'Sin descripción.' }}
-                            </p>
-
-                            <div class="pt-btn-group">
-                                <a href="{{ route('registro-cuidados.create', ['adopcion_id' => $adopcion->id]) }}" class="pt-btn pt-btn-green">
-                                    Registrar cuidado general
-                                </a>
-
-                                <a href="{{ route('reporte-problemas.create', ['adopcion_id' => $adopcion->id]) }}" class="pt-btn pt-btn-red">
-                                    Reportar problema
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Plan de cuidados -->
-            <div class="pt-card">
-                <div class="pt-card-header">
-                    <h3 class="pt-card-title">Plan de cuidados</h3>
-                </div>
-
-                <div class="pt-card-body">
-                    @php
-                        $cuidadosAsignados = $adopcion->planta->plantaCuidados;
-                    @endphp
-
-                    @if($cuidadosAsignados->count())
-                        <div class="pt-table-wrapper">
-                            <table class="pt-table">
-                                <thead>
-                                    <tr>
-                                        <th>Cuidado</th>
-                                        <th>Frecuencia</th>
-                                        <th>Próxima fecha sugerida</th>
-                                        <th>Registrar</th>
-                                    </tr>
-                                </thead>
-
-                                <tbody>
-                                    @foreach($cuidadosAsignados as $pc)
-                                        @php
-                                            $ultimoRegistro = $adopcion->registrosCuidados()
-                                                ->where('id_planta_cuidado', $pc->id)
-                                                ->latest()
-                                                ->first();
-
-                                            if ($ultimoRegistro) {
-                                                $proximaFecha = \Carbon\Carbon::parse($ultimoRegistro->fecha)->addDays($pc->frecuencia);
-                                            } else {
-                                                $proximaFecha = \Carbon\Carbon::parse($adopcion->fecha_adopcion)->addDays($pc->frecuencia);
-                                            }
-                                        @endphp
-
-                                        <tr>
-                                            <td>
-                                                <strong>{{ $pc->cuidado->nombre }}</strong>
-
-                                                @if($pc->instrucciones_esp)
-                                                    <br>
-                                                    <span class="pt-muted">
-                                                        {{ Str::limit($pc->instrucciones_esp, 80) }}
-                                                    </span>
-                                                @endif
-                                            </td>
-
-                                            <td>
-                                                Cada {{ $pc->frecuencia }} días
-                                            </td>
-
-                                            <td>
-                                                {{ $proximaFecha->format('d/m/Y') }}
-                                            </td>
-
-                                            <td>
-                                                <a href="{{ route('registro-cuidados.create', ['adopcion_id' => $adopcion->id, 'cuidado_id' => $pc->id]) }}" class="pt-small-btn green">
-                                                    Registrar
-                                                </a>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                    @else
-                        <p class="pt-muted">No hay cuidados asignados a esta planta.</p>
-                    @endif
-                </div>
-            </div>
-
-            <!-- Historial de cuidados -->
-            <div class="pt-card">
-                <div class="pt-card-header">
-                    <h3 class="pt-card-title">Historial de cuidados</h3>
-                </div>
-
-                <div class="pt-card-body">
-                    @forelse($adopcion->registrosCuidados as $registro)
-                        <div class="pt-history-item">
-                            <div class="pt-history-content">
-                                <div class="pt-history-title">
-                                    {{ $registro->plantaCuidado->cuidado->nombre }}
-                                    <span>{{ \Carbon\Carbon::parse($registro->fecha)->format('d/m/Y H:i') }}</span>
-                                </div>
-
-                                <div class="pt-history-text">
-                                    {{ $registro->descripcion ?? 'Sin descripción' }}
-                                </div>
-
-                                @if($registro->estado_observado)
-                                    <div class="pt-muted pt-margin-top-small">
-                                        Estado observado: {{ $registro->estado_observado }}
-                                    </div>
-                                @endif
-                            </div>
-
-                            @if($registro->imagen)
-                                <div>
-                                    <img src="{{ asset('storage/' . $registro->imagen) }}" class="pt-history-image" alt="Evidencia">
-                                </div>
-                            @endif
-                        </div>
-                    @empty
-                        <p class="pt-muted">Aún no se han registrado cuidados.</p>
-                    @endforelse
-                </div>
-            </div>
-
-            <!-- Problemas reportados -->
-            <div class="pt-card">
-                <div class="pt-card-header">
-                    <h3 class="pt-card-title">Problemas reportados</h3>
-                </div>
-
-                <div class="pt-card-body">
-                    @forelse($adopcion->reportesProblemas as $reporte)
-                        <div class="pt-problem-item">
-                            <div class="pt-problem-header">
-                                <div>
-                                    <strong>{{ $reporte->problema->nombre }}</strong>
-
-                                    <span class="pt-status-badge 
-                                        @if($reporte->estado === 'activo') active 
-                                        @elseif($reporte->estado === 'en_revision') review 
-                                        @else solved 
-                                        @endif">
-                                        {{ ucfirst(str_replace('_', ' ', $reporte->estado)) }}
-                                    </span>
-                                </div>
-
-                                <span class="pt-muted">
-                                    Gravedad: {{ ucfirst($reporte->gravedad) }}
-                                </span>
-                            </div>
-
-                            <div class="pt-text pt-margin-top-small">
-                                {{ $reporte->descripcion ?? 'Sin descripción' }}
-                            </div>
-
-                            <div class="pt-margin-top-medium">
-                                <a href="{{ route('reporte-problemas.show', $reporte) }}" class="pt-small-btn green">
-                                    Ver diagnóstico
-                                </a>
-                            </div>
-                        </div>
-                    @empty
-                        <p class="pt-muted">No hay problemas reportados.</p>
-                    @endforelse
-                </div>
-            </div>
-
-            <!-- Tratamientos aplicados -->
-            <div class="pt-card">
-                <div class="pt-card-header">
-                    <h3 class="pt-card-title">Tratamientos aplicados</h3>
-                </div>
-
-                <div class="pt-card-body">
-                    <p class="pt-muted pt-margin-bottom-medium">
-                        Tratamientos registrados derivados de los problemas reportados.
-                    </p>
-
-                    @php
-                        $tratamientosReporte = $adopcion->reportesProblemas->flatMap(function ($reporte) {
-                            return $reporte->tratamientosReportes->map(function ($tratamientoReporte) use ($reporte) {
-                                $tratamientoReporte->reporte_original = $reporte;
-                                return $tratamientoReporte;
-                            });
-                        });
-                    @endphp
-
-                    @if($tratamientosReporte->count() > 0)
-                        <div class="pt-table-wrapper">
-                            <table class="pt-table">
-                                <thead>
-                                    <tr>
-                                        <th>Problema</th>
-                                        <th>Tratamiento</th>
-                                        <th>Frecuencia</th>
-                                        <th>Fecha registro</th>
-                                        <th>Estado</th>
-                                        <th>Evidencia</th>
-                                        <th>Acción</th>
-                                    </tr>
-                                </thead>
-
-                                <tbody>
-                                    @foreach($tratamientosReporte as $tr)
-                                        @php
-                                            $estadoTratamiento = strtolower($tr->estado ?? 'pendiente');
-                                            $fechaRegistro = $tr->updated_at ?? $tr->created_at;
-                                        @endphp
-
-                                        <tr>
-                                            <td>
-                                                <strong>{{ $tr->reporte_original->problema->nombre ?? 'Problema' }}</strong>
-                                                <br>
-                                                <span class="pt-muted">
-                                                    Gravedad: {{ ucfirst($tr->reporte_original->gravedad ?? '-') }}
-                                                </span>
-                                            </td>
-
-                                            <td>
-                                                <strong>{{ $tr->tratamiento->descripcion ?? 'Tratamiento' }}</strong>
-
-                                                @if($tr->descripcion)
-                                                    <br>
-                                                    <span class="pt-muted">
-                                                        Último: {{ $tr->descripcion }}
-                                                    </span>
-                                                @endif
-                                            </td>
-
-                                            <td>
-                                                Cada {{ $tr->frecuencia_dias ?? 1 }} días
-                                            </td>
-
-                                            <td>
-                                                {{ $fechaRegistro ? \Carbon\Carbon::parse($fechaRegistro)->format('d/m/Y') : 'Sin fecha' }}
-                                            </td>
-
-                                            <td>
-                                                <span class="pt-status-badge @if($estadoTratamiento === 'pendiente') review @else solved @endif">
-                                                    {{ ucfirst($tr->estado ?? 'pendiente') }}
-                                                </span>
-                                            </td>
-
-                                            <td>
-                                                @if($tr->imagen)
-                                                    <img src="{{ asset('storage/' . $tr->imagen) }}" alt="Evidencia" class="pt-table-image">
-                                                @else
-                                                    <span class="pt-muted">—</span>
-                                                @endif
-                                            </td>
-
-                                            <td>
-                                                <a href="{{ route('reporte-problemas.show', $tr->reporte_original->id) }}" class="pt-small-btn green">
-                                                    Ver diagnóstico
-                                                </a>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                    @else
-                        <div class="pt-empty">
-                            <div class="pt-empty-icon"></div>
-                            <div class="pt-empty-title">Sin tratamientos</div>
-                            <p class="pt-muted">No hay tratamientos asignados todavía.</p>
-                        </div>
-                    @endif
-                </div>
-            </div>
-
+                    <?php if(Route::has('register')): ?>
+                        <a href="<?php echo e(route('register')); ?>" class="pt-welcome-nav-btn">Registrarse</a>
+                    <?php endif; ?>
+                <?php endif; ?>
+            <?php endif; ?>
         </div>
-    </div>
-</x-app-layout>
+    </nav>
+
+    <section class="pt-welcome-hero">
+        <div class="pt-welcome-hero-inner">
+            <div>
+                <div class="pt-welcome-badge">
+                    <span class="pt-welcome-badge-dot"></span>
+                    Plataforma de adopción vegetal
+                </div>
+
+                <h1 class="pt-welcome-title">
+                    Cuida tu jardín<br>con <em>inteligencia</em><br>natural
+                </h1>
+
+                <p class="pt-welcome-description">
+                    Adopta plantas, recibe recomendaciones personalizadas según tu entorno y lleva un registro inteligente de cada cuidado. Tu huella verde, organizada.
+                </p>
+
+                <div class="pt-welcome-actions">
+                    <?php if(Route::has('register')): ?>
+                        <a href="<?php echo e(route('register')); ?>" class="pt-welcome-main-btn">
+                            Comenzar gratis
+                        </a>
+                    <?php endif; ?>
+
+                    <?php if(Route::has('login')): ?>
+                        <a href="<?php echo e(route('login')); ?>" class="pt-welcome-secondary-btn">
+                            Ver catálogo →
+                        </a>
+                    <?php endif; ?>
+                </div>
+            </div>
+
+            <div class="pt-welcome-visual">
+                <div class="pt-welcome-orb">
+                    <svg fill="none" stroke="currentColor" stroke-width="1" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 3C8 3 4 7 4 12c0 3.31 1.79 6.21 4.46 7.77M12 3c4 0 8 4 8 9 0 3.31-1.79 6.21-4.46 7.77M12 3v18M7.76 19.77C9.15 17.4 10 14.8 10 12M16.24 19.77C14.85 17.4 14 14.8 14 12"/>
+                    </svg>
+                </div>
+
+                <div class="pt-welcome-float-card pt-float-1">🌱 Nueva adopción</div>
+                <div class="pt-welcome-float-card pt-float-2">💧 Riego recomendado hoy</div>
+                <div class="pt-welcome-float-card pt-float-3">✅ 3 cuidados al día</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="pt-welcome-section white">
+        <p class="pt-welcome-section-label">¿Qué ofrece PlantaTec?</p>
+        <h2 class="pt-welcome-section-title">Todo lo que tu jardín necesita</h2>
+        <p class="pt-welcome-section-description">
+            Una plataforma completa para adoptar plantas, registrar cuidados y recibir alertas inteligentes basadas en tu entorno.
+        </p>
+
+        <div class="pt-welcome-features-grid">
+            <?php
+                $features = [
+                    ['icon' => '🌿', 'name' => 'Catálogo de plantas', 'text' => 'Explora especies con fichas detalladas.'],
+                    ['icon' => '💚', 'name' => 'Adopciones', 'text' => 'Adopta plantas y llévalas a casa.'],
+                    ['icon' => '📝', 'name' => 'Registro de cuidados', 'text' => 'Anota cada riego, poda o fertilización.'],
+                    ['icon' => '💡', 'name' => 'Recomendaciones', 'text' => 'Recibe sugerencias según la especie.'],
+                    ['icon' => '🔔', 'name' => 'Notificaciones', 'text' => 'Recibe alertas cuando una planta necesita atención.'],
+                    ['icon' => '📍', 'name' => 'Gestión por ubicación', 'text' => 'Organiza tus plantas por ubicación.'],
+                ];
+            ?>
+
+            <?php $__currentLoopData = $features; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $feature): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                <div class="pt-welcome-feature-card">
+                    <div class="pt-welcome-feature-icon">
+                        <?php echo e($feature['icon']); ?>
+
+                    </div>
+                    <h3><?php echo e($feature['name']); ?></h3>
+                    <p><?php echo e($feature['text']); ?></p>
+                </div>
+            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+        </div>
+    </section>
+
+    <section class="pt-welcome-stats">
+        <div class="pt-welcome-stats-grid">
+            <div>
+                <p class="pt-welcome-stat-number">+500</p>
+                <p class="pt-welcome-stat-label">Especies disponibles</p>
+            </div>
+
+            <div>
+                <p class="pt-welcome-stat-number">100%</p>
+                <p class="pt-welcome-stat-label">Recomendaciones automáticas</p>
+            </div>
+
+            <div>
+                <p class="pt-welcome-stat-number">∞</p>
+                <p class="pt-welcome-stat-label">Cuidados registrados</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="pt-welcome-section soft">
+        <p class="pt-welcome-section-label">Inspírate</p>
+        <h2 class="pt-welcome-section-title">Plantas destacadas para adoptar</h2>
+        <p class="pt-welcome-section-description">
+            Descubre algunas de nuestras especies más queridas. Todas listas para dar vida a tu hogar.
+        </p>
+
+        <div class="pt-welcome-plants-grid" id="plantas-destacadas">
+            <div class="pt-welcome-loading">
+                <div class="pt-welcome-spinner"></div>
+                <p>Cargando plantas destacadas...</p>
+            </div>
+        </div>
+
+        <div class="pt-welcome-center">
+            <a href="<?php echo e(route('catalogo.plantas')); ?>" class="pt-welcome-outline-btn">
+                Ver todo el catálogo →
+            </a>
+        </div>
+    </section>
+
+    <section class="pt-welcome-cta">
+        <h2>
+            ¿Listo para empezar tu<br><em>huella verde</em>?
+        </h2>
+
+        <p>Únete gratis. Sin tarjeta de crédito. Sin complicaciones.</p>
+
+        <div class="pt-welcome-cta-actions">
+            <?php if(Route::has('register')): ?>
+                <a href="<?php echo e(route('register')); ?>" class="pt-welcome-main-btn">
+                    Crear cuenta gratis
+                </a>
+            <?php endif; ?>
+
+            <?php if(Route::has('login')): ?>
+                <a href="<?php echo e(route('login')); ?>" class="pt-welcome-secondary-btn">
+                    Ya tengo cuenta
+                </a>
+            <?php endif; ?>
+        </div>
+    </section>
+
+    <footer class="pt-welcome-footer">
+        &copy; <?php echo e(date('Y')); ?> PlantaTec · Hecho con 🌿 · Todos los derechos reservados
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            fetch('/plantas-destacadas')
+                .then(response => response.json())
+                .then(data => {
+                    const container = document.getElementById('plantas-destacadas');
+
+                    if (!data || data.length === 0) {
+                        container.innerHTML = '<div class="pt-welcome-error">🌿 No hay plantas disponibles por el momento.</div>';
+                        return;
+                    }
+
+                    container.innerHTML = data.map(planta => `
+                        <div class="pt-welcome-plant-card">
+                            <img src="${planta.imagen || 'https://images.unsplash.com/photo-1592150621744-aca64f48394a?w=400&auto=format'}" alt="${planta.nombre}">
+                            <div class="pt-welcome-plant-body">
+                                <h3>${planta.nombre}</h3>
+                                <span>${planta.tipo_zona || 'Interior'}</span>
+                                <p>${planta.descripcion || 'Una hermosa planta para tu hogar.'}</p>
+                                <a href="<?php echo e(route('catalogo.plantas')); ?>" class="pt-welcome-outline-btn">Adoptar →</a>
+                            </div>
+                        </div>
+                    `).join('');
+                })
+                .catch(() => {
+                    document.getElementById('plantas-destacadas').innerHTML =
+                        '<div class="pt-welcome-error">⚠️ Error al cargar las plantas.</div>';
+                });
+        });
+    </script>
+</body>
+</html><?php /**PATH C:\Users\Admin\Documents\8\Prog de backend\Laravel Herd\PlantaTec\resources\views/welcome.blade.php ENDPATH**/ ?>

@@ -2,131 +2,64 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\Adopcion;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Hash;
 
 class UsuarioController extends Controller
 {
-    public function index()
-    {
-        $usuarios = User::latest()->get();
-        
-        // Preparar datos para la tabla
-        $tableUsuariosRows = $usuarios->map(function($usuario) {
-            $rolClass = $usuario->rol === 'admin' ? 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300' : 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300';
-            $rolText = $usuario->rol === 'admin' ? 'Admin' : 'Usuario';
-            $inicial = strtoupper(substr($usuario->name, 0, 1));
-            return [
-                '<div class="flex items-center gap-3"><div class="w-8 h-8 rounded-full bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center text-white font-bold text-sm">' . $inicial . '</div><span class="font-medium">' . $usuario->name . '</span></div>',
-                $usuario->email,
-                '<span class="inline-block px-3 py-1 rounded-full text-xs font-semibold ' . $rolClass . '">' . $rolText . '</span>',
-                $usuario->created_at->format('d/m/Y'),
-            ];
-        })->toArray();
-        
-        $tableUsuariosActions = $usuarios->map(function($usuario) {
-            $actions = [
-                'view' => route('admin.usuarios.show', $usuario->id),
-                'edit' => route('admin.usuarios.edit', $usuario->id),
-            ];
-            if (auth()->id() !== $usuario->id) {
-                $actions['delete'] = route('admin.usuarios.destroy', $usuario->id);
-            }
-            return $actions;
-        })->toArray();
-        
-        return view('admin.usuarios.index', compact('usuarios', 'tableUsuariosRows', 'tableUsuariosActions'));
-    }
-
     /**
-     * Mostrar formulario para crear nuevo usuario
+     * Lista de usuarios con búsqueda y estadísticas básicas.
      */
-    public function create()
+    public function index(Request $request)
     {
-        return view('admin.usuarios.create');
-    }
+        $search = $request->get('search');
 
-    /**
-     * Guardar nuevo usuario en la base de datos
-     */
-    public function store(Request $request)
-    {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
-            'rol' => 'required|in:admin,usuario',
-            'password' => 'required|min:8|confirmed',
-        ]);
-
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'rol' => $request->rol,
-            'password' => Hash::make($request->password),
-        ]);
-
-        return redirect()->route('admin.usuarios.index')
-            ->with('success', 'Usuario creado correctamente.');
-    }
-
-    public function show($id)
-    {
-        $usuario = User::findOrFail($id);
-        $adopciones = Adopcion::where('id_usuario', $id)
-            ->with('planta')
-            ->latest()
+        $usuarios = User::where('rol', 'usuario') // solo usuarios normales
+            ->when($search, function ($query, $search) {
+                return $query->where('name', 'like', "%{$search}%")
+                             ->orWhere('email', 'like', "%{$search}%");
+            })
+            ->with(['adopciones' => function ($q) {
+                $q->with(['planta', 'registrosCuidados', 'reportesProblemas.problema']);
+            }])
             ->paginate(10);
-        
-        return view('admin.usuarios.show', compact('usuario', 'adopciones'));
+
+        // Agregar estadísticas calculadas
+        foreach ($usuarios as $usuario) {
+            $usuario->total_adopciones = $usuario->adopciones->count();
+            $usuario->total_cuidados = $usuario->adopciones->sum(fn($a) => $a->registrosCuidados->count());
+            $usuario->problemas_activos = $usuario->adopciones->sum(fn($a) => $a->reportesProblemas->where('estado', 'activo')->count());
+        }
+
+        return view('admin.usuarios.index', compact('usuarios', 'search'));
     }
 
-    public function edit($id)
+    /**
+     * Obtiene el resumen de adopciones de un usuario (para el modal).
+     */
+    public function resumen($id)
     {
-        $usuario = User::findOrFail($id);
-        return view('admin.usuarios.edit', compact('usuario'));
-    }
+        $usuario = User::with(['adopciones.planta', 'adopciones.registrosCuidados', 'adopciones.reportesProblemas.problema'])
+            ->findOrFail($id);
 
-    public function update(Request $request, $id)
-    {
-        $usuario = User::findOrFail($id);
+        $adopciones = $usuario->adopciones->map(function ($adop) {
+            return [
+                'id' => $adop->id,
+                'planta_nombre' => $adop->planta->nombre,
+                'estado_adopcion' => $adop->estado_adopcion,
+                'fecha_adopcion' => $adop->fecha_adopcion->format('d/m/Y'),
+                'ultimo_cuidado' => $adop->registrosCuidados->sortByDesc('fecha')->first(),
+                'problemas_activos' => $adop->reportesProblemas->where('estado', 'activo')->values(),
+                'total_cuidados' => $adop->registrosCuidados->count(),
+            ];
+        });
 
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $id,
-            'rol' => 'required|in:admin,usuario',
-            'password' => 'nullable|min:8|confirmed',
+        return response()->json([
+            'usuario' => $usuario->name,
+            'email' => $usuario->email,
+            'adopciones' => $adopciones
         ]);
-
-        $data = [
-            'name' => $request->name,
-            'email' => $request->email,
-            'rol' => $request->rol,
-        ];
-
-        if ($request->filled('password')) {
-            $data['password'] = Hash::make($request->password);
-        }
-
-        $usuario->update($data);
-
-        return redirect()->route('admin.usuarios.index')
-            ->with('success', 'Usuario actualizado correctamente.');
-    }
-
-    public function destroy($id)
-    {
-        $usuario = User::findOrFail($id);
-        
-        if ($usuario->id === auth()->id()) {
-            return back()->with('error', 'No puedes eliminar tu propio usuario.');
-        }
-
-        $usuario->delete();
-
-        return redirect()->route('admin.usuarios.index')
-            ->with('success', 'Usuario eliminado correctamente.');
     }
 }

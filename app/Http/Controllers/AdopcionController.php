@@ -104,24 +104,27 @@ class AdopcionController extends Controller
         ));
     }
 
-    public function show(Adopcion $adopcione)
+        public function show(Adopcion $adopcione)
     {
         $adopcion = $adopcione;
 
-        // Permitir ver a admin o al dueño de la adopción
         if (auth()->user()->rol !== 'admin' && $adopcion->id_usuario !== auth()->id()) {
             abort(403, 'No tienes permiso para ver esta adopción.');
         }
 
         $adopcion->load([
-            'planta.plantaCuidados.cuidado',
-            'ubicacion',
-            'registrosCuidados.plantaCuidado.cuidado',
-            'reportesProblemas.problema',
-            'reportesProblemas.tratamientosReportes.tratamiento',
-        ]);
+        'planta.plantaCuidados.cuidado',
+        'ubicacion',
+        'registrosCuidados.plantaCuidado.cuidado',
+        'reportesProblemas.problema',
+        'reportesProblemas.tratamientosReportes.tratamiento',
+    ]);
+        $planta = $adopcion->planta;
 
-        return view('adopciones.show', compact('adopcion'));
+        // 👇 Agregar esta línea para que la vista tenga las zonas recomendadas
+        $zonasRecomendadas = \App\Models\RecomendacionZona::all();
+
+        return view('adopciones.show', compact('adopcion', 'planta', 'zonasRecomendadas'));
     }
 
     public function destroy(Adopcion $adopcione)

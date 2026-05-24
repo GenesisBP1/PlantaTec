@@ -1,51 +1,20 @@
-<x-app-layout>
-    <x-slot name="header">
-        <div class="pt-header">
-            <div>
-                <p class="pt-header-label">Panel de Control</p>
-                <h2 class="pt-header-title">Bienvenido, {{ Auth::user()->name }}</h2>
-                <p class="pt-header-subtitle">Resumen general del sistema · {{ now()->format('d M Y') }}</p>
-            </div>
-            <div class="pt-header-actions">
-                <a href="{{ route('plantas.create') }}" class="pt-btn pt-btn-green">Nueva planta</a>
-                <a href="{{ route('recomendaciones-cuidado.index') }}" class="pt-btn pt-btn-light">Recomendaciones</a>
-            </div>
-        </div>
-    </x-slot>
+<!DOCTYPE html>
+<html lang="<?php echo e(str_replace('_', '-', app()->getLocale())); ?>">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>PlantaTec — Gestión de plantas</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700;9..40,800&display=swap" rel="stylesheet">
+
+    <!-- Alpine.js para el dropdown -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
     <style>
-        /* ========== ESTILOS GLOBALES PLANTA TEC (VERDES) ========== */
-        /* (Copiado tal cual de tu código, sin cambios) */
-        span {
-            color: #02180a;
-        }
-        .pt-navbar {
-            background: #ffffff;
-            border-bottom: 1px solid #e5e7eb;
-            position: sticky;
-            top: 0;
-            z-index: 50;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.04);
-            text-align: center;
-            color: #374151;
-        }
-        .pt-nav-link {
-    color: #1f2937; /* cambiar a otro color */
-}
-.pt-nav-link:hover,
-.pt-nav-link.active {
-    background: #dcfce7;
-    color: #16a34a; /* verde más intenso */
-}
-        .pt-navbar-container {
-            max-width: 1280px;
-            margin: 0 auto;
-            padding: 0.75rem 1.5rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
+        /* ========== ESTILOS GLOBALES PLANTA TEC ========== */
+        /* Basado en el diseño proporcionado, sin taiwanstyle y 100% CSS puro */
         .pt-page { padding: 3.5rem 0; }
         .pt-container { max-width: 1280px; margin: 0 auto; padding: 0 1.5rem; }
         .pt-header { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
@@ -252,273 +221,326 @@
         .pt-toast.warning { background: #f59e0b; }
         .pt-toast.info { background: #2563eb; }
         .pt-toast-close { border: none; background: transparent; color: white; font-size: 1.3rem; cursor: pointer; }
+        .pt-navbar { background: #ffffff; border-bottom: 1px solid #e5e7eb; position: sticky; top: 0; z-index: 50; box-shadow: 0 2px 12px rgba(0,0,0,0.04); }
+        .pt-nav-container { max-width: 1280px; margin: 0 auto; padding: 0 1rem; }
+        .pt-nav-inner { height: 64px; display: flex; align-items: center; justify-content: space-between; }
+        .pt-nav-left { display: flex; align-items: center; gap: 2rem; }
+        .pt-logo { display: flex; align-items: center; gap: 0.6rem; text-decoration: none; color: #1f2937; font-size: 1.25rem; font-weight: 900; }
+        .pt-logo-icon { width: 34px; height: 34px; border-radius: 0.9rem; background: linear-gradient(135deg, #16a34a, #047857); color: #ffffff; display: flex; align-items: center; justify-content: center; }
+        .pt-desktop-menu { display: flex; align-items: center; gap: 0.25rem; }
+        .pt-nav-link { position: relative; display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.6rem 0.85rem; border-radius: 0.75rem; color: #374151; text-decoration: none; font-size: 0.9rem; font-weight: 700; border: none; background: transparent; cursor: pointer; }
+        .pt-nav-link:hover, .pt-nav-link.active { background: #f0fdf4; color: #15803d; }
+        .pt-dropdown { position: relative; }
+        .pt-dropdown-menu, .pt-user-dropdown { position: absolute; top: 115%; background: #ffffff; border: 1px solid #e5e7eb; border-radius: 1rem; box-shadow: 0 16px 32px rgba(0,0,0,0.12); overflow: hidden; z-index: 100; }
+        .pt-dropdown-menu { left: 0; width: 270px; padding: 0.4rem; }
+        .pt-dropdown-menu a, .pt-user-dropdown a, .pt-user-dropdown button { display: block; width: 100%; padding: 0.75rem 1rem; color: #374151; text-decoration: none; font-size: 0.875rem; font-weight: 600; background: transparent; border: none; text-align: left; cursor: pointer; }
+        .pt-dropdown-menu a:hover, .pt-user-dropdown a:hover, .pt-user-dropdown button:hover { background: #f0fdf4; color: #15803d; }
+        .pt-dropdown-menu hr { border: none; border-top: 1px solid #e5e7eb; margin: 0.35rem 0; }
+        .pt-nav-notification { padding-right: 1.3rem; }
+        .pt-nav-badge { background: #ef4444; color: #ffffff; border-radius: 999px; font-size: 0.68rem; font-weight: 900; padding: 0.1rem 0.4rem; margin-left: 0.3rem; }
+        .pt-user-menu { position: relative; }
+        .pt-user-btn { display: flex; align-items: center; gap: 0.65rem; padding: 0.45rem 0.7rem; border-radius: 0.9rem; background: #f9fafb; border: 1px solid #e5e7eb; cursor: pointer; }
+        .pt-user-btn:hover { background: #f3f4f6; }
+        .pt-avatar { width: 34px; height: 34px; border-radius: 999px; background: linear-gradient(135deg, #16a34a, #047857); color: #ffffff; display: flex; align-items: center; justify-content: center; font-weight: 900; }
+        .pt-user-text { text-align: left; }
+        .pt-user-text p { margin: 0; color: #1f2937; font-size: 0.875rem; font-weight: 800; }
+        .pt-user-text span { color: #6b7280; font-size: 0.75rem; }
+        .pt-user-arrow { color: #6b7280; }
+        .pt-user-dropdown { right: 0; width: 230px; }
+        .pt-user-info { padding: 1rem; border-bottom: 1px solid #e5e7eb; }
+        .pt-user-info p { margin: 0; font-weight: 800; color: #111827; }
+        .pt-user-info span { display: block; color: #6b7280; font-size: 0.75rem; overflow: hidden; text-overflow: ellipsis; }
+        .pt-user-dropdown button { color: #dc2626; }
+        .pt-mobile-btn { display: none; border: none; background: #f3f4f6; color: #374151; width: 40px; height: 40px; border-radius: 0.75rem; font-size: 1.4rem; cursor: pointer; }
+        .pt-mobile-menu { display: none; background: #ffffff; border-top: 1px solid #e5e7eb; padding: 0.75rem 1rem; }
+        .pt-mobile-menu a, .pt-mobile-menu button { display: block; width: 100%; padding: 0.75rem; border-radius: 0.75rem; color: #374151; text-decoration: none; font-weight: 700; border: none; background: transparent; text-align: left; }
+        .pt-mobile-menu a:hover, .pt-mobile-menu a.active, .pt-mobile-menu button:hover { background: #f0fdf4; color: #15803d; }
+        .pt-mobile-user { display: flex; align-items: center; gap: 0.75rem; padding: 1rem 0.75rem; border-top: 1px solid #e5e7eb; margin-top: 0.5rem; }
+        .pt-mobile-user p { margin: 0; font-weight: 800; color: #111827; }
+        .pt-mobile-user span { font-size: 0.8rem; color: #6b7280; }
+        @media (max-width: 768px) { .pt-desktop-menu, .pt-user-menu { display: none; } .pt-mobile-btn { display: flex; align-items: center; justify-content: center; } .pt-mobile-menu { display: block; } }
+        * { box-sizing: border-box; }
+        p, h1, h2, h3, h4 { margin-top: 0; }
 
-        
-        /* Ajustes adicionales */
-        .pt-metric-icon img { width: 100%; height: 100%; object-fit: contain; }
-        #mapa-admin-custom { height: 500px; width: 100%; border-radius: 1rem; z-index: 1; }
-        @media (max-width: 768px) { #mapa-admin-custom { height: 350px; } }
+        /* Estilos específicos para la tabla de administración */
+        .pt-admin-card {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 1.5rem;
+            box-shadow: 0 12px 28px rgba(0, 32, 0, 0.08);
+            overflow: hidden;
+            padding: 1.5rem;
+        }
+        .pt-admin-table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+        }
+        .pt-admin-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .pt-admin-table thead tr {
+            background: linear-gradient(90deg, #f0fdf4, #ecfdf5);
+        }
+        .pt-admin-table th {
+            padding: 1rem;
+            text-align: left;
+            font-size: 0.85rem;
+            font-weight: 900;
+            color: #374151;
+            border-bottom: 1px solid #d1fae5;
+            white-space: nowrap;
+        }
+        .pt-admin-table td {
+            padding: 1rem;
+            font-size: 0.875rem;
+            color: #374151;
+            border-bottom: 1px solid #f3f4f6;
+            vertical-align: middle;
+        }
+        .pt-admin-table tbody tr:hover {
+            background: #f0fdf4;
+        }
+        .pt-table-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        .pt-table-actions form {
+            margin: 0;
+        }
+        .pt-action-btn {
+            border: 1px solid transparent;
+            border-radius: 0.75rem;
+            padding: 0.45rem 0.75rem;
+            font-size: 0.8rem;
+            font-weight: 800;
+            text-decoration: none;
+            cursor: pointer;
+            transition: 0.2s ease;
+            font-family: inherit;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .pt-action-btn.view {
+            background: #eff6ff;
+            color: #2563eb;
+            border-color: #bfdbfe;
+        }
+        .pt-action-btn.view:hover {
+            background: #2563eb;
+            color: #ffffff;
+        }
+        .pt-action-btn.edit {
+            background: #fefce8;
+            color: #ca8a04;
+            border-color: #fde68a;
+        }
+        .pt-action-btn.edit:hover {
+            background: #ca8a04;
+            color: #ffffff;
+        }
+        .pt-action-btn.delete {
+            background: #fef2f2;
+            color: #dc2626;
+            border-color: #fecaca;
+        }
+        .pt-action-btn.delete:hover {
+            background: #dc2626;
+            color: #ffffff;
+        }
+        @media (max-width: 768px) {
+            .pt-admin-card {
+                padding: 1rem;
+            }
+            .pt-admin-table th,
+            .pt-admin-table td {
+                padding: 0.75rem;
+            }
+        }
+        .pt-pagination {
+            margin-top: 1rem;
+            text-align: center;
+        }
+        .pt-pagination nav {
+            display: inline-flex;
+            gap: 0.25rem;
+        }
+        .pt-pagination .page-link {
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.5rem;
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            color: #374151;
+            text-decoration: none;
+            font-size: 0.875rem;
+        }
+        .pt-pagination .active .page-link {
+            background: #16a34a;
+            border-color: #16a34a;
+            color: white;
+        }
+        .pt-pagination .page-link:hover {
+            background: #f0fdf4;
+            border-color: #16a34a;
+        }
     </style>
+</head>
 
+<body class="pt-app">
+
+    <!-- ========== BARRA DE NAVEGACIÓN (con Alpine.js) ========== -->
+    <nav x-data="{ open: false }" class="pt-navbar">
+        <div class="pt-nav-container">
+            <div class="pt-nav-inner">
+                <div class="pt-nav-left">
+                    <a href="<?php echo e(route('dashboard')); ?>" class="pt-logo">
+                        <div class="pt-logo-icon">🌿</div>
+                        <span>PlantaTec</span>
+                    </a>
+                    <div class="pt-desktop-menu">
+                        <a href="<?php echo e(route('dashboard')); ?>" class="pt-nav-link <?php echo e(request()->routeIs('dashboard') ? 'active' : ''); ?>">Dashboard</a>
+                        <?php if(auth()->user()->rol === 'admin'): ?>
+                            <div class="pt-dropdown" x-data="{ adminOpen: false }">
+                                <button @click="adminOpen = !adminOpen" @click.away="adminOpen = false" class="pt-nav-link pt-dropdown-btn">Administración <span>⌄</span></button>
+                                <div x-show="adminOpen" x-transition class="pt-dropdown-menu" style="display:none;">
+                                    <a href="<?php echo e(route('plantas.index')); ?>">Plantas</a>
+                                    <a href="<?php echo e(route('adopciones.index')); ?>">Adopciones</a>
+                                    <a href="<?php echo e(route('ubicaciones.index')); ?>">Ubicaciones</a>
+                                    <a href="<?php echo e(route('cuidados.index')); ?>">Cuidados</a>
+                                    <a href="<?php echo e(route('planta-cuidados.index')); ?>">Asignar cuidados</a>
+                                    <a href="<?php echo e(route('recomendaciones-cuidado.index')); ?>">Recomendaciones de cuidado</a>
+                                    <a href="<?php echo e(route('recomendaciones-zona.index')); ?>">Recomendaciones de zona</a>
+                                    <a href="<?php echo e(route('problemas.index')); ?>">Problemas</a>
+                                    <a href="<?php echo e(route('tratamientos.index')); ?>">Tratamientos</a>
+                                    <hr>
+                                    <a href="<?php echo e(route('reporte-problemas.index')); ?>">Reportes de problemas</a>
+                                    <a href="<?php echo e(route('admin.usuarios.index')); ?>">Usuarios</a>
+                                </div>
+                            </div>
+                        <?php else: ?>
+                            <a href="<?php echo e(route('catalogo.plantas')); ?>" class="pt-nav-link <?php echo e(request()->routeIs('catalogo.plantas') ? 'active' : ''); ?>">Catálogo</a>
+                            <a href="<?php echo e(route('adopciones.index')); ?>" class="pt-nav-link <?php echo e(request()->routeIs('adopciones.*') ? 'active' : ''); ?>">Mis adopciones</a>
+                            <?php $notificacionesNoLeidas = \App\Models\Notificacion::where('id_usuario', auth()->id())->where('leida', false)->count(); ?>
+                            <a href="<?php echo e(route('notificaciones.index')); ?>" class="pt-nav-link pt-nav-notification <?php echo e(request()->routeIs('notificaciones.*') ? 'active' : ''); ?>">
+                                Notificaciones
+                                <?php if($notificacionesNoLeidas > 0): ?>
+                                    <span class="pt-nav-badge"><?php echo e($notificacionesNoLeidas > 9 ? '9+' : $notificacionesNoLeidas); ?></span>
+                                <?php endif; ?>
+                            </a>
+                        <?php endif; ?>
+                    </div>
+                </div>
+                <div class="pt-user-menu" x-data="{ dropdownOpen: false }">
+                    <button @click="dropdownOpen = !dropdownOpen" @click.away="dropdownOpen = false" class="pt-user-btn">
+                        <div class="pt-avatar"><?php echo e(strtoupper(substr(Auth::user()->name, 0, 1))); ?></div>
+                        <div class="pt-user-text"><p><?php echo e(Auth::user()->name); ?></p><span><?php echo e(Auth::user()->rol === 'admin' ? 'Administrador' : 'Usuario'); ?></span></div>
+                        <span class="pt-user-arrow">⌄</span>
+                    </button>
+                    <div x-show="dropdownOpen" x-transition class="pt-user-dropdown" style="display:none;">
+                        <div class="pt-user-info"><p><?php echo e(Auth::user()->name); ?></p><span><?php echo e(Auth::user()->email); ?></span></div>
+                        <a href="<?php echo e(route('profile.edit')); ?>">Mi perfil</a>
+                        <form method="POST" action="<?php echo e(route('logout')); ?>"><?php echo csrf_field(); ?><button type="submit">Cerrar sesión</button></form>
+                    </div>
+                </div>
+                <button @click="open = !open" class="pt-mobile-btn"><span x-show="!open">☰</span><span x-show="open" style="display:none;">×</span></button>
+            </div>
+        </div>
+        <div x-show="open" x-transition class="pt-mobile-menu" style="display:none;">
+            <a href="<?php echo e(route('dashboard')); ?>">Dashboard</a>
+            <?php if(auth()->user()->rol === 'admin'): ?>
+                <a href="<?php echo e(route('plantas.index')); ?>">Plantas</a>
+                <a href="<?php echo e(route('adopciones.index')); ?>">Adopciones</a>
+                <a href="<?php echo e(route('ubicaciones.index')); ?>">Ubicaciones</a>
+                <a href="<?php echo e(route('cuidados.index')); ?>">Cuidados</a>
+                <a href="<?php echo e(route('planta-cuidados.index')); ?>">Asignar cuidados</a>
+                <a href="<?php echo e(route('recomendaciones-cuidado.index')); ?>">Recomendaciones de cuidado</a>
+                <a href="<?php echo e(route('recomendaciones-zona.index')); ?>">Recomendaciones de zona</a>
+                <a href="<?php echo e(route('problemas.index')); ?>">Problemas</a>
+                <a href="<?php echo e(route('tratamientos.index')); ?>">Tratamientos</a>
+                <a href="<?php echo e(route('reporte-problemas.index')); ?>">Reportes de problemas</a>
+                <a href="<?php echo e(route('admin.usuarios.index')); ?>">Usuarios</a>
+            <?php else: ?>
+                <a href="<?php echo e(route('catalogo.plantas')); ?>">Catálogo</a>
+                <a href="<?php echo e(route('adopciones.index')); ?>">Mis adopciones</a>
+                <a href="<?php echo e(route('notificaciones.index')); ?>">Notificaciones</a>
+            <?php endif; ?>
+            <div class="pt-mobile-user">
+                <div class="pt-avatar"><?php echo e(strtoupper(substr(Auth::user()->name, 0, 1))); ?></div>
+                <div><p><?php echo e(Auth::user()->name); ?></p><span><?php echo e(Auth::user()->email); ?></span></div>
+            </div>
+            <a href="<?php echo e(route('profile.edit')); ?>">Mi perfil</a>
+            <form method="POST" action="<?php echo e(route('logout')); ?>"><?php echo csrf_field(); ?><button type="submit">Cerrar sesión</button></form>
+        </div>
+    </nav>
+
+    <!-- ========== CONTENIDO PRINCIPAL ========== -->
     <div class="pt-page">
         <div class="pt-container">
 
-            <!-- Métricas con imágenes -->
-            <div class="pt-metrics-grid">
-                <div class="pt-metric-card green">
-                    <div class="pt-metric-circle"></div>
-                    <div class="pt-metric-content">
-                        <div class="pt-metric-icon">
-                            <img src="https://images.vexels.com/media/users/3/131782/isolated/preview/4833130cb7d9b85e4134262733da8b6d-icono-de-planta.png?w=360" alt="Plantas">
-                        </div>
-                        <p class="pt-label">Plantas</p>
-                        <p class="pt-number">{{ $totalPlantas }}</p>
-                        <a href="{{ route('plantas.index') }}" class="pt-link green">Ver todas →</a>
-                    </div>
+            <!-- Cabecera con título y botón -->
+            <div class="pt-header">
+                <div>
+                    <p class="pt-header-label">Plantas</p>
+                    <h2 class="pt-header-title">Gestión de plantas</h2>
+                    <p class="pt-header-subtitle">Panel de administración</p>
                 </div>
-                <div class="pt-metric-card blue">
-                    <div class="pt-metric-circle"></div>
-                    <div class="pt-metric-content">
-                        <div class="pt-metric-icon">
-                            <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Usuarios">
-                        </div>
-                        <p class="pt-label">Usuarios registrados</p>
-                        <p class="pt-number">{{ $totalUsuarios }}</p>
-                        <a href="{{ route('admin.usuarios.index') }}" class="pt-link blue">Ver detalles →</a>
-                    </div>
-                </div>
-                <div class="pt-metric-card violet">
-                    <div class="pt-metric-circle"></div>
-                    <div class="pt-metric-content">
-                        <div class="pt-metric-icon">
-                            <img src="https://images.vexels.com/media/users/3/131782/isolated/preview/4833130cb7d9b85e4134262733da8b6d-icono-de-planta.png?w=360" alt="Adopciones">
-                        </div>
-                        <p class="pt-label">Plantas adoptadas</p>
-                        <p class="pt-number">{{ $totalAdopciones }}</p>
-                    </div>
-                </div>
-                <div class="pt-metric-card amber">
-                    <div class="pt-metric-circle"></div>
-                    <div class="pt-metric-content">
-                        <div class="pt-metric-icon">
-                            <img src="https://cdn-icons-png.flaticon.com/512/190/190411.png" alt="Problemas">
-                        </div>
-                        <p class="pt-label">Problemas activos</p>
-                        <p class="pt-number">{{ $problemasActivos }}</p>
-                    </div>
+                <div class="pt-header-actions">
+                    <a href="<?php echo e(route('plantas.create')); ?>" class="pt-btn pt-btn-green">+ Registrar planta</a>
                 </div>
             </div>
 
-            <!-- Mapa (justo después de las métricas) -->
-            <div class="pt-map-card" style="margin-top: 1rem; margin-bottom: 2rem;">
-                <div class="pt-map-header">
-                    <div>
-                        <h3 class="pt-section-title">🗺️ Mapa de ubicaciones</h3>
-                        <p class="pt-card-subtitle">Adopciones y zonas públicas recomendadas</p>
+            <!-- Tabla de plantas -->
+            <div class="pt-admin-card">
+                <div class="pt-admin-table-wrapper">
+                    <table class="pt-admin-table">
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Especie</th>
+                                <th>Zona</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php $__empty_1 = true; $__currentLoopData = $plantas; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $planta): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
+                                <tr>
+                                    <td><?php echo e($planta->nombre); ?></td>
+                                    <td><?php echo e($planta->especie); ?></td>
+                                    <td><?php echo e($planta->tipo_zona ?? '—'); ?></td>
+                                    <td><?php echo e(ucfirst($planta->estado)); ?></td>
+                                    <td class="pt-table-actions">
+                                        <a href="<?php echo e(route('plantas.show', $planta)); ?>" class="pt-action-btn view">Ver</a>
+                                        <a href="<?php echo e(route('plantas.edit', $planta)); ?>" class="pt-action-btn edit">Editar</a>
+                                        <form action="<?php echo e(route('plantas.destroy', $planta)); ?>" method="POST" style="display:inline;">
+                                            <?php echo csrf_field(); ?>
+                                            <?php echo method_field('DELETE'); ?>
+                                            <button type="submit" class="pt-action-btn delete" onclick="return confirm('¿Eliminar esta planta?')">Eliminar</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
+                                <tr>
+                                    <td colspan="5" class="pt-empty center">No hay plantas registradas.</td>
+                                </tr>
+                            <?php endif; ?>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- Paginación -->
+                <?php if($plantas instanceof \Illuminate\Pagination\LengthAwarePaginator && $plantas->hasPages()): ?>
+                    <div class="pt-pagination">
+                        <?php echo e($plantas->links()); ?>
+
                     </div>
-                    @if(\Illuminate\Support\Facades\Route::has('mapa.index'))
-                        <a href="{{ route('mapa.index') }}" class="pt-link green">Ver mapa completo →</a>
-                    @endif
-                </div>
-                <div class="pt-map-body">
-                    <div id="mapa-admin-custom"></div>
-                </div>
-            </div>
-
-            <!-- Planta más adoptada y Zonas recomendadas (compactas) -->
-            <div class="pt-info-grid">
-                <div class="pt-card">
-                    <div class="pt-card-header">
-                        <div>
-                            <h3 class="pt-card-title">Planta más adoptada</h3>
-                            <p class="pt-card-subtitle">La planta con más adopciones registradas</p>
-                        </div>
-                        <span class="pt-badge green">Real</span>
-                    </div>
-                    @if($plantaMasAdoptada)
-                        <div class="pt-plant-row">
-                            <div class="pt-plant-image">
-                                <img src="{{ $plantaMasAdoptada->imagen ? (str_starts_with($plantaMasAdoptada->imagen, 'http') ? $plantaMasAdoptada->imagen : asset('storage/' . $plantaMasAdoptada->imagen)) : 'https://images.unsplash.com/photo-1592150621744-aca64f48394a?w=400&h=250&fit=crop' }}" alt="{{ $plantaMasAdoptada->nombre }}">
-                            </div>
-                            <div class="pt-plant-info">
-                                <p class="pt-plant-name">{{ $plantaMasAdoptada->nombre }}</p>
-                                <p class="pt-text">{{ $plantaMasAdoptada->adopciones_count }} adopciones registradas</p>
-                                <p class="pt-muted">Zona: {{ $plantaMasAdoptada->tipo_zona ?? 'No definida' }}</p>
-                            </div>
-                        </div>
-                    @else
-                        <div class="pt-empty">Aún no hay adopciones registradas para calcular este dato.</div>
-                    @endif
-                </div>
-
-                <!-- Zonas recomendadas (solo 3 + enlace) -->
-                <div class="pt-card">
-                    <div class="pt-card-header">
-                        <div>
-                            <h3 class="pt-card-title">Zonas recomendadas disponibles</h3>
-                            <p class="pt-card-subtitle">Ubicaciones públicas sugeridas</p>
-                        </div>
-                        <a href="{{ route('recomendaciones-zona.index') }}" class="pt-link green">Ver todas →</a>
-                    </div>
-
-                    @php
-                        $zonas = \App\Models\RecomendacionZona::orderBy('nombre_lugar')->limit(3)->get();
-                        $totalZonas = \App\Models\RecomendacionZona::count();
-                    @endphp
-
-                    @if($zonas->count() > 0)
-                        <div class="pt-zone-list">
-                            @foreach($zonas as $zona)
-                                <div class="pt-zone-item">
-                                    <div class="pt-zone-main">
-                                        <p class="pt-zone-title">{{ $zona->nombre_lugar }}</p>
-                                        <div class="pt-zone-tags">
-                                            <span class="pt-badge blue">{{ $zona->tipo_zona }}</span>
-                                            @if($zona->descripcion)
-                                                <span class="pt-zone-description">{{ \Illuminate\Support\Str::limit($zona->descripcion, 50) }}</span>
-                                            @endif
-                                        </div>
-                                    </div>
-                                    <div class="pt-zone-coords">
-                                        <p class="pt-code">{{ number_format($zona->latitud, 4) }}, {{ number_format($zona->longitud, 4) }}</p>
-                                    </div>
-                                </div>
-                            @endforeach
-                            @if($totalZonas > 3)
-                                <div class="pt-muted" style="text-align: center; margin-top: 0.5rem;">
-                                    + {{ $totalZonas - 3 }} zonas más
-                                </div>
-                            @endif
-                        </div>
-                    @else
-                        <div class="pt-empty center">
-                            <div class="pt-empty-icon">📍</div>
-                            <p class="pt-empty-title">No hay zonas recomendadas configuradas</p>
-                        </div>
-                    @endif
-                </div>
-            </div>
-
-            <!-- Gestión rápida -->
-            <div class="pt-card pt-section">
-                <div class="pt-section-header">
-                    <div>
-                        <h3 class="pt-section-title">Gestión rápida</h3>
-                        <p class="pt-card-subtitle">Accede a cualquier módulo del sistema</p>
-                    </div>
-                </div>
-                <div class="pt-access-grid">
-                    @php
-                    $accesos = [
-                        ['route' => 'plantas.index', 'label' => 'Plantas', 'icon' => '🌿', 'color' => 'green'],
-                        ['route' => 'ubicaciones.index', 'label' => 'Ubicaciones', 'icon' => '📍', 'color' => 'blue'],
-                        ['route' => 'adopciones.index', 'label' => 'Adopciones', 'icon' => '💜', 'color' => 'violet'],
-                        ['route' => 'cuidados.index', 'label' => 'Cuidados', 'icon' => '📋', 'color' => 'cyan'],
-                        ['route' => 'planta-cuidados.index', 'label' => 'Asignar cuidados', 'icon' => '✅', 'color' => 'emerald'],
-                        ['route' => 'problemas.index', 'label' => 'Problemas', 'icon' => '⚠️', 'color' => 'orange'],
-                        ['route' => 'tratamientos.index', 'label' => 'Tratamientos', 'icon' => '🧪', 'color' => 'yellow'],
-                        ['route' => 'recomendaciones-cuidado.index', 'label' => 'Recomendaciones', 'icon' => '🔔', 'color' => 'red'],
-                        ['route' => 'notificaciones.index', 'label' => 'Notificaciones', 'icon' => '🔔', 'color' => 'gray'],
-                        ['route' => 'reporte-problemas.index', 'label' => 'Reportes de problemas', 'icon' => '🚨', 'color' => 'pink'],
-                    ];
-                    @endphp
-                    @foreach($accesos as $item)
-                        @if(\Illuminate\Support\Facades\Route::has($item['route']))
-                            <a href="{{ route($item['route']) }}" class="pt-access-btn {{ $item['color'] }}">
-                                <span class="pt-access-icon">{{ $item['icon'] }}</span>
-                                <span>{{ $item['label'] }}</span>
-                            </a>
-                        @endif
-                    @endforeach
-                </div>
+                <?php endif; ?>
             </div>
 
         </div>
     </div>
 
-    @push('styles')
-        <style>
-            /* Asegurar que el mapa tenga altura fija y no se superponga */
-            #mapa-admin-custom {
-                height: 500px;
-                width: 100%;
-                border-radius: 1rem;
-                z-index: 1;
-            }
-            /* Responsive para el mapa */
-            @media (max-width: 768px) {
-                #mapa-admin-custom {
-                    height: 350px;
-                }
-            }
-        </style>
-    @endpush
-
-    @push('scripts')
-        <script>
-            document.addEventListener('DOMContentLoaded', function () {
-                const map = L.map('mapa-admin-custom').setView([23.6345, -102.5528], 5);
-                L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> & CartoDB'
-                }).addTo(map);
-
-                const adopciones = @json($adopcionesConUbicacion ?? []);
-                const zonas = @json($zonasRecomendadas ?? []);
-
-                const iconoAdopcion = L.icon({
-                    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
-                    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
-                    iconSize: [25, 41],
-                    iconAnchor: [12, 41],
-                    popupAnchor: [1, -34]
-                });
-
-                const iconoZona = L.icon({
-                    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-green.png',
-                    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
-                    iconSize: [25, 41],
-                    iconAnchor: [12, 41],
-                    popupAnchor: [1, -34]
-                });
-
-                adopciones.forEach(adop => {
-                    if (adop.ubicacion && adop.ubicacion.latitud && adop.ubicacion.longitud) {
-                        const popup = `
-                            <div style="min-width: 200px;">
-                                <strong>${adop.planta?.nombre || 'Planta'}</strong><br>
-                                <b>Adoptado por:</b> ${adop.usuario?.name || 'Usuario'}<br>
-                                <b>Ubicación:</b> ${adop.ubicacion.nombre_lugar || 'Sin nombre'}<br>
-                                <b>Tipo:</b> ${adop.ubicacion.tipo || 'privado'}<br>
-                                <a href="/adopciones/${adop.id}">Ver detalles</a>
-                            </div>
-                        `;
-                        L.marker([adop.ubicacion.latitud, adop.ubicacion.longitud], { icon: iconoAdopcion })
-                            .addTo(map)
-                            .bindPopup(popup);
-                    }
-                });
-
-                zonas.forEach(zona => {
-                    if (zona.latitud && zona.longitud) {
-                        const popup = `
-                            <div style="min-width: 180px;">
-                                <strong>📍 ${zona.nombre_lugar}</strong><br>
-                                <b>Tipo:</b> ${zona.tipo_zona || 'Zona pública'}<br>
-                                ${zona.descripcion ? `<i>${zona.descripcion}</i><br>` : ''}
-                                <b>Coordenadas:</b> ${zona.latitud.toFixed(4)}, ${zona.longitud.toFixed(4)}
-                            </div>
-                        `;
-                        L.marker([zona.latitud, zona.longitud], { icon: iconoZona })
-                            .addTo(map)
-                            .bindPopup(popup);
-                    }
-                });
-
-                const group = L.featureGroup();
-                map.eachLayer(layer => { if (layer instanceof L.Marker) group.addLayer(layer); });
-                if (group.getLayers().length > 0) map.fitBounds(group.getBounds().pad(0.2));
-                else map.setView([23.6345, -102.5528], 5);
-            });
-        </script>
-    @endpush
-</x-app-layout>
+</body>
+</html><?php /**PATH C:\Users\Admin\Documents\8\Prog de backend\Laravel Herd\PlantaTec\resources\views/plantas/index.blade.php ENDPATH**/ ?>

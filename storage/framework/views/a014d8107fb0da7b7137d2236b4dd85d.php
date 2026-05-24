@@ -1,25 +1,25 @@
-<x-app-layout>
-    <x-slot name="header">
+<?php if (isset($component)) { $__componentOriginal9ac128a9029c0e4701924bd2d73d7f54 = $component; } ?>
+<?php if (isset($attributes)) { $__attributesOriginal9ac128a9029c0e4701924bd2d73d7f54 = $attributes; } ?>
+<?php $component = App\View\Components\AppLayout::resolve([] + (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag ? $attributes->all() : [])); ?>
+<?php $component->withName('app-layout'); ?>
+<?php if ($component->shouldRender()): ?>
+<?php $__env->startComponent($component->resolveView(), $component->data()); ?>
+<?php if (isset($attributes) && $attributes instanceof Illuminate\View\ComponentAttributeBag): ?>
+<?php $attributes = $attributes->except(\App\View\Components\AppLayout::ignoredParameterNames()); ?>
+<?php endif; ?>
+<?php $component->withAttributes([]); ?>
+     <?php $__env->slot('header', null, []); ?> 
         <div class="pt-header">
             <div>
-                <p class="pt-header-label">Detalle de adopción</p>
-                <h2 class="pt-header-title">{{ $adopcion->planta->nombre }}</h2>
-                <p class="pt-header-subtitle">
-                    Información general, cuidados, problemas y tratamientos de la planta adoptada
-                </p>
+                <p class="pt-header-label">Zonas públicas</p>
+                <h2 class="pt-header-title">Gestión de zonas recomendadas</h2>
+                <p class="pt-header-subtitle">Panel de administración</p>
             </div>
-
             <div class="pt-header-actions">
-                <a href="{{ route('adopciones.index') }}" class="pt-btn pt-btn-light">
-                    Volver
-                </a>
-
-                <a href="{{ route('registro-cuidados.create', ['adopcion_id' => $adopcion->id]) }}" class="pt-btn pt-btn-green">
-                    Registrar cuidado
-                </a>
+                <a href="<?php echo e(route('recomendaciones-zona.create')); ?>" class="pt-btn pt-btn-green">+ Nueva zona</a>
             </div>
         </div>
-    </x-slot>
+     <?php $__env->endSlot(); ?>
 
     <style>
         /* ========== ESTILOS GLOBALES PLANTA TEC ========== */
@@ -215,8 +215,7 @@
             background: #ffffff;
             border: 1px solid #f3f4f6;
             border-radius: 1.25rem;
-            padding: 1.5rem;
-              margin-bottom: 1.5rem;
+            padding: 1.75rem;
             box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
         }
 
@@ -977,7 +976,7 @@
         }
 
         .pt-card-body {
-            padding: 1rem;
+            padding: 1.75rem;
         }
 
         .pt-adoption-detail {
@@ -1216,7 +1215,7 @@
 
         @media (max-width: 768px) {
             .pt-card-body {
-                padding: 1rem;
+                padding: 1.1rem;
             }
 
             .pt-adoption-flex {
@@ -2204,348 +2203,59 @@
                 padding: 70px 1rem;
             }
         }
-
-        .pt-margin-top-small {
-    margin-top: 0.3rem;
-}
-
-.pt-margin-top-medium {
-    margin-top: 0.8rem;
-}
-
-.pt-margin-bottom-medium {
-    margin-bottom: 1rem;
-}
     </style>
 
     <div class="pt-page">
         <div class="pt-container">
-
-            <!-- Tarjeta de información general + imagen -->
-            <div class="pt-card">
-                <div class="pt-card-header">
-                    <h3 class="pt-card-title">{{ $adopcion->planta->nombre }}</h3>
+            <div class="pt-admin-card">
+                <div class="pt-admin-table-wrapper">
+                    <table class="pt-admin-table">
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Tipo</th>
+                                <th>Descripción</th>
+                                <th>Coordenadas</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php $__empty_1 = true; $__currentLoopData = $zonas; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $zona): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
+                                <tr>
+                                    <td><?php echo e($zona->nombre_lugar); ?></td>
+                                    <td><?php echo e($zona->tipo_zona ?? '—'); ?></td>
+                                    <td><?php echo e(Str::limit($zona->descripcion, 60)); ?></td>
+                                    <td><?php echo e($zona->latitud); ?>, <?php echo e($zona->longitud); ?></td>
+                                    <td class="pt-table-actions">
+                                        <a href="<?php echo e(route('recomendaciones-zona.show', $zona)); ?>" class="pt-action-btn view">Ver</a>
+                                        <a href="<?php echo e(route('recomendaciones-zona.edit', $zona)); ?>" class="pt-action-btn edit">Editar</a>
+                                        <form action="<?php echo e(route('recomendaciones-zona.destroy', $zona)); ?>" method="POST" style="display:inline;">
+                                            <?php echo csrf_field(); ?>
+                                            <?php echo method_field('DELETE'); ?>
+                                            <button type="submit" class="pt-action-btn delete" onclick="return confirm('¿Eliminar esta zona?')">Eliminar</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
+                                <tr>
+                                    <td colspan="5" class="pt-empty center">No hay zonas recomendadas registradas.</td>
+                                </tr>
+                            <?php endif; ?>
+                        </tbody>
+                    </table>
                 </div>
+                <?php echo e($zonas->links()); ?>
 
-                <div class="pt-card-body">
-                    <div class="pt-adoption-flex">
-                        <div class="pt-adoption-image">
-                            @php
-                                $imagenUrl = 'https://images.unsplash.com/photo-1592150621744-aca64f48394a?w=300&fit=crop';
-
-                                if ($adopcion->planta->imagen) {
-                                    if (filter_var($adopcion->planta->imagen, FILTER_VALIDATE_URL)) {
-                                        $imagenUrl = $adopcion->planta->imagen;
-                                    } elseif (file_exists(public_path('storage/' . $adopcion->planta->imagen))) {
-                                        $imagenUrl = asset('storage/' . $adopcion->planta->imagen);
-                                    }
-                                }
-                            @endphp
-
-                            <img src="{{ $imagenUrl }}" alt="{{ $adopcion->planta->nombre }}">
-                        </div>
-
-                        <div class="pt-adoption-info">
-                            <div class="pt-info-grid-small">
-                                <div class="pt-info-box">
-                                    <strong>Especie</strong>
-                                    <span>{{ $adopcion->planta->especie }}</span>
-                                </div>
-
-                                <div class="pt-info-box">
-                                    <strong>Estado adopción</strong>
-                                    <span>{{ ucfirst($adopcion->estado_adopcion) }}</span>
-                                </div>
-
-                                <div class="pt-info-box">
-                                    <strong>Ubicación</strong>
-                                    <span>{{ $adopcion->ubicacion->nombre_lugar ?? 'No registrada' }}</span>
-                                </div>
-
-                                <div class="pt-info-box">
-                                    <strong>Fecha adopción</strong>
-                                    <span>{{ \Carbon\Carbon::parse($adopcion->fecha_adopcion)->format('d/m/Y') }}</span>
-                                </div>
-                            </div>
-
-                            <p class="pt-description">
-                                <strong>Descripción:</strong>
-                                {{ $adopcion->planta->descripcion ?? 'Sin descripción.' }}
-                            </p>
-
-                            <div class="pt-btn-group">
-                                <a href="{{ route('registro-cuidados.create', ['adopcion_id' => $adopcion->id]) }}" class="pt-btn pt-btn-green">
-                                    Registrar cuidado general
-                                </a>
-
-                                <a href="{{ route('reporte-problemas.create', ['adopcion_id' => $adopcion->id]) }}" class="pt-btn pt-btn-red">
-                                    Reportar problema
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
-
-            <!-- Plan de cuidados -->
-            <div class="pt-card">
-                <div class="pt-card-header">
-                    <h3 class="pt-card-title">Plan de cuidados</h3>
-                </div>
-
-                <div class="pt-card-body">
-                    @php
-                        $cuidadosAsignados = $adopcion->planta->plantaCuidados;
-                    @endphp
-
-                    @if($cuidadosAsignados->count())
-                        <div class="pt-table-wrapper">
-                            <table class="pt-table">
-                                <thead>
-                                    <tr>
-                                        <th>Cuidado</th>
-                                        <th>Frecuencia</th>
-                                        <th>Próxima fecha sugerida</th>
-                                        <th>Registrar</th>
-                                    </tr>
-                                </thead>
-
-                                <tbody>
-                                    @foreach($cuidadosAsignados as $pc)
-                                        @php
-                                            $ultimoRegistro = $adopcion->registrosCuidados()
-                                                ->where('id_planta_cuidado', $pc->id)
-                                                ->latest()
-                                                ->first();
-
-                                            if ($ultimoRegistro) {
-                                                $proximaFecha = \Carbon\Carbon::parse($ultimoRegistro->fecha)->addDays($pc->frecuencia);
-                                            } else {
-                                                $proximaFecha = \Carbon\Carbon::parse($adopcion->fecha_adopcion)->addDays($pc->frecuencia);
-                                            }
-                                        @endphp
-
-                                        <tr>
-                                            <td>
-                                                <strong>{{ $pc->cuidado->nombre }}</strong>
-
-                                                @if($pc->instrucciones_esp)
-                                                    <br>
-                                                    <span class="pt-muted">
-                                                        {{ Str::limit($pc->instrucciones_esp, 80) }}
-                                                    </span>
-                                                @endif
-                                            </td>
-
-                                            <td>
-                                                Cada {{ $pc->frecuencia }} días
-                                            </td>
-
-                                            <td>
-                                                {{ $proximaFecha->format('d/m/Y') }}
-                                            </td>
-
-                                            <td>
-                                                <a href="{{ route('registro-cuidados.create', ['adopcion_id' => $adopcion->id, 'cuidado_id' => $pc->id]) }}" class="pt-small-btn green">
-                                                    Registrar
-                                                </a>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                    @else
-                        <p class="pt-muted">No hay cuidados asignados a esta planta.</p>
-                    @endif
-                </div>
-            </div>
-
-            <!-- Historial de cuidados -->
-            <div class="pt-card">
-                <div class="pt-card-header">
-                    <h3 class="pt-card-title">Historial de cuidados</h3>
-                </div>
-
-                <div class="pt-card-body">
-                    @forelse($adopcion->registrosCuidados as $registro)
-                        <div class="pt-history-item">
-                            <div class="pt-history-content">
-                                <div class="pt-history-title">
-                                    {{ $registro->plantaCuidado->cuidado->nombre }}
-                                    <span>{{ \Carbon\Carbon::parse($registro->fecha)->format('d/m/Y H:i') }}</span>
-                                </div>
-
-                                <div class="pt-history-text">
-                                    {{ $registro->descripcion ?? 'Sin descripción' }}
-                                </div>
-
-                                @if($registro->estado_observado)
-                                    <div class="pt-muted pt-margin-top-small">
-                                        Estado observado: {{ $registro->estado_observado }}
-                                    </div>
-                                @endif
-                            </div>
-
-                            @if($registro->imagen)
-                                <div>
-                                    <img src="{{ asset('storage/' . $registro->imagen) }}" class="pt-history-image" alt="Evidencia">
-                                </div>
-                            @endif
-                        </div>
-                    @empty
-                        <p class="pt-muted">Aún no se han registrado cuidados.</p>
-                    @endforelse
-                </div>
-            </div>
-
-            <!-- Problemas reportados -->
-            <div class="pt-card">
-                <div class="pt-card-header">
-                    <h3 class="pt-card-title">Problemas reportados</h3>
-                </div>
-
-                <div class="pt-card-body">
-                    @forelse($adopcion->reportesProblemas as $reporte)
-                        <div class="pt-problem-item">
-                            <div class="pt-problem-header">
-                                <div>
-                                    <strong>{{ $reporte->problema->nombre }}</strong>
-
-                                    <span class="pt-status-badge 
-                                        @if($reporte->estado === 'activo') active 
-                                        @elseif($reporte->estado === 'en_revision') review 
-                                        @else solved 
-                                        @endif">
-                                        {{ ucfirst(str_replace('_', ' ', $reporte->estado)) }}
-                                    </span>
-                                </div>
-
-                                <span class="pt-muted">
-                                    Gravedad: {{ ucfirst($reporte->gravedad) }}
-                                </span>
-                            </div>
-
-                            <div class="pt-text pt-margin-top-small">
-                                {{ $reporte->descripcion ?? 'Sin descripción' }}
-                            </div>
-
-                            <div class="pt-margin-top-medium">
-                                <a href="{{ route('reporte-problemas.show', $reporte) }}" class="pt-small-btn green">
-                                    Ver diagnóstico
-                                </a>
-                            </div>
-                        </div>
-                    @empty
-                        <p class="pt-muted">No hay problemas reportados.</p>
-                    @endforelse
-                </div>
-            </div>
-
-            <!-- Tratamientos aplicados -->
-            <div class="pt-card">
-                <div class="pt-card-header">
-                    <h3 class="pt-card-title">Tratamientos aplicados</h3>
-                </div>
-
-                <div class="pt-card-body">
-                    <p class="pt-muted pt-margin-bottom-medium">
-                        Tratamientos registrados derivados de los problemas reportados.
-                    </p>
-
-                    @php
-                        $tratamientosReporte = $adopcion->reportesProblemas->flatMap(function ($reporte) {
-                            return $reporte->tratamientosReportes->map(function ($tratamientoReporte) use ($reporte) {
-                                $tratamientoReporte->reporte_original = $reporte;
-                                return $tratamientoReporte;
-                            });
-                        });
-                    @endphp
-
-                    @if($tratamientosReporte->count() > 0)
-                        <div class="pt-table-wrapper">
-                            <table class="pt-table">
-                                <thead>
-                                    <tr>
-                                        <th>Problema</th>
-                                        <th>Tratamiento</th>
-                                        <th>Frecuencia</th>
-                                        <th>Fecha registro</th>
-                                        <th>Estado</th>
-                                        <th>Evidencia</th>
-                                        <th>Acción</th>
-                                    </tr>
-                                </thead>
-
-                                <tbody>
-                                    @foreach($tratamientosReporte as $tr)
-                                        @php
-                                            $estadoTratamiento = strtolower($tr->estado ?? 'pendiente');
-                                            $fechaRegistro = $tr->updated_at ?? $tr->created_at;
-                                        @endphp
-
-                                        <tr>
-                                            <td>
-                                                <strong>{{ $tr->reporte_original->problema->nombre ?? 'Problema' }}</strong>
-                                                <br>
-                                                <span class="pt-muted">
-                                                    Gravedad: {{ ucfirst($tr->reporte_original->gravedad ?? '-') }}
-                                                </span>
-                                            </td>
-
-                                            <td>
-                                                <strong>{{ $tr->tratamiento->descripcion ?? 'Tratamiento' }}</strong>
-
-                                                @if($tr->descripcion)
-                                                    <br>
-                                                    <span class="pt-muted">
-                                                        Último: {{ $tr->descripcion }}
-                                                    </span>
-                                                @endif
-                                            </td>
-
-                                            <td>
-                                                Cada {{ $tr->frecuencia_dias ?? 1 }} días
-                                            </td>
-
-                                            <td>
-                                                {{ $fechaRegistro ? \Carbon\Carbon::parse($fechaRegistro)->format('d/m/Y') : 'Sin fecha' }}
-                                            </td>
-
-                                            <td>
-                                                <span class="pt-status-badge @if($estadoTratamiento === 'pendiente') review @else solved @endif">
-                                                    {{ ucfirst($tr->estado ?? 'pendiente') }}
-                                                </span>
-                                            </td>
-
-                                            <td>
-                                                @if($tr->imagen)
-                                                    <img src="{{ asset('storage/' . $tr->imagen) }}" alt="Evidencia" class="pt-table-image">
-                                                @else
-                                                    <span class="pt-muted">—</span>
-                                                @endif
-                                            </td>
-
-                                            <td>
-                                                <a href="{{ route('reporte-problemas.show', $tr->reporte_original->id) }}" class="pt-small-btn green">
-                                                    Ver diagnóstico
-                                                </a>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                    @else
-                        <div class="pt-empty">
-                            <div class="pt-empty-icon"></div>
-                            <div class="pt-empty-title">Sin tratamientos</div>
-                            <p class="pt-muted">No hay tratamientos asignados todavía.</p>
-                        </div>
-                    @endif
-                </div>
-            </div>
-
         </div>
     </div>
-</x-app-layout>
+ <?php echo $__env->renderComponent(); ?>
+<?php endif; ?>
+<?php if (isset($__attributesOriginal9ac128a9029c0e4701924bd2d73d7f54)): ?>
+<?php $attributes = $__attributesOriginal9ac128a9029c0e4701924bd2d73d7f54; ?>
+<?php unset($__attributesOriginal9ac128a9029c0e4701924bd2d73d7f54); ?>
+<?php endif; ?>
+<?php if (isset($__componentOriginal9ac128a9029c0e4701924bd2d73d7f54)): ?>
+<?php $component = $__componentOriginal9ac128a9029c0e4701924bd2d73d7f54; ?>
+<?php unset($__componentOriginal9ac128a9029c0e4701924bd2d73d7f54); ?>
+<?php endif; ?><?php /**PATH C:\Users\Admin\Documents\8\Prog de backend\Laravel Herd\PlantaTec\resources\views/recomendaciones-zona/index.blade.php ENDPATH**/ ?>

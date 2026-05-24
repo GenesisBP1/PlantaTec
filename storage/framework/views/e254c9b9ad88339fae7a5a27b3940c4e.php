@@ -1,50 +1,17 @@
-<x-app-layout>
-    <x-slot name="header">
-        <div class="pt-header">
-            <div>
-                <p class="pt-header-label">Panel de Control</p>
-                <h2 class="pt-header-title">Bienvenido, {{ Auth::user()->name }}</h2>
-                <p class="pt-header-subtitle">Resumen general del sistema · {{ now()->format('d M Y') }}</p>
-            </div>
-            <div class="pt-header-actions">
-                <a href="{{ route('plantas.create') }}" class="pt-btn pt-btn-green">Nueva planta</a>
-                <a href="{{ route('recomendaciones-cuidado.index') }}" class="pt-btn pt-btn-light">Recomendaciones</a>
-            </div>
-        </div>
-    </x-slot>
+<!DOCTYPE html>
+<html lang="<?php echo e(str_replace('_', '-', app()->getLocale())); ?>">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>PlantaTec — Crear cuenta</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700;9..40,800&display=swap" rel="stylesheet">
 
     <style>
-        /* ========== ESTILOS GLOBALES PLANTA TEC (VERDES) ========== */
-        /* (Copiado tal cual de tu código, sin cambios) */
-        span {
-            color: #02180a;
-        }
-        .pt-navbar {
-            background: #ffffff;
-            border-bottom: 1px solid #e5e7eb;
-            position: sticky;
-            top: 0;
-            z-index: 50;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.04);
-            text-align: center;
-            color: #374151;
-        }
-        .pt-nav-link {
-    color: #1f2937; /* cambiar a otro color */
-}
-.pt-nav-link:hover,
-.pt-nav-link.active {
-    background: #dcfce7;
-    color: #16a34a; /* verde más intenso */
-}
-        .pt-navbar-container {
-            max-width: 1280px;
-            margin: 0 auto;
-            padding: 0.75rem 1.5rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
+        /* ========== ESTILOS GLOBALES PLANTA TEC ========== */
+        /* (Mismo bloque que en login, pero lo incluyo completo aquí) */
 
         .pt-page { padding: 3.5rem 0; }
         .pt-container { max-width: 1280px; margin: 0 auto; padding: 0 1.5rem; }
@@ -252,273 +219,288 @@
         .pt-toast.warning { background: #f59e0b; }
         .pt-toast.info { background: #2563eb; }
         .pt-toast-close { border: none; background: transparent; color: white; font-size: 1.3rem; cursor: pointer; }
+        .pt-navbar { background: #ffffff; border-bottom: 1px solid #e5e7eb; position: sticky; top: 0; z-index: 50; box-shadow: 0 2px 12px rgba(0,0,0,0.04); }
+        .pt-nav-container { max-width: 1280px; margin: 0 auto; padding: 0 1rem; }
+        .pt-nav-inner { height: 64px; display: flex; align-items: center; justify-content: space-between; }
+        .pt-nav-left { display: flex; align-items: center; gap: 2rem; }
+        .pt-logo { display: flex; align-items: center; gap: 0.6rem; text-decoration: none; color: #1f2937; font-size: 1.25rem; font-weight: 900; }
+        .pt-logo-icon { width: 34px; height: 34px; border-radius: 0.9rem; background: linear-gradient(135deg, #16a34a, #047857); color: #ffffff; display: flex; align-items: center; justify-content: center; }
+        .pt-desktop-menu { display: flex; align-items: center; gap: 0.25rem; }
+        .pt-nav-link { position: relative; display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.6rem 0.85rem; border-radius: 0.75rem; color: #374151; text-decoration: none; font-size: 0.9rem; font-weight: 700; border: none; background: transparent; cursor: pointer; }
+        .pt-nav-link:hover, .pt-nav-link.active { background: #f0fdf4; color: #15803d; }
+        .pt-dropdown { position: relative; }
+        .pt-dropdown-menu, .pt-user-dropdown { position: absolute; top: 115%; background: #ffffff; border: 1px solid #e5e7eb; border-radius: 1rem; box-shadow: 0 16px 32px rgba(0,0,0,0.12); overflow: hidden; z-index: 100; }
+        .pt-dropdown-menu { left: 0; width: 270px; padding: 0.4rem; }
+        .pt-dropdown-menu a, .pt-user-dropdown a, .pt-user-dropdown button { display: block; width: 100%; padding: 0.75rem 1rem; color: #374151; text-decoration: none; font-size: 0.875rem; font-weight: 600; background: transparent; border: none; text-align: left; cursor: pointer; }
+        .pt-dropdown-menu a:hover, .pt-user-dropdown a:hover, .pt-user-dropdown button:hover { background: #f0fdf4; color: #15803d; }
+        .pt-dropdown-menu hr { border: none; border-top: 1px solid #e5e7eb; margin: 0.35rem 0; }
+        .pt-nav-notification { padding-right: 1.3rem; }
+        .pt-nav-badge { background: #ef4444; color: #ffffff; border-radius: 999px; font-size: 0.68rem; font-weight: 900; padding: 0.1rem 0.4rem; margin-left: 0.3rem; }
+        .pt-user-menu { position: relative; }
+        .pt-user-btn { display: flex; align-items: center; gap: 0.65rem; padding: 0.45rem 0.7rem; border-radius: 0.9rem; background: #f9fafb; border: 1px solid #e5e7eb; cursor: pointer; }
+        .pt-user-btn:hover { background: #f3f4f6; }
+        .pt-avatar { width: 34px; height: 34px; border-radius: 999px; background: linear-gradient(135deg, #16a34a, #047857); color: #ffffff; display: flex; align-items: center; justify-content: center; font-weight: 900; }
+        .pt-user-text { text-align: left; }
+        .pt-user-text p { margin: 0; color: #1f2937; font-size: 0.875rem; font-weight: 800; }
+        .pt-user-text span { color: #6b7280; font-size: 0.75rem; }
+        .pt-user-arrow { color: #6b7280; }
+        .pt-user-dropdown { right: 0; width: 230px; }
+        .pt-user-info { padding: 1rem; border-bottom: 1px solid #e5e7eb; }
+        .pt-user-info p { margin: 0; font-weight: 800; color: #111827; }
+        .pt-user-info span { display: block; color: #6b7280; font-size: 0.75rem; overflow: hidden; text-overflow: ellipsis; }
+        .pt-user-dropdown button { color: #dc2626; }
+        .pt-mobile-btn { display: none; border: none; background: #f3f4f6; color: #374151; width: 40px; height: 40px; border-radius: 0.75rem; font-size: 1.4rem; cursor: pointer; }
+        .pt-mobile-menu { display: none; background: #ffffff; border-top: 1px solid #e5e7eb; padding: 0.75rem 1rem; }
+        .pt-mobile-menu a, .pt-mobile-menu button { display: block; width: 100%; padding: 0.75rem; border-radius: 0.75rem; color: #374151; text-decoration: none; font-weight: 700; border: none; background: transparent; text-align: left; }
+        .pt-mobile-menu a:hover, .pt-mobile-menu a.active, .pt-mobile-menu button:hover { background: #f0fdf4; color: #15803d; }
+        .pt-mobile-user { display: flex; align-items: center; gap: 0.75rem; padding: 1rem 0.75rem; border-top: 1px solid #e5e7eb; margin-top: 0.5rem; }
+        .pt-mobile-user p { margin: 0; font-weight: 800; color: #111827; }
+        .pt-mobile-user span { font-size: 0.8rem; color: #6b7280; }
+        @media (max-width: 768px) { .pt-desktop-menu, .pt-user-menu { display: none; } .pt-mobile-btn { display: flex; align-items: center; justify-content: center; } .pt-mobile-menu { display: block; } }
+        * { box-sizing: border-box; }
+        p, h1, h2, h3, h4 { margin-top: 0; }
 
-        
-        /* Ajustes adicionales */
-        .pt-metric-icon img { width: 100%; height: 100%; object-fit: contain; }
-        #mapa-admin-custom { height: 500px; width: 100%; border-radius: 1rem; z-index: 1; }
-        @media (max-width: 768px) { #mapa-admin-custom { height: 350px; } }
+        /* ========== ESTILOS ESPECÍFICOS PARA AUTENTICACIÓN ========== */
+        .pt-auth-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .pt-auth-header h1 {
+            font-family: 'DM Serif Display', serif;
+            font-size: 2rem;
+            color: #111827;
+            margin-bottom: 0.5rem;
+        }
+        .pt-auth-header p {
+            color: #6b7280;
+        }
+        .pt-auth-form {
+            max-width: 540px;
+            margin: 0 auto;
+            background: #ffffff;
+            padding: 2rem;
+            border-radius: 1.5rem;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e5e7eb;
+        }
+        .pt-form-group {
+            margin-bottom: 1.25rem;
+        }
+        .pt-form-group.full {
+            width: 100%;
+        }
+        .pt-form-group label {
+            display: block;
+            font-weight: 800;
+            color: #374151;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+        .pt-form-group input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border-radius: 1rem;
+            border: 1px solid #d1d5db;
+            font-family: inherit;
+            font-size: 0.95rem;
+            transition: 0.2s;
+        }
+        .pt-form-group input:focus {
+            outline: none;
+            border-color: #16a34a;
+            box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.1);
+        }
+        .pt-error-text {
+            color: #dc2626;
+            font-size: 0.75rem;
+            margin-top: 0.25rem;
+            display: inline-block;
+        }
+        .pt-password-toggle {
+            background: none;
+            border: none;
+            font-size: 0.75rem;
+            color: #16a34a;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 0.5rem;
+            padding: 0;
+        }
+        .pt-auth-password-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 0.5rem;
+        }
+        .pt-auth-terms {
+            font-size: 0.8rem;
+            color: #6b7280;
+            margin: 1rem 0;
+            line-height: 1.5;
+        }
+        .pt-auth-terms a {
+            color: #16a34a;
+            text-decoration: none;
+            font-weight: 700;
+        }
+        .pt-auth-terms a:hover {
+            text-decoration: underline;
+        }
+        .pt-auth-submit {
+            width: 100%;
+            justify-content: center;
+            margin-top: 0.5rem;
+            padding: 0.75rem;
+            font-size: 1rem;
+        }
+        .pt-auth-footer {
+            text-align: center;
+            margin-top: 1.5rem;
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+        .pt-auth-footer a {
+            color: #16a34a;
+            font-weight: 700;
+            text-decoration: none;
+        }
+        .pt-auth-footer a:hover {
+            text-decoration: underline;
+        }
+        @media (max-width: 640px) {
+            .pt-auth-password-grid {
+                grid-template-columns: 1fr;
+            }
+            .pt-auth-form {
+                padding: 1.5rem;
+            }
+        }
     </style>
+</head>
 
-    <div class="pt-page">
-        <div class="pt-container">
+<body class="pt-welcome-body">
 
-            <!-- Métricas con imágenes -->
-            <div class="pt-metrics-grid">
-                <div class="pt-metric-card green">
-                    <div class="pt-metric-circle"></div>
-                    <div class="pt-metric-content">
-                        <div class="pt-metric-icon">
-                            <img src="https://images.vexels.com/media/users/3/131782/isolated/preview/4833130cb7d9b85e4134262733da8b6d-icono-de-planta.png?w=360" alt="Plantas">
-                        </div>
-                        <p class="pt-label">Plantas</p>
-                        <p class="pt-number">{{ $totalPlantas }}</p>
-                        <a href="{{ route('plantas.index') }}" class="pt-link green">Ver todas →</a>
-                    </div>
-                </div>
-                <div class="pt-metric-card blue">
-                    <div class="pt-metric-circle"></div>
-                    <div class="pt-metric-content">
-                        <div class="pt-metric-icon">
-                            <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Usuarios">
-                        </div>
-                        <p class="pt-label">Usuarios registrados</p>
-                        <p class="pt-number">{{ $totalUsuarios }}</p>
-                        <a href="{{ route('admin.usuarios.index') }}" class="pt-link blue">Ver detalles →</a>
-                    </div>
-                </div>
-                <div class="pt-metric-card violet">
-                    <div class="pt-metric-circle"></div>
-                    <div class="pt-metric-content">
-                        <div class="pt-metric-icon">
-                            <img src="https://images.vexels.com/media/users/3/131782/isolated/preview/4833130cb7d9b85e4134262733da8b6d-icono-de-planta.png?w=360" alt="Adopciones">
-                        </div>
-                        <p class="pt-label">Plantas adoptadas</p>
-                        <p class="pt-number">{{ $totalAdopciones }}</p>
-                    </div>
-                </div>
-                <div class="pt-metric-card amber">
-                    <div class="pt-metric-circle"></div>
-                    <div class="pt-metric-content">
-                        <div class="pt-metric-icon">
-                            <img src="https://cdn-icons-png.flaticon.com/512/190/190411.png" alt="Problemas">
-                        </div>
-                        <p class="pt-label">Problemas activos</p>
-                        <p class="pt-number">{{ $problemasActivos }}</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Mapa (justo después de las métricas) -->
-            <div class="pt-map-card" style="margin-top: 1rem; margin-bottom: 2rem;">
-                <div class="pt-map-header">
-                    <div>
-                        <h3 class="pt-section-title">🗺️ Mapa de ubicaciones</h3>
-                        <p class="pt-card-subtitle">Adopciones y zonas públicas recomendadas</p>
-                    </div>
-                    @if(\Illuminate\Support\Facades\Route::has('mapa.index'))
-                        <a href="{{ route('mapa.index') }}" class="pt-link green">Ver mapa completo →</a>
-                    @endif
-                </div>
-                <div class="pt-map-body">
-                    <div id="mapa-admin-custom"></div>
-                </div>
-            </div>
-
-            <!-- Planta más adoptada y Zonas recomendadas (compactas) -->
-            <div class="pt-info-grid">
-                <div class="pt-card">
-                    <div class="pt-card-header">
-                        <div>
-                            <h3 class="pt-card-title">Planta más adoptada</h3>
-                            <p class="pt-card-subtitle">La planta con más adopciones registradas</p>
-                        </div>
-                        <span class="pt-badge green">Real</span>
-                    </div>
-                    @if($plantaMasAdoptada)
-                        <div class="pt-plant-row">
-                            <div class="pt-plant-image">
-                                <img src="{{ $plantaMasAdoptada->imagen ? (str_starts_with($plantaMasAdoptada->imagen, 'http') ? $plantaMasAdoptada->imagen : asset('storage/' . $plantaMasAdoptada->imagen)) : 'https://images.unsplash.com/photo-1592150621744-aca64f48394a?w=400&h=250&fit=crop' }}" alt="{{ $plantaMasAdoptada->nombre }}">
-                            </div>
-                            <div class="pt-plant-info">
-                                <p class="pt-plant-name">{{ $plantaMasAdoptada->nombre }}</p>
-                                <p class="pt-text">{{ $plantaMasAdoptada->adopciones_count }} adopciones registradas</p>
-                                <p class="pt-muted">Zona: {{ $plantaMasAdoptada->tipo_zona ?? 'No definida' }}</p>
-                            </div>
-                        </div>
-                    @else
-                        <div class="pt-empty">Aún no hay adopciones registradas para calcular este dato.</div>
-                    @endif
-                </div>
-
-                <!-- Zonas recomendadas (solo 3 + enlace) -->
-                <div class="pt-card">
-                    <div class="pt-card-header">
-                        <div>
-                            <h3 class="pt-card-title">Zonas recomendadas disponibles</h3>
-                            <p class="pt-card-subtitle">Ubicaciones públicas sugeridas</p>
-                        </div>
-                        <a href="{{ route('recomendaciones-zona.index') }}" class="pt-link green">Ver todas →</a>
-                    </div>
-
-                    @php
-                        $zonas = \App\Models\RecomendacionZona::orderBy('nombre_lugar')->limit(3)->get();
-                        $totalZonas = \App\Models\RecomendacionZona::count();
-                    @endphp
-
-                    @if($zonas->count() > 0)
-                        <div class="pt-zone-list">
-                            @foreach($zonas as $zona)
-                                <div class="pt-zone-item">
-                                    <div class="pt-zone-main">
-                                        <p class="pt-zone-title">{{ $zona->nombre_lugar }}</p>
-                                        <div class="pt-zone-tags">
-                                            <span class="pt-badge blue">{{ $zona->tipo_zona }}</span>
-                                            @if($zona->descripcion)
-                                                <span class="pt-zone-description">{{ \Illuminate\Support\Str::limit($zona->descripcion, 50) }}</span>
-                                            @endif
-                                        </div>
-                                    </div>
-                                    <div class="pt-zone-coords">
-                                        <p class="pt-code">{{ number_format($zona->latitud, 4) }}, {{ number_format($zona->longitud, 4) }}</p>
-                                    </div>
-                                </div>
-                            @endforeach
-                            @if($totalZonas > 3)
-                                <div class="pt-muted" style="text-align: center; margin-top: 0.5rem;">
-                                    + {{ $totalZonas - 3 }} zonas más
-                                </div>
-                            @endif
-                        </div>
-                    @else
-                        <div class="pt-empty center">
-                            <div class="pt-empty-icon">📍</div>
-                            <p class="pt-empty-title">No hay zonas recomendadas configuradas</p>
-                        </div>
-                    @endif
-                </div>
-            </div>
-
-            <!-- Gestión rápida -->
-            <div class="pt-card pt-section">
-                <div class="pt-section-header">
-                    <div>
-                        <h3 class="pt-section-title">Gestión rápida</h3>
-                        <p class="pt-card-subtitle">Accede a cualquier módulo del sistema</p>
-                    </div>
-                </div>
-                <div class="pt-access-grid">
-                    @php
-                    $accesos = [
-                        ['route' => 'plantas.index', 'label' => 'Plantas', 'icon' => '🌿', 'color' => 'green'],
-                        ['route' => 'ubicaciones.index', 'label' => 'Ubicaciones', 'icon' => '📍', 'color' => 'blue'],
-                        ['route' => 'adopciones.index', 'label' => 'Adopciones', 'icon' => '💜', 'color' => 'violet'],
-                        ['route' => 'cuidados.index', 'label' => 'Cuidados', 'icon' => '📋', 'color' => 'cyan'],
-                        ['route' => 'planta-cuidados.index', 'label' => 'Asignar cuidados', 'icon' => '✅', 'color' => 'emerald'],
-                        ['route' => 'problemas.index', 'label' => 'Problemas', 'icon' => '⚠️', 'color' => 'orange'],
-                        ['route' => 'tratamientos.index', 'label' => 'Tratamientos', 'icon' => '🧪', 'color' => 'yellow'],
-                        ['route' => 'recomendaciones-cuidado.index', 'label' => 'Recomendaciones', 'icon' => '🔔', 'color' => 'red'],
-                        ['route' => 'notificaciones.index', 'label' => 'Notificaciones', 'icon' => '🔔', 'color' => 'gray'],
-                        ['route' => 'reporte-problemas.index', 'label' => 'Reportes de problemas', 'icon' => '🚨', 'color' => 'pink'],
-                    ];
-                    @endphp
-                    @foreach($accesos as $item)
-                        @if(\Illuminate\Support\Facades\Route::has($item['route']))
-                            <a href="{{ route($item['route']) }}" class="pt-access-btn {{ $item['color'] }}">
-                                <span class="pt-access-icon">{{ $item['icon'] }}</span>
-                                <span>{{ $item['label'] }}</span>
-                            </a>
-                        @endif
-                    @endforeach
-                </div>
-            </div>
-
+    <div class="pt-container" style="max-width: 1200px; margin: 2rem auto;">
+        <div class="pt-auth-header">
+            <h1>Crea tu cuenta</h1>
+            <p>Únete y empieza a cuidar tu jardín digital</p>
         </div>
+
+        <form method="POST" action="<?php echo e(route('register')); ?>" class="pt-auth-form">
+            <?php echo csrf_field(); ?>
+
+            <div class="pt-form-group full">
+                <label>Nombre completo</label>
+                <input
+                    id="name"
+                    type="text"
+                    name="name"
+                    value="<?php echo e(old('name')); ?>"
+                    required
+                    autofocus
+                    autocomplete="name"
+                    placeholder="Tu nombre">
+                <?php $__errorArgs = ['name'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                    <small class="pt-error-text"><?php echo e($message); ?></small>
+                <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
+            </div>
+
+            <div class="pt-form-group full">
+                <label>Correo electrónico</label>
+                <input
+                    id="email"
+                    type="email"
+                    name="email"
+                    value="<?php echo e(old('email')); ?>"
+                    required
+                    autocomplete="username"
+                    placeholder="tu@correo.com">
+                <?php $__errorArgs = ['email'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                    <small class="pt-error-text"><?php echo e($message); ?></small>
+                <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
+            </div>
+
+            <div class="pt-auth-password-grid">
+                <div class="pt-form-group" id="password-group">
+                    <label>Contraseña</label>
+                    <input
+                        id="password"
+                        type="password"
+                        name="password"
+                        required
+                        autocomplete="new-password"
+                        placeholder="Mín. 8 caracteres">
+                    <button type="button" class="pt-password-toggle" data-target="password">Mostrar contraseña</button>
+                    <?php $__errorArgs = ['password'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?>
+                        <small class="pt-error-text"><?php echo e($message); ?></small>
+                    <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
+                </div>
+
+                <div class="pt-form-group" id="password-confirm-group">
+                    <label>Confirmar contraseña</label>
+                    <input
+                        id="password_confirmation"
+                        type="password"
+                        name="password_confirmation"
+                        required
+                        autocomplete="new-password"
+                        placeholder="Repite la contraseña">
+                    <button type="button" class="pt-password-toggle" data-target="password_confirmation">Mostrar contraseña</button>
+                </div>
+            </div>
+
+            <p class="pt-auth-terms">
+                Al registrarte aceptas nuestros
+                <a href="#">Términos de uso</a>
+                y nuestra
+                <a href="#">Política de privacidad</a>.
+            </p>
+
+            <button type="submit" class="pt-btn pt-btn-green pt-auth-submit">
+                Crear mi cuenta
+            </button>
+
+            <p class="pt-auth-footer">
+                ¿Ya tienes cuenta?
+                <a href="<?php echo e(route('login')); ?>">Inicia sesión</a>
+            </p>
+        </form>
     </div>
 
-    @push('styles')
-        <style>
-            /* Asegurar que el mapa tenga altura fija y no se superponga */
-            #mapa-admin-custom {
-                height: 500px;
-                width: 100%;
-                border-radius: 1rem;
-                z-index: 1;
-            }
-            /* Responsive para el mapa */
-            @media (max-width: 768px) {
-                #mapa-admin-custom {
-                    height: 350px;
+    <script>
+        // Funcionalidad de mostrar/ocultar contraseña sin Alpine.js
+        document.querySelectorAll('.pt-password-toggle').forEach(button => {
+            button.addEventListener('click', function() {
+                const targetId = this.getAttribute('data-target');
+                const input = document.getElementById(targetId);
+                if (input) {
+                    const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+                    input.setAttribute('type', type);
+                    this.textContent = type === 'password' ? 'Mostrar contraseña' : 'Ocultar contraseña';
                 }
-            }
-        </style>
-    @endpush
-
-    @push('scripts')
-        <script>
-            document.addEventListener('DOMContentLoaded', function () {
-                const map = L.map('mapa-admin-custom').setView([23.6345, -102.5528], 5);
-                L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> & CartoDB'
-                }).addTo(map);
-
-                const adopciones = @json($adopcionesConUbicacion ?? []);
-                const zonas = @json($zonasRecomendadas ?? []);
-
-                const iconoAdopcion = L.icon({
-                    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
-                    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
-                    iconSize: [25, 41],
-                    iconAnchor: [12, 41],
-                    popupAnchor: [1, -34]
-                });
-
-                const iconoZona = L.icon({
-                    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-green.png',
-                    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
-                    iconSize: [25, 41],
-                    iconAnchor: [12, 41],
-                    popupAnchor: [1, -34]
-                });
-
-                adopciones.forEach(adop => {
-                    if (adop.ubicacion && adop.ubicacion.latitud && adop.ubicacion.longitud) {
-                        const popup = `
-                            <div style="min-width: 200px;">
-                                <strong>${adop.planta?.nombre || 'Planta'}</strong><br>
-                                <b>Adoptado por:</b> ${adop.usuario?.name || 'Usuario'}<br>
-                                <b>Ubicación:</b> ${adop.ubicacion.nombre_lugar || 'Sin nombre'}<br>
-                                <b>Tipo:</b> ${adop.ubicacion.tipo || 'privado'}<br>
-                                <a href="/adopciones/${adop.id}">Ver detalles</a>
-                            </div>
-                        `;
-                        L.marker([adop.ubicacion.latitud, adop.ubicacion.longitud], { icon: iconoAdopcion })
-                            .addTo(map)
-                            .bindPopup(popup);
-                    }
-                });
-
-                zonas.forEach(zona => {
-                    if (zona.latitud && zona.longitud) {
-                        const popup = `
-                            <div style="min-width: 180px;">
-                                <strong>📍 ${zona.nombre_lugar}</strong><br>
-                                <b>Tipo:</b> ${zona.tipo_zona || 'Zona pública'}<br>
-                                ${zona.descripcion ? `<i>${zona.descripcion}</i><br>` : ''}
-                                <b>Coordenadas:</b> ${zona.latitud.toFixed(4)}, ${zona.longitud.toFixed(4)}
-                            </div>
-                        `;
-                        L.marker([zona.latitud, zona.longitud], { icon: iconoZona })
-                            .addTo(map)
-                            .bindPopup(popup);
-                    }
-                });
-
-                const group = L.featureGroup();
-                map.eachLayer(layer => { if (layer instanceof L.Marker) group.addLayer(layer); });
-                if (group.getLayers().length > 0) map.fitBounds(group.getBounds().pad(0.2));
-                else map.setView([23.6345, -102.5528], 5);
             });
-        </script>
-    @endpush
-</x-app-layout>
+        });
+    </script>
+</body>
+</html><?php /**PATH C:\Users\Admin\Documents\8\Prog de backend\Laravel Herd\PlantaTec\resources\views/auth/register.blade.php ENDPATH**/ ?>

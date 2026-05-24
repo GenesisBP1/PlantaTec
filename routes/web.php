@@ -114,6 +114,10 @@ Route::put('/reportes-problemas/{reporteProblema}/resolver', [ReporteProblemaCon
     Route::prefix('admin')->name('admin.')->group(function () {
         Route::resource('usuarios', UsuarioController::class);
     });
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::resource('usuarios', \App\Http\Controllers\Admin\UsuarioController::class)->only(['index']);
+    Route::get('usuarios/{id}/resumen', [\App\Http\Controllers\Admin\UsuarioController::class, 'resumen'])->name('usuarios.resumen');
+});
 });
 
 require __DIR__.'/auth.php';
