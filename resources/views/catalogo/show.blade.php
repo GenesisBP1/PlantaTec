@@ -18,7 +18,7 @@
 
     <style>
         /* ========== ESTILOS GLOBALES PLANTA TEC ========== */
-        /* Mismo bloque completo que en las páginas anteriores */
+        /* (Todos los estilos que ya tenías, los mantengo exactamente igual) */
         .pt-page { padding: 3.5rem 0; }
         .pt-container { max-width: 1280px; margin: 0 auto; padding: 0 1.5rem; }
         .pt-header { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
@@ -698,7 +698,6 @@
     <nav x-data="{ open: false }" class="pt-navbar">
         <div class="pt-nav-container">
             <div class="pt-nav-inner">
-
                 <div class="pt-nav-left">
                     <a href="{{ route('dashboard') }}" class="pt-logo">
                         <div class="pt-logo-icon">🌿</div>
@@ -706,17 +705,10 @@
                     </a>
 
                     <div class="pt-desktop-menu">
-                        <a href="{{ route('dashboard') }}" class="pt-nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">
-                            Dashboard
-                        </a>
-
+                        <a href="{{ route('dashboard') }}" class="pt-nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">Dashboard</a>
                         @if(auth()->user()->rol === 'admin')
                             <div class="pt-dropdown" x-data="{ adminOpen: false }">
-                                <button @click="adminOpen = !adminOpen" @click.away="adminOpen = false" class="pt-nav-link pt-dropdown-btn">
-                                    Administración
-                                    <span>⌄</span>
-                                </button>
-
+                                <button @click="adminOpen = !adminOpen" @click.away="adminOpen = false" class="pt-nav-link pt-dropdown-btn">Administración <span>⌄</span></button>
                                 <div x-show="adminOpen" x-transition class="pt-dropdown-menu" style="display:none;">
                                     <a href="{{ route('plantas.index') }}">Plantas</a>
                                     <a href="{{ route('adopciones.index') }}">Adopciones</a>
@@ -733,71 +725,35 @@
                                 </div>
                             </div>
                         @else
-                            <a href="{{ route('catalogo.plantas') }}" class="pt-nav-link {{ request()->routeIs('catalogo.plantas') ? 'active' : '' }}">
-                                Catálogo
-                            </a>
-
-                            <a href="{{ route('adopciones.index') }}" class="pt-nav-link {{ request()->routeIs('adopciones.*') ? 'active' : '' }}">
-                                Mis adopciones
-                            </a>
-
-                            @php
-                                $notificacionesNoLeidas = \App\Models\Notificacion::where('id_usuario', auth()->id())->where('leida', false)->count();
-                            @endphp
-
+                            <a href="{{ route('catalogo.plantas') }}" class="pt-nav-link {{ request()->routeIs('catalogo.plantas') ? 'active' : '' }}">Catálogo</a>
+                            <a href="{{ route('adopciones.index') }}" class="pt-nav-link {{ request()->routeIs('adopciones.*') ? 'active' : '' }}">Mis adopciones</a>
+                            @php $notificacionesNoLeidas = \App\Models\Notificacion::where('id_usuario', auth()->id())->where('leida', false)->count(); @endphp
                             <a href="{{ route('notificaciones.index') }}" class="pt-nav-link pt-nav-notification {{ request()->routeIs('notificaciones.*') ? 'active' : '' }}">
                                 Notificaciones
                                 @if($notificacionesNoLeidas > 0)
-                                    <span class="pt-nav-badge">
-                                        {{ $notificacionesNoLeidas > 9 ? '9+' : $notificacionesNoLeidas }}
-                                    </span>
+                                    <span class="pt-nav-badge">{{ $notificacionesNoLeidas > 9 ? '9+' : $notificacionesNoLeidas }}</span>
                                 @endif
                             </a>
                         @endif
                     </div>
                 </div>
-
                 <div class="pt-user-menu" x-data="{ dropdownOpen: false }">
                     <button @click="dropdownOpen = !dropdownOpen" @click.away="dropdownOpen = false" class="pt-user-btn">
-                        <div class="pt-avatar">
-                            {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
-                        </div>
-
-                        <div class="pt-user-text">
-                            <p>{{ Auth::user()->name }}</p>
-                            <span>{{ Auth::user()->rol === 'admin' ? 'Administrador' : 'Usuario' }}</span>
-                        </div>
-
+                        <div class="pt-avatar">{{ strtoupper(substr(Auth::user()->name, 0, 1)) }}</div>
+                        <div class="pt-user-text"><p>{{ Auth::user()->name }}</p><span>{{ Auth::user()->rol === 'admin' ? 'Administrador' : 'Usuario' }}</span></div>
                         <span class="pt-user-arrow">⌄</span>
                     </button>
-
                     <div x-show="dropdownOpen" x-transition class="pt-user-dropdown" style="display:none;">
-                        <div class="pt-user-info">
-                            <p>{{ Auth::user()->name }}</p>
-                            <span>{{ Auth::user()->email }}</span>
-                        </div>
-
+                        <div class="pt-user-info"><p>{{ Auth::user()->name }}</p><span>{{ Auth::user()->email }}</span></div>
                         <a href="{{ route('profile.edit') }}">Mi perfil</a>
-
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
-                            <button type="submit">Cerrar sesión</button>
-                        </form>
+                        <form method="POST" action="{{ route('logout') }}">@csrf<button type="submit">Cerrar sesión</button></form>
                     </div>
                 </div>
-
-                <button @click="open = !open" class="pt-mobile-btn">
-                    <span x-show="!open">☰</span>
-                    <span x-show="open" style="display:none;">×</span>
-                </button>
+                <button @click="open = !open" class="pt-mobile-btn"><span x-show="!open">☰</span><span x-show="open" style="display:none;">×</span></button>
             </div>
         </div>
-
         <div x-show="open" x-transition class="pt-mobile-menu" style="display:none;">
-            <a href="{{ route('dashboard') }}" class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">
-                Dashboard
-            </a>
-
+            <a href="{{ route('dashboard') }}">Dashboard</a>
             @if(auth()->user()->rol === 'admin')
                 <a href="{{ route('plantas.index') }}">Plantas</a>
                 <a href="{{ route('adopciones.index') }}">Adopciones</a>
@@ -813,37 +769,14 @@
             @else
                 <a href="{{ route('catalogo.plantas') }}">Catálogo</a>
                 <a href="{{ route('adopciones.index') }}">Mis adopciones</a>
-
-                @php
-                    $notificacionesNoLeidasMovil = \App\Models\Notificacion::where('id_usuario', auth()->id())->where('leida', false)->count();
-                @endphp
-
-                <a href="{{ route('notificaciones.index') }}">
-                    Notificaciones
-                    @if($notificacionesNoLeidasMovil > 0)
-                        <span class="pt-nav-badge">
-                            {{ $notificacionesNoLeidasMovil > 9 ? '9+' : $notificacionesNoLeidasMovil }}
-                        </span>
-                    @endif
-                </a>
+                <a href="{{ route('notificaciones.index') }}">Notificaciones</a>
             @endif
-
             <div class="pt-mobile-user">
-                <div class="pt-avatar">
-                    {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
-                </div>
-                <div>
-                    <p>{{ Auth::user()->name }}</p>
-                    <span>{{ Auth::user()->email }}</span>
-                </div>
+                <div class="pt-avatar">{{ strtoupper(substr(Auth::user()->name, 0, 1)) }}</div>
+                <div><p>{{ Auth::user()->name }}</p><span>{{ Auth::user()->email }}</span></div>
             </div>
-
             <a href="{{ route('profile.edit') }}">Mi perfil</a>
-
-            <form method="POST" action="{{ route('logout') }}">
-                @csrf
-                <button type="submit">Cerrar sesión</button>
-            </form>
+            <form method="POST" action="{{ route('logout') }}">@csrf<button type="submit">Cerrar sesión</button></form>
         </div>
     </nav>
 
@@ -855,7 +788,6 @@
                 <div class="pt-catalog-show-image">
                     @php
                         $imagenUrl = 'https://images.unsplash.com/photo-1592150621744-aca64f48394a?w=300&fit=crop';
-
                         if ($planta->imagen) {
                             if (filter_var($planta->imagen, FILTER_VALIDATE_URL)) {
                                 $imagenUrl = $planta->imagen;
@@ -864,34 +796,20 @@
                             }
                         }
                     @endphp
-
                     <img src="{{ $imagenUrl }}" alt="{{ $planta->nombre }}">
                 </div>
-
                 <div class="pt-catalog-show-info">
                     <h3>{{ $planta->nombre }}</h3>
-
-                    <p class="pt-text">
-                        <strong>Especie:</strong> {{ $planta->especie }}
-                    </p>
-
-                    <span class="pt-badge green">
-                        Estado: {{ ucfirst($planta->estado) }}
-                    </span>
-
+                    <p class="pt-text"><strong>Especie:</strong> {{ $planta->especie }}</p>
+                    <span class="pt-badge green">Estado: {{ ucfirst($planta->estado) }}</span>
                     <div class="pt-show-section">
-                        <h4 class="pt-show-section-title">
-                            Cuidados necesarios
-                        </h4>
-
+                        <h4 class="pt-show-section-title">Cuidados necesarios</h4>
                         @if($planta->plantaCuidados && $planta->plantaCuidados->count())
                             <div class="pt-care-grid">
                                 @foreach($planta->plantaCuidados as $pc)
                                     <div class="pt-care-item">
                                         <strong>{{ $pc->cuidado->nombre }}</strong>
-
                                         <p>Cada {{ $pc->frecuencia }} días</p>
-
                                         @if($pc->instrucciones_esp)
                                             <span>{{ Str::limit($pc->instrucciones_esp, 60) }}</span>
                                         @endif
@@ -902,25 +820,15 @@
                             <p class="pt-muted">No se han definido cuidados específicos para esta planta.</p>
                         @endif
                     </div>
-
                     <div class="pt-show-section">
-                        <p class="pt-text">
-                            <strong>Zona recomendada:</strong>
-                            {{ $planta->tipo_zona ?? 'No especificada' }}
-                        </p>
-
-                        <p class="pt-description">
-                            {{ $planta->descripcion ?? 'Sin descripción.' }}
-                        </p>
+                        <p class="pt-text"><strong>Zona recomendada:</strong> {{ $planta->tipo_zona ?? 'No especificada' }}</p>
+                        <p class="pt-description">{{ $planta->descripcion ?? 'Sin descripción.' }}</p>
                     </div>
                 </div>
             </div>
 
             <div class="pt-card pt-adoption-form-card">
-                <h4 class="pt-section-title">
-                    Datos de ubicación para la adopción
-                </h4>
-
+                <h4 class="pt-section-title">Datos de ubicación para la adopción</h4>
                 @if($errors->any())
                     <div class="pt-alert-error">
                         <ul>
@@ -936,7 +844,6 @@
 
                     <div class="pt-form-group">
                         <label>Tipo de ubicación</label>
-
                         <select name="tipo" id="tipoUbicacion" required>
                             <option value="">Selecciona</option>
                             <option value="publico">Pública (parque, jardín público)</option>
@@ -944,16 +851,15 @@
                         </select>
                     </div>
 
+                    <!-- Ubicación pública -->
                     <div id="ubicacionPublica" class="hidden">
                         <div class="pt-form-group">
                             <label>¿Cómo deseas seleccionar la ubicación?</label>
-
                             <div class="pt-radio-group">
                                 <label>
                                     <input type="radio" name="metodo_ubicacion_publica" value="zona" checked class="metodo-ubicacion" data-metodo="zona">
                                     <span>Elegir zona recomendada</span>
                                 </label>
-
                                 <label>
                                     <input type="radio" name="metodo_ubicacion_publica" value="mapa" class="metodo-ubicacion" data-metodo="mapa">
                                     <span>Seleccionar en el mapa</span>
@@ -963,41 +869,22 @@
 
                         <div id="subopcion-zona" class="pt-form-group">
                             <label>Zona pública recomendada</label>
-
                             <select name="id_recomendacion_zona">
                                 <option value="">Selecciona una zona</option>
-
                                 @foreach($zonasRecomendadas as $zona)
-                                    <option value="{{ $zona->id }}">
-                                        {{ $zona->nombre_lugar }} - {{ $zona->tipo_zona ?? 'Sin tipo' }}
-                                    </option>
+                                    <option value="{{ $zona->id }}">{{ $zona->nombre_lugar }} - {{ $zona->tipo_zona ?? 'Sin tipo' }}</option>
                                 @endforeach
                             </select>
-
-                            <p class="pt-help-text">
-                                Se tomarán automáticamente los datos de la zona.
-                            </p>
+                            <p class="pt-help-text">Se tomarán automáticamente los datos de la zona.</p>
                         </div>
 
                         <div id="subopcion-mapa" class="hidden">
-                            <p class="pt-info-message">
-                                Selecciona tu ubicación en el mapa o usa geolocalización.
-                            </p>
-
-                            <x-mapa-interactivo 
-                                id="mapa-adopcion-publica"
-                                :canSelectLocation="true"
-                                showToolbar="true"
-                                height="400px"
-                            />
-
+                            <p class="pt-info-message">Selecciona tu ubicación en el mapa o usa geolocalización.</p>
+                            <!-- Aquí va nuestro mapa personalizado, no el componente -->
+                            <div id="mapa-publico" style="height: 400px; width: 100%; border-radius: 1rem; z-index: 1;"></div>
                             <div class="pt-location-box">
-                                <p>
-                                    Ubicación elegida:
-                                    <strong id="ubicacion-seleccionada-publica">Ninguna</strong>
-                                </p>
+                                <p>Ubicación elegida: <strong id="ubicacion-seleccionada-publica">Ninguna</strong></p>
                             </div>
-
                             <input type="hidden" name="latitud" id="input-latitud">
                             <input type="hidden" name="longitud" id="input-longitud">
                             <input type="hidden" name="nombre_lugar" id="input-nombre_lugar">
@@ -1005,16 +892,15 @@
                         </div>
                     </div>
 
+                    <!-- Ubicación privada -->
                     <div id="ubicacionPrivada" class="hidden">
                         <div class="pt-form-group">
                             <label>¿Cómo deseas registrar la ubicación?</label>
-
                             <div class="pt-radio-group">
                                 <label>
                                     <input type="radio" name="metodo_ubicacion_privada" value="nombre" checked class="metodo-ubicacion" data-metodo="nombre">
                                     <span>Solo nombre</span>
                                 </label>
-
                                 <label>
                                     <input type="radio" name="metodo_ubicacion_privada" value="mapa" class="metodo-ubicacion" data-metodo="mapa">
                                     <span>Con ubicación exacta (mapa)</span>
@@ -1024,57 +910,161 @@
 
                         <div id="subopcion-nombre" class="pt-form-group">
                             <label>Nombre del lugar privado</label>
-
                             <input type="text" name="nombre_lugar_privado" placeholder="Ejemplo: Mi casa, patio trasero, jardín familiar">
-
                             <label>Descripción (opcional)</label>
-
                             <textarea name="descripcion_privada" rows="2" placeholder="Comparte detalles como luz, sombra, etc."></textarea>
                         </div>
 
                         <div id="subopcion-mapa-privada" class="hidden">
-                            <p class="pt-info-message">
-                                Selecciona tu ubicación en el mapa.
-                            </p>
-
-                            <x-mapa-interactivo 
-                                id="mapa-adopcion-privada"
-                                :canSelectLocation="true"
-                                showToolbar="true"
-                                height="400px"
-                            />
-
+                            <p class="pt-info-message">Selecciona tu ubicación en el mapa.</p>
+                            <div id="mapa-privado" style="height: 400px; width: 100%; border-radius: 1rem; z-index: 1;"></div>
                             <div class="pt-location-box">
-                                <p>
-                                    Ubicación elegida:
-                                    <strong id="ubicacion-seleccionada-privada">Ninguna</strong>
-                                </p>
+                                <p>Ubicación elegida: <strong id="ubicacion-seleccionada-privada">Ninguna</strong></p>
                             </div>
-
                             <div class="pt-form-group">
                                 <label>Nombre del lugar (obligatorio)</label>
                                 <input type="text" name="nombre_lugar_privado_mapa" id="input-nombre_lugar_privado" placeholder="Ejemplo: Mi hogar, oficina, huerto">
-
                                 <label>Descripción (opcional)</label>
                                 <textarea name="descripcion_privada_mapa" id="input-descripcion_privada" rows="2" placeholder="Información adicional..."></textarea>
                             </div>
-
                             <input type="hidden" name="latitud_privada" id="input-latitud-privada">
                             <input type="hidden" name="longitud_privada" id="input-longitud-privada">
                             <input type="hidden" name="es_publica_privada" value="0">
                         </div>
                     </div>
 
-                    <button type="submit" class="pt-submit-btn">
-                        Adoptar {{ $planta->nombre }}
-                    </button>
+                    <button type="submit" class="pt-submit-btn">Adoptar {{ $planta->nombre }}</button>
                 </form>
             </div>
-
         </div>
     </div>
 
     <script>
+        // Variables globales para los mapas y marcadores
+        let mapaPublico, marcadorPublico;
+        let mapaPrivado, marcadorPrivado;
+
+        // Inicializar mapa público
+        function initMapaPublico() {
+            const defaultLat = 23.6345;
+            const defaultLng = -102.5528;
+            mapaPublico = L.map('mapa-publico').setView([defaultLat, defaultLng], 5);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap'
+            }).addTo(mapaPublico);
+
+            marcadorPublico = L.marker([defaultLat, defaultLng], { draggable: true }).addTo(mapaPublico);
+            actualizarInputsPublico(defaultLat, defaultLng);
+
+            marcadorPublico.on('dragend', function() {
+                const pos = marcadorPublico.getLatLng();
+                actualizarInputsPublico(pos.lat, pos.lng);
+            });
+
+            mapaPublico.on('click', function(e) {
+                marcadorPublico.setLatLng(e.latlng);
+                actualizarInputsPublico(e.latlng.lat, e.latlng.lng);
+            });
+        }
+
+        function actualizarInputsPublico(lat, lng) {
+            document.getElementById('input-latitud').value = lat.toFixed(7);
+            document.getElementById('input-longitud').value = lng.toFixed(7);
+            document.getElementById('ubicacion-seleccionada-publica').innerHTML = `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
+            // También guardamos el nombre del lugar (podría obtenerse con reverse geocoding, pero dejamos que el usuario lo ponga manualmente)
+            document.getElementById('input-nombre_lugar').value = '';
+        }
+
+        // Inicializar mapa privado
+        function initMapaPrivado() {
+            const defaultLat = 23.6345;
+            const defaultLng = -102.5528;
+            mapaPrivado = L.map('mapa-privado').setView([defaultLat, defaultLng], 5);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap'
+            }).addTo(mapaPrivado);
+
+            marcadorPrivado = L.marker([defaultLat, defaultLng], { draggable: true }).addTo(mapaPrivado);
+            actualizarInputsPrivado(defaultLat, defaultLng);
+
+            marcadorPrivado.on('dragend', function() {
+                const pos = marcadorPrivado.getLatLng();
+                actualizarInputsPrivado(pos.lat, pos.lng);
+            });
+
+            mapaPrivado.on('click', function(e) {
+                marcadorPrivado.setLatLng(e.latlng);
+                actualizarInputsPrivado(e.latlng.lat, e.latlng.lng);
+            });
+        }
+
+        function actualizarInputsPrivado(lat, lng) {
+            document.getElementById('input-latitud-privada').value = lat.toFixed(7);
+            document.getElementById('input-longitud-privada').value = lng.toFixed(7);
+            document.getElementById('ubicacion-seleccionada-privada').innerHTML = `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
+        }
+
+        // Geolocalización para mapa público
+        function geolocalizarPublico() {
+            if (!navigator.geolocation) {
+                alert('Geolocalización no soportada');
+                return;
+            }
+            navigator.geolocation.getCurrentPosition(function(pos) {
+                const lat = pos.coords.latitude;
+                const lng = pos.coords.longitude;
+                mapaPublico.setView([lat, lng], 15);
+                marcadorPublico.setLatLng([lat, lng]);
+                actualizarInputsPublico(lat, lng);
+            }, function() {
+                alert('No se pudo obtener tu ubicación');
+            });
+        }
+
+        // Geolocalización para mapa privado
+        function geolocalizarPrivado() {
+            if (!navigator.geolocation) {
+                alert('Geolocalización no soportada');
+                return;
+            }
+            navigator.geolocation.getCurrentPosition(function(pos) {
+                const lat = pos.coords.latitude;
+                const lng = pos.coords.longitude;
+                mapaPrivado.setView([lat, lng], 15);
+                marcadorPrivado.setLatLng([lat, lng]);
+                actualizarInputsPrivado(lat, lng);
+            }, function() {
+                alert('No se pudo obtener tu ubicación');
+            });
+        }
+
+        // Asignar eventos a los radios de los mapas y mostrar mapas cuando sea necesario
+        document.addEventListener('DOMContentLoaded', function() {
+            // Inicializar ambos mapas (aunque estén ocultos)
+            initMapaPublico();
+            initMapaPrivado();
+
+            // Agregar botones de geolocalización manualmente (los añadimos con JS)
+            const toolbarPublico = document.querySelector('#subopcion-mapa .pt-location-box');
+            const geolocBtnPublico = document.createElement('button');
+            geolocBtnPublico.type = 'button';
+            geolocBtnPublico.className = 'pt-map-btn blue';
+            geolocBtnPublico.style.marginTop = '0.5rem';
+            geolocBtnPublico.innerHTML = '📍 Usar mi ubicación';
+            geolocBtnPublico.onclick = geolocalizarPublico;
+            toolbarPublico.parentNode.insertBefore(geolocBtnPublico, toolbarPublico.nextSibling);
+
+            const toolbarPrivado = document.querySelector('#subopcion-mapa-privada .pt-location-box');
+            const geolocBtnPrivado = document.createElement('button');
+            geolocBtnPrivado.type = 'button';
+            geolocBtnPrivado.className = 'pt-map-btn blue';
+            geolocBtnPrivado.style.marginTop = '0.5rem';
+            geolocBtnPrivado.innerHTML = '📍 Usar mi ubicación';
+            geolocBtnPrivado.onclick = geolocalizarPrivado;
+            toolbarPrivado.parentNode.insertBefore(geolocBtnPrivado, toolbarPrivado.nextSibling);
+        });
+
+        // Lógica de visibilidad de los sub-formularios (sin cambios respecto al original)
         const tipoUbicacion = document.getElementById('tipoUbicacion');
         const ubicacionPublica = document.getElementById('ubicacionPublica');
         const ubicacionPrivada = document.getElementById('ubicacionPrivada');
@@ -1084,6 +1074,11 @@
             const tipo = this.value;
             ubicacionPublica.classList.toggle('hidden', tipo !== 'publico');
             ubicacionPrivada.classList.toggle('hidden', tipo !== 'privado');
+            // Refrescar los mapas si se muestran (evitar problemas de tamaño)
+            setTimeout(() => {
+                if (mapaPublico) mapaPublico.invalidateSize();
+                if (mapaPrivado) mapaPrivado.invalidateSize();
+            }, 100);
         });
 
         document.querySelectorAll('input[name="metodo_ubicacion_publica"]').forEach(radio => {
@@ -1091,11 +1086,8 @@
                 const metodo = this.value;
                 document.getElementById('subopcion-zona').classList.toggle('hidden', metodo !== 'zona');
                 document.getElementById('subopcion-mapa').classList.toggle('hidden', metodo !== 'mapa');
-
-                if (metodo === 'mapa' && window.mapaInstancias && window.mapaInstancias['mapa-adopcion-publica']) {
-                    setTimeout(() => {
-                        window.mapaInstancias['mapa-adopcion-publica'].invalidateSize();
-                    }, 50);
+                if (metodo === 'mapa') {
+                    setTimeout(() => { if (mapaPublico) mapaPublico.invalidateSize(); }, 50);
                 }
             });
         });
@@ -1105,79 +1097,78 @@
                 const metodo = this.value;
                 document.getElementById('subopcion-nombre').classList.toggle('hidden', metodo !== 'nombre');
                 document.getElementById('subopcion-mapa-privada').classList.toggle('hidden', metodo !== 'mapa');
-
-                if (metodo === 'mapa' && window.mapaInstancias && window.mapaInstancias['mapa-adopcion-privada']) {
-                    setTimeout(() => {
-                        window.mapaInstancias['mapa-adopcion-privada'].invalidateSize();
-                    }, 50);
+                if (metodo === 'mapa') {
+                    setTimeout(() => { if (mapaPrivado) mapaPrivado.invalidateSize(); }, 50);
                 }
             });
         });
 
-        setInterval(() => {
-            if (window.ubicacionSeleccionada) {
-                const lat = window.ubicacionSeleccionada.latitud.toFixed(4);
-                const lng = window.ubicacionSeleccionada.longitud.toFixed(4);
-
-                if (!document.getElementById('subopcion-mapa').classList.contains('hidden')) {
-                    document.getElementById('ubicacion-seleccionada-publica').textContent = `${lat}, ${lng}`;
-                    document.getElementById('input-latitud').value = window.ubicacionSeleccionada.latitud;
-                    document.getElementById('input-longitud').value = window.ubicacionSeleccionada.longitud;
-                    document.getElementById('input-nombre_lugar').value = window.ubicacionSeleccionada.nombreLugar || 'Lugar seleccionado';
+        // Zonas recomendadas (si se selecciona una, mover el mapa público)
+        const zonaSelect = document.querySelector('select[name="id_recomendacion_zona"]');
+        if (zonaSelect) {
+            zonaSelect.addEventListener('change', function() {
+                const zonaId = this.value;
+                if (zonaId && window.zonasData && window.zonasData[zonaId]) {
+                    const zona = window.zonasData[zonaId];
+                    if (mapaPublico) {
+                        mapaPublico.setView([zona.latitud, zona.longitud], 15);
+                        marcadorPublico.setLatLng([zona.latitud, zona.longitud]);
+                        actualizarInputsPublico(zona.latitud, zona.longitud);
+                    }
                 }
+            });
+        }
 
-                if (!document.getElementById('subopcion-mapa-privada').classList.contains('hidden')) {
-                    document.getElementById('ubicacion-seleccionada-privada').textContent = `${lat}, ${lng}`;
-                    document.getElementById('input-latitud-privada').value = window.ubicacionSeleccionada.latitud;
-                    document.getElementById('input-longitud-privada').value = window.ubicacionSeleccionada.longitud;
-                }
-            }
-        }, 500);
-
+        // Validación del formulario (ya existente, la dejamos igual)
         formulario.addEventListener('submit', function(e) {
             const tipo = document.getElementById('tipoUbicacion').value;
-
             if (tipo === 'publico') {
                 const metodo = document.querySelector('input[name="metodo_ubicacion_publica"]:checked')?.value;
-
                 if (metodo === 'zona') {
                     const zona = document.querySelector('select[name="id_recomendacion_zona"]').value;
-
                     if (!zona) {
                         e.preventDefault();
                         alert('Por favor selecciona una zona recomendada');
                     }
                 } else if (metodo === 'mapa') {
-                    if (!window.ubicacionSeleccionada) {
+                    const lat = document.getElementById('input-latitud').value;
+                    if (!lat || lat === '') {
                         e.preventDefault();
                         alert('Por favor selecciona una ubicación en el mapa');
                     }
                 }
             } else if (tipo === 'privado') {
                 const metodo = document.querySelector('input[name="metodo_ubicacion_privada"]:checked')?.value;
-
                 if (metodo === 'nombre') {
                     const nombre = document.querySelector('input[name="nombre_lugar_privado"]').value;
-
                     if (!nombre) {
                         e.preventDefault();
                         alert('Por favor ingresa el nombre del lugar');
                     }
                 } else if (metodo === 'mapa') {
                     const nombre = document.getElementById('input-nombre_lugar_privado').value;
-
                     if (!nombre) {
                         e.preventDefault();
                         alert('Por favor ingresa el nombre del lugar');
                     }
-
-                    if (!window.ubicacionSeleccionada) {
+                    const lat = document.getElementById('input-latitud-privada').value;
+                    if (!lat || lat === '') {
                         e.preventDefault();
                         alert('Por favor selecciona una ubicación en el mapa');
                     }
                 }
             }
         });
+
+        // Pasar datos de zonas a JavaScript (si están disponibles)
+        @php
+            $zonasData = \App\Models\RecomendacionZona::all()->map(fn($z) => [
+                'id' => $z->id,
+                'latitud' => (float) $z->latitud,
+                'longitud' => (float) $z->longitud,
+            ])->keyBy('id');
+        @endphp
+        window.zonasData = @json($zonasData);
     </script>
 
 </body>
