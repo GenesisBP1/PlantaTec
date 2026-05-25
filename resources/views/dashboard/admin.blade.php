@@ -433,86 +433,25 @@
         </div>
     </div>
 
-    <!-- Leaflet CSS y JS (aseguramos carga) -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
+    <!-- Leaflet JS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Inicializar el mapa con centro en México
-            const map = L.map('mapa-admin-custom').setView([23.6345, -102.5528], 5);
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-            }).addTo(map);
-
-            // Datos desde PHP (si no existen, arrays vacíos)
-            const adopciones = @json($adopcionesConUbicacion ?? []);
-            const zonas = @json($zonasRecomendadas ?? []);
-
-            // Iconos personalizados
-            const iconoAdopcion = L.icon({
-                iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
-                shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
-                iconSize: [25, 41],
-                iconAnchor: [12, 41],
-                popupAnchor: [1, -34]
+        document.addEventListener('DOMContentLoaded', function () {
+            const mapa = L.map('mapaUsuario').setView([25.8690, -97.5027], 12);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap' }).addTo(mapa);
+            const ubicaciones = @json($ubicacionesMapa ?? []);
+            const usuarioActual = {{ auth()->id() }};
+            const iconoRojo = new L.Icon({ iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png', shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png', iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34] });
+            const iconoAzul = new L.Icon({ iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-blue.png', shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png', iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34] });
+            ubicaciones.forEach(item => {
+                if (!item.ubicacion) return;
+                const esMia = item.id_usuario === usuarioActual;
+                const tipo = (item.ubicacion.tipo || '').toLowerCase();
+                if (!esMia && tipo !== 'publico') return;
+                L.marker([item.ubicacion.latitud, item.ubicacion.longitud], { icon: esMia ? iconoRojo : iconoAzul }).addTo(mapa).bindPopup(`<div style="min-width:200px"><strong>${item.planta?.nombre ?? ''}</strong><br><b>Ubicación:</b> ${item.ubicacion.nombre_lugar ?? 'Sin nombre'}<br><b>Tipo:</b> ${tipo}<br><b>${esMia ? 'Tu adopción' : 'Ubicación pública'}</b></div>`);
             });
-
-            const iconoZona = L.icon({
-                iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-green.png',
-                shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
-                iconSize: [25, 41],
-                iconAnchor: [12, 41],
-                popupAnchor: [1, -34]
-            });
-
-            // Marcadores de adopciones
-            if (adopciones.length) {
-                adopciones.forEach(adop => {
-                    if (adop.ubicacion && adop.ubicacion.latitud && adop.ubicacion.longitud) {
-                        const popup = `
-                            <div style="min-width: 200px;">
-                                <strong>${adop.planta?.nombre || 'Planta'}</strong><br>
-                                <b>Adoptado por:</b> ${adop.usuario?.name || 'Usuario'}<br>
-                                <b>Ubicación:</b> ${adop.ubicacion.nombre_lugar || 'Sin nombre'}<br>
-                                <b>Tipo:</b> ${adop.ubicacion.tipo === 'publico' ? 'Pública' : 'Privada'}<br>
-                                <a href="/adopciones/${adop.id}" target="_blank">Ver detalles</a>
-                            </div>
-                        `;
-                        L.marker([adop.ubicacion.latitud, adop.ubicacion.longitud], { icon: iconoAdopcion })
-                            .addTo(map)
-                            .bindPopup(popup);
-                    }
-                });
-            }
-
-            // Marcadores de zonas recomendadas
-            if (zonas.length) {
-                zonas.forEach(zona => {
-                    if (zona.latitud && zona.longitud) {
-                        const popup = `
-                            <div style="min-width: 180px;">
-                                <strong>📍 ${zona.nombre_lugar}</strong><br>
-                                <b>Tipo:</b> ${zona.tipo_zona || 'Zona pública'}<br>
-                                ${zona.descripcion ? `<i>${zona.descripcion}</i><br>` : ''}
-                                <b>Coordenadas:</b> ${zona.latitud.toFixed(4)}, ${zona.longitud.toFixed(4)}
-                            </div>
-                        `;
-                        L.marker([zona.latitud, zona.longitud], { icon: iconoZona })
-                            .addTo(map)
-                            .bindPopup(popup);
-                    }
-                });
-            }
-
-            // Ajustar el zoom para mostrar todos los puntos (si hay al menos uno)
-            const group = L.featureGroup();
-            map.eachLayer(layer => { if (layer instanceof L.Marker) group.addLayer(layer); });
-            if (group.getLayers().length > 0) {
-                map.fitBounds(group.getBounds().pad(0.2));
-            } else {
-                map.setView([23.6345, -102.5528], 5);
-            }
         });
     </script>
 </x-app-layout>
