@@ -689,30 +689,6 @@
         flex-direction: column;
     }
 }
-
-/* ========== ESTILOS ADICIONALES PARA GARANTIZAR QUE EL MAPA SE VEA ========== */
-/* Asegurar que el contenedor del mapa tenga altura definida */
-#subopcion-mapa .pt-map-component,
-#subopcion-mapa-privada .pt-map-component,
-[x-data] .pt-map-component {
-    min-height: 400px;
-    height: 400px;
-}
-.leaflet-container {
-    height: 100% !important;
-    width: 100% !important;
-    z-index: 1;
-}
-/* Si el componente x-mapa-interactivo falla, forzamos altura */
-.mapa-fallback {
-    min-height: 400px;
-    background: #f0f0f0;
-    border-radius: 1rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #666;
-}
     </style>
 </head>
 
@@ -1202,25 +1178,6 @@
                 }
             }
         });
-
-        // Script de respaldo por si el componente x-mapa-interactivo no carga
-        // Esperamos un poco para ver si los contenedores tienen mapa
-        setTimeout(function() {
-            const mapas = document.querySelectorAll('#subopcion-mapa .leaflet-container, #subopcion-mapa-privada .leaflet-container');
-            if (mapas.length === 0) {
-                // Si no se inicializó Leaflet, creamos un mapa básico de ejemplo
-                const contenedores = document.querySelectorAll('#subopcion-mapa, #subopcion-mapa-privada');
-                contenedores.forEach(cont => {
-                    const mapaDiv = cont.querySelector('.pt-map-component');
-                    if (mapaDiv && !mapaDiv.querySelector('.leaflet-container')) {
-                        const id = mapaDiv.id || 'mapa-fallback';
-                        mapaDiv.style.height = '400px';
-                        mapaDiv.style.background = '#eef2ee';
-                        mapaDiv.innerHTML = '<div style="display:flex; align-items:center; justify-content:center; height:100%; flex-direction:column; gap:0.5rem;"><svg style="width:48px; height:48px; color:#2b7840;" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19c-5-3.5-8-8-8-12 0-4 3-7 7-7s7 3 7 7c0 4-3 8.5-8 12zm12-7c0-3.5-3-7-7-7s-7 3.5-7 7c0 4 3 8.5 8 12 5-3.5 8-8 8-12z"/></svg><span>Mapa no disponible. Intenta de nuevo más tarde.</span></div>';
-                    }
-                });
-            }
-        }, 1000);
     </script>
 
 </body>
