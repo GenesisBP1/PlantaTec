@@ -826,9 +826,9 @@
                     </div>
                 </div>
             </div>
-
-            <div class="pt-card pt-adoption-form-card">
+<div class="pt-card pt-adoption-form-card">
                 <h4 class="pt-section-title">Datos de ubicación para la adopción</h4>
+
                 @if($errors->any())
                     <div class="pt-alert-error">
                         <ul>
@@ -878,22 +878,34 @@
                             <p class="pt-help-text">Se tomarán automáticamente los datos de la zona.</p>
                         </div>
 
+                        <!-- === CORRECCIÓN: AÑADIMOS CAMPOS VISIBLES PARA NOMBRE Y DESCRIPCIÓN === -->
                         <div id="subopcion-mapa" class="hidden">
                             <p class="pt-info-message">Selecciona tu ubicación en el mapa o usa geolocalización.</p>
-                            <!-- Aquí va nuestro mapa personalizado, no el componente -->
                             <div id="mapa-publico" style="height: 400px; width: 100%; border-radius: 1rem; z-index: 1;"></div>
                             <div class="pt-location-box">
                                 <p>Ubicación elegida: <strong id="ubicacion-seleccionada-publica">Ninguna</strong></p>
                             </div>
+
+                            <!-- Campos para que el usuario ingrese nombre y descripción -->
+                            <div class="pt-form-group">
+                                <label>Nombre del lugar (obligatorio)</label>
+                                <input type="text" name="nombre_lugar" id="nombre_lugar_publico_mapa" placeholder="Ejemplo: Parque Central, Jardín Botánico" required>
+                            </div>
+                            <div class="pt-form-group">
+                                <label>Descripción (opcional)</label>
+                                <textarea name="descripcion" id="descripcion_publica_mapa" rows="2" placeholder="Información adicional sobre el lugar..."></textarea>
+                            </div>
+
+                            <!-- Campos ocultos para coordenadas -->
                             <input type="hidden" name="latitud" id="input-latitud">
                             <input type="hidden" name="longitud" id="input-longitud">
-                            <input type="hidden" name="nombre_lugar" id="input-nombre_lugar">
                             <input type="hidden" name="es_publica" value="1">
                         </div>
                     </div>
 
-                    <!-- Ubicación privada -->
+                    <!-- Ubicación privada (sin cambios) -->
                     <div id="ubicacionPrivada" class="hidden">
+                        <!-- ... igual que en tu código ... -->
                         <div class="pt-form-group">
                             <label>¿Cómo deseas registrar la ubicación?</label>
                             <div class="pt-radio-group">
@@ -971,11 +983,10 @@
             document.getElementById('input-latitud').value = lat.toFixed(7);
             document.getElementById('input-longitud').value = lng.toFixed(7);
             document.getElementById('ubicacion-seleccionada-publica').innerHTML = `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
-            // También guardamos el nombre del lugar (podría obtenerse con reverse geocoding, pero dejamos que el usuario lo ponga manualmente)
-            document.getElementById('input-nombre_lugar').value = '';
+            // No tocamos los campos de nombre/descripción, los deja el usuario
         }
 
-        // Inicializar mapa privado
+        // Inicializar mapa privado (sin cambios)
         function initMapaPrivado() {
             const defaultLat = 23.6345;
             const defaultLng = -102.5528;
@@ -1040,11 +1051,10 @@
 
         // Asignar eventos a los radios de los mapas y mostrar mapas cuando sea necesario
         document.addEventListener('DOMContentLoaded', function() {
-            // Inicializar ambos mapas (aunque estén ocultos)
             initMapaPublico();
             initMapaPrivado();
 
-            // Agregar botones de geolocalización manualmente (los añadimos con JS)
+            // Agregar botones de geolocalización
             const toolbarPublico = document.querySelector('#subopcion-mapa .pt-location-box');
             const geolocBtnPublico = document.createElement('button');
             geolocBtnPublico.type = 'button';
@@ -1064,7 +1074,7 @@
             toolbarPrivado.parentNode.insertBefore(geolocBtnPrivado, toolbarPrivado.nextSibling);
         });
 
-        // Lógica de visibilidad de los sub-formularios (sin cambios respecto al original)
+        // Lógica de visibilidad de los sub-formularios
         const tipoUbicacion = document.getElementById('tipoUbicacion');
         const ubicacionPublica = document.getElementById('ubicacionPublica');
         const ubicacionPrivada = document.getElementById('ubicacionPrivada');
@@ -1074,7 +1084,6 @@
             const tipo = this.value;
             ubicacionPublica.classList.toggle('hidden', tipo !== 'publico');
             ubicacionPrivada.classList.toggle('hidden', tipo !== 'privado');
-            // Refrescar los mapas si se muestran (evitar problemas de tamaño)
             setTimeout(() => {
                 if (mapaPublico) mapaPublico.invalidateSize();
                 if (mapaPrivado) mapaPrivado.invalidateSize();
@@ -1103,7 +1112,7 @@
             });
         });
 
-        // Zonas recomendadas (si se selecciona una, mover el mapa público)
+        // Zonas recomendadas: al seleccionar, mover mapa y rellenar nombre y descripción
         const zonaSelect = document.querySelector('select[name="id_recomendacion_zona"]');
         if (zonaSelect) {
             zonaSelect.addEventListener('change', function() {
@@ -1114,12 +1123,19 @@
                         mapaPublico.setView([zona.latitud, zona.longitud], 15);
                         marcadorPublico.setLatLng([zona.latitud, zona.longitud]);
                         actualizarInputsPublico(zona.latitud, zona.longitud);
+                        // Rellenar los campos de nombre y descripción con los datos de la zona
+                        if (zona.nombre) {
+                            document.getElementById('nombre_lugar_publico_mapa').value = zona.nombre;
+                        }
+                        if (zona.descripcion) {
+                            document.getElementById('descripcion_publica_mapa').value = zona.descripcion;
+                        }
                     }
                 }
             });
         }
 
-        // Validación del formulario (ya existente, la dejamos igual)
+        // Validación del formulario (actualizada para el nombre en mapa público)
         formulario.addEventListener('submit', function(e) {
             const tipo = document.getElementById('tipoUbicacion').value;
             if (tipo === 'publico') {
@@ -1131,10 +1147,19 @@
                         alert('Por favor selecciona una zona recomendada');
                     }
                 } else if (metodo === 'mapa') {
+                    // Verificar que se haya seleccionado una ubicación en el mapa
                     const lat = document.getElementById('input-latitud').value;
                     if (!lat || lat === '') {
                         e.preventDefault();
                         alert('Por favor selecciona una ubicación en el mapa');
+                        return;
+                    }
+                    // Verificar que se haya ingresado un nombre para el lugar
+                    const nombre = document.getElementById('nombre_lugar_publico_mapa').value.trim();
+                    if (nombre === '') {
+                        e.preventDefault();
+                        alert('Por favor ingresa el nombre del lugar');
+                        return;
                     }
                 }
             } else if (tipo === 'privado') {
@@ -1160,10 +1185,12 @@
             }
         });
 
-        // Pasar datos de zonas a JavaScript (si están disponibles)
+        // Pasar datos de zonas a JavaScript (incluyendo nombre y descripción)
         @php
             $zonasData = \App\Models\RecomendacionZona::all()->map(fn($z) => [
                 'id' => $z->id,
+                'nombre' => $z->nombre_lugar,
+                'descripcion' => $z->descripcion,
                 'latitud' => (float) $z->latitud,
                 'longitud' => (float) $z->longitud,
             ])->keyBy('id');
