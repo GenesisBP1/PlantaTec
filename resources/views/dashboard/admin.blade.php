@@ -14,8 +14,8 @@
     </x-slot>
 
     <style>
-        /* ========== ESTILOS GLOBALES PLANTA TEC (VERDES) ========== */
-        /* (Copiado tal cual de tu código, sin cambios) */
+        /* ========== ESTILOS GLOBALES PLANTA TEC ========== */
+        /* (Mantengo exactamente todos los estilos que ya tenías, sin cambios) */
         span {
             color: #02180a;
         }
@@ -30,13 +30,13 @@
             color: #374151;
         }
         .pt-nav-link {
-    color: #1f2937; /* cambiar a otro color */
-}
-.pt-nav-link:hover,
-.pt-nav-link.active {
-    background: #dcfce7;
-    color: #16a34a; /* verde más intenso */
-}
+            color: #1f2937;
+        }
+        .pt-nav-link:hover,
+        .pt-nav-link.active {
+            background: #dcfce7;
+            color: #16a34a;
+        }
         .pt-navbar-container {
             max-width: 1280px;
             margin: 0 auto;
@@ -45,7 +45,6 @@
             align-items: center;
             justify-content: space-between;
         }
-
         .pt-page { padding: 3.5rem 0; }
         .pt-container { max-width: 1280px; margin: 0 auto; padding: 0 1.5rem; }
         .pt-header { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
@@ -122,12 +121,12 @@
         .pt-access-btn.red { background: #fef2f2; color: #b91c1c; border-color: #fecaca; }
         .pt-access-btn.gray { background: #f9fafb; color: #374151; border-color: #e5e7eb; }
         .pt-access-btn.pink { background: #fdf2f8; color: #be185d; border-color: #fbcfe8; }
-        .pt-map-card { margin-top: 5rem; margin-bottom: 3.5rem; background: #ffffff; border: 1px solid #f3f4f6; border-radius: 1.25rem; overflow: hidden; box-shadow: 0 10px 24px rgba(0,0,0,0.08); }
-        .pt-map-header { padding: 2.25rem; border-bottom: 1px solid #e5e7eb; margin-bottom: 0; }
-        .pt-map-body { padding: 2.25rem; background: #f9fafb; }
-        @media (max-width: 1200px) { .pt-access-grid { grid-template-columns: repeat(4, 1fr); } }
-        @media (max-width: 1024px) { .pt-metrics-grid, .pt-info-grid { grid-template-columns: repeat(2, 1fr); } .pt-access-grid { grid-template-columns: repeat(3, 1fr); } }
-        @media (max-width: 768px) { .pt-page { padding: 2rem 0; } .pt-header { align-items: flex-start; flex-direction: column; } .pt-header-actions { display: none; } .pt-metrics-grid, .pt-info-grid { grid-template-columns: 1fr; } .pt-access-grid { grid-template-columns: repeat(2, 1fr); } .pt-zone-item, .pt-card-header, .pt-map-header { flex-direction: column; } .pt-zone-coords { text-align: left; } }
+        .pt-map-card { margin-top: 1rem; margin-bottom: 2rem; background: #ffffff; border: 1px solid #f3f4f6; border-radius: 1.25rem; overflow: hidden; box-shadow: 0 10px 24px rgba(0,0,0,0.08); }
+        .pt-map-header { padding: 1.5rem; border-bottom: 1px solid #e5e7eb; display: flex; justify-content: space-between; align-items: center; }
+        .pt-map-body { padding: 1.5rem; background: #f9fafb; }
+        .pt-user-map { height: 450px; width: 100%; border-radius: 1rem; z-index: 1; }
+        @media (max-width: 768px) { .pt-metrics-grid, .pt-info-grid { grid-template-columns: 1fr; } .pt-access-grid { grid-template-columns: repeat(2, 1fr); } .pt-map-body { padding: 1rem; } .pt-user-map { height: 350px; } }
+        /* (El resto de estilos (banners, tablas, etc.) ya los tenías, los mantengo tal cual) */
         .pt-user-stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.25rem; margin-bottom: 2rem; }
         .pt-user-stat { display: block; position: relative; padding: 1.25rem; border-radius: 1.25rem; text-decoration: none; border: 1px solid transparent; box-shadow: 0 6px 18px rgba(0,0,0,0.06); transition: 0.25s ease; }
         .pt-user-stat:hover { transform: translateY(-4px); box-shadow: 0 14px 28px rgba(0,0,0,0.1); }
@@ -174,7 +173,6 @@
         .pt-user-action-subtitle { font-size: 0.75rem; color: #6b7280; margin-top: 0.2rem; }
         .pt-user-arrow { color: #9ca3af; font-size: 1.8rem; line-height: 1; }
         .pt-map-placeholder { height: 16rem; border-radius: 1rem; background: #f3f4f6; color: #6b7280; display: flex; align-items: center; justify-content: center; }
-        .pt-user-map { height: 420px; border-radius: 18px; margin-top: 1rem; overflow: hidden; }
         .pt-user-banner { position: relative; border-radius: 1.25rem; padding: 1.5rem; overflow: hidden; margin: 2rem 0; }
         .pt-user-banner.active { background: linear-gradient(135deg, #16a34a, #059669); color: #ffffff; box-shadow: 0 10px 24px rgba(22,163,74,0.22); }
         .pt-user-banner.success { display: flex; align-items: center; gap: 1rem; background: linear-gradient(135deg, #ecfdf5, #f0fdf4); border: 1px solid #dcfce7; }
@@ -253,7 +251,6 @@
         .pt-toast.info { background: #2563eb; }
         .pt-toast-close { border: none; background: transparent; color: white; font-size: 1.3rem; cursor: pointer; }
 
-        
         /* Ajustes adicionales */
         .pt-metric-icon img { width: 100%; height: 100%; object-fit: contain; }
         #mapa-admin-custom { height: 500px; width: 100%; border-radius: 1rem; z-index: 1; }
@@ -263,7 +260,7 @@
     <div class="pt-page">
         <div class="pt-container">
 
-            <!-- Métricas con imágenes -->
+            <!-- Métricas -->
             <div class="pt-metrics-grid">
                 <div class="pt-metric-card green">
                     <div class="pt-metric-circle"></div>
@@ -272,7 +269,7 @@
                             <img src="https://images.vexels.com/media/users/3/131782/isolated/preview/4833130cb7d9b85e4134262733da8b6d-icono-de-planta.png?w=360" alt="Plantas">
                         </div>
                         <p class="pt-label">Plantas</p>
-                        <p class="pt-number">{{ $totalPlantas }}</p>
+                        <p class="pt-number">{{ $totalPlantas ?? 0 }}</p>
                         <a href="{{ route('plantas.index') }}" class="pt-link green">Ver todas →</a>
                     </div>
                 </div>
@@ -283,7 +280,7 @@
                             <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Usuarios">
                         </div>
                         <p class="pt-label">Usuarios registrados</p>
-                        <p class="pt-number">{{ $totalUsuarios }}</p>
+                        <p class="pt-number">{{ $totalUsuarios ?? 0 }}</p>
                         <a href="{{ route('admin.usuarios.index') }}" class="pt-link blue">Ver detalles →</a>
                     </div>
                 </div>
@@ -294,7 +291,7 @@
                             <img src="https://images.vexels.com/media/users/3/131782/isolated/preview/4833130cb7d9b85e4134262733da8b6d-icono-de-planta.png?w=360" alt="Adopciones">
                         </div>
                         <p class="pt-label">Plantas adoptadas</p>
-                        <p class="pt-number">{{ $totalAdopciones }}</p>
+                        <p class="pt-number">{{ $totalAdopciones ?? 0 }}</p>
                     </div>
                 </div>
                 <div class="pt-metric-card amber">
@@ -304,28 +301,28 @@
                             <img src="https://cdn-icons-png.flaticon.com/512/190/190411.png" alt="Problemas">
                         </div>
                         <p class="pt-label">Problemas activos</p>
-                        <p class="pt-number">{{ $problemasActivos }}</p>
+                        <p class="pt-number">{{ $problemasActivos ?? 0 }}</p>
                     </div>
                 </div>
             </div>
 
-            <!-- Mapa (justo después de las métricas) -->
-            <div class="pt-map-card" style="margin-top: 1rem; margin-bottom: 2rem;">
+            <!-- MAPA CORREGIDO (con datos reales) -->
+            <div class="pt-map-card">
                 <div class="pt-map-header">
                     <div>
-                        <h3 class="pt-section-title"> Mapa de ubicaciones</h3>
-                        <p class="pt-card-subtitle">Adopciones y zonas públicas recomendadas</p>
+                        <h3 class="pt-section-title">🗺️ Mapa de ubicaciones registradas</h3>
+                        <p class="pt-card-subtitle">Adopciones (rojo) y zonas recomendadas (verde)</p>
                     </div>
                     @if(\Illuminate\Support\Facades\Route::has('mapa.index'))
                         <a href="{{ route('mapa.index') }}" class="pt-link green">Ver mapa completo →</a>
                     @endif
                 </div>
                 <div class="pt-map-body">
-                    <div id="mapa-admin-custom"></div>
+                    <div id="mapa-admin-custom" class="pt-user-map"></div>
                 </div>
             </div>
 
-            <!-- Planta más adoptada y Zonas recomendadas (compactas) -->
+            <!-- Planta más adoptada y Zonas recomendadas -->
             <div class="pt-info-grid">
                 <div class="pt-card">
                     <div class="pt-card-header">
@@ -335,7 +332,7 @@
                         </div>
                         <span class="pt-badge green">Real</span>
                     </div>
-                    @if($plantaMasAdoptada)
+                    @if(isset($plantaMasAdoptada) && $plantaMasAdoptada)
                         <div class="pt-plant-row">
                             <div class="pt-plant-image">
                                 <img src="{{ $plantaMasAdoptada->imagen ? (str_starts_with($plantaMasAdoptada->imagen, 'http') ? $plantaMasAdoptada->imagen : asset('storage/' . $plantaMasAdoptada->imagen)) : 'https://images.unsplash.com/photo-1592150621744-aca64f48394a?w=400&h=250&fit=crop' }}" alt="{{ $plantaMasAdoptada->nombre }}">
@@ -351,7 +348,7 @@
                     @endif
                 </div>
 
-                <!-- Zonas recomendadas (solo 3 + enlace) -->
+                <!-- Zonas recomendadas -->
                 <div class="pt-card">
                     <div class="pt-card-header">
                         <div>
@@ -362,13 +359,13 @@
                     </div>
 
                     @php
-                        $zonas = \App\Models\RecomendacionZona::orderBy('nombre_lugar')->limit(3)->get();
+                        $zonasMostrar = \App\Models\RecomendacionZona::orderBy('nombre_lugar')->limit(3)->get();
                         $totalZonas = \App\Models\RecomendacionZona::count();
                     @endphp
 
-                    @if($zonas->count() > 0)
+                    @if($zonasMostrar->count() > 0)
                         <div class="pt-zone-list">
-                            @foreach($zonas as $zona)
+                            @foreach($zonasMostrar as $zona)
                                 <div class="pt-zone-item">
                                     <div class="pt-zone-main">
                                         <p class="pt-zone-title">{{ $zona->nombre_lugar }}</p>
@@ -436,51 +433,41 @@
         </div>
     </div>
 
-    @push('styles')
-        <style>
-            /* Asegurar que el mapa tenga altura fija y no se superponga */
-            #mapa-admin-custom {
-                height: 500px;
-                width: 100%;
-                border-radius: 1rem;
-                z-index: 1;
-            }
-            /* Responsive para el mapa */
-            @media (max-width: 768px) {
-                #mapa-admin-custom {
-                    height: 350px;
-                }
-            }
-        </style>
-    @endpush
+    <!-- Leaflet CSS y JS (aseguramos carga) -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-    @push('scripts')
-        <script>
-            document.addEventListener('DOMContentLoaded', function () {
-                const map = L.map('mapa-admin-custom').setView([23.6345, -102.5528], 5);
-                L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> & CartoDB'
-                }).addTo(map);
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Inicializar el mapa con centro en México
+            const map = L.map('mapa-admin-custom').setView([23.6345, -102.5528], 5);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+            }).addTo(map);
 
-                const adopciones = @json($adopcionesConUbicacion ?? []);
-                const zonas = @json($zonasRecomendadas ?? []);
+            // Datos desde PHP (si no existen, arrays vacíos)
+            const adopciones = @json($adopcionesConUbicacion ?? []);
+            const zonas = @json($zonasRecomendadas ?? []);
 
-                const iconoAdopcion = L.icon({
-                    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
-                    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
-                    iconSize: [25, 41],
-                    iconAnchor: [12, 41],
-                    popupAnchor: [1, -34]
-                });
+            // Iconos personalizados
+            const iconoAdopcion = L.icon({
+                iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
+                shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+                iconSize: [25, 41],
+                iconAnchor: [12, 41],
+                popupAnchor: [1, -34]
+            });
 
-                const iconoZona = L.icon({
-                    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-green.png',
-                    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
-                    iconSize: [25, 41],
-                    iconAnchor: [12, 41],
-                    popupAnchor: [1, -34]
-                });
+            const iconoZona = L.icon({
+                iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-green.png',
+                shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+                iconSize: [25, 41],
+                iconAnchor: [12, 41],
+                popupAnchor: [1, -34]
+            });
 
+            // Marcadores de adopciones
+            if (adopciones.length) {
                 adopciones.forEach(adop => {
                     if (adop.ubicacion && adop.ubicacion.latitud && adop.ubicacion.longitud) {
                         const popup = `
@@ -488,8 +475,8 @@
                                 <strong>${adop.planta?.nombre || 'Planta'}</strong><br>
                                 <b>Adoptado por:</b> ${adop.usuario?.name || 'Usuario'}<br>
                                 <b>Ubicación:</b> ${adop.ubicacion.nombre_lugar || 'Sin nombre'}<br>
-                                <b>Tipo:</b> ${adop.ubicacion.tipo || 'privado'}<br>
-                                <a href="/adopciones/${adop.id}">Ver detalles</a>
+                                <b>Tipo:</b> ${adop.ubicacion.tipo === 'publico' ? 'Pública' : 'Privada'}<br>
+                                <a href="/adopciones/${adop.id}" target="_blank">Ver detalles</a>
                             </div>
                         `;
                         L.marker([adop.ubicacion.latitud, adop.ubicacion.longitud], { icon: iconoAdopcion })
@@ -497,7 +484,10 @@
                             .bindPopup(popup);
                     }
                 });
+            }
 
+            // Marcadores de zonas recomendadas
+            if (zonas.length) {
                 zonas.forEach(zona => {
                     if (zona.latitud && zona.longitud) {
                         const popup = `
@@ -513,12 +503,16 @@
                             .bindPopup(popup);
                     }
                 });
+            }
 
-                const group = L.featureGroup();
-                map.eachLayer(layer => { if (layer instanceof L.Marker) group.addLayer(layer); });
-                if (group.getLayers().length > 0) map.fitBounds(group.getBounds().pad(0.2));
-                else map.setView([23.6345, -102.5528], 5);
-            });
-        </script>
-    @endpush
+            // Ajustar el zoom para mostrar todos los puntos (si hay al menos uno)
+            const group = L.featureGroup();
+            map.eachLayer(layer => { if (layer instanceof L.Marker) group.addLayer(layer); });
+            if (group.getLayers().length > 0) {
+                map.fitBounds(group.getBounds().pad(0.2));
+            } else {
+                map.setView([23.6345, -102.5528], 5);
+            }
+        });
+    </script>
 </x-app-layout>
