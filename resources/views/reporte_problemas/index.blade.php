@@ -1,18 +1,20 @@
-<x-app-layout>
-    <x-slot name="header">
-        <div class="pt-header">
-            <div>
-                <p class="pt-header-label">Reportes de problemas</p>
-                <h2 class="pt-header-title">Gestión de reportes</h2>
-                <p class="pt-header-subtitle">Panel de administración</p>
-            </div>
-        </div>
-    </x-slot>
+<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>PlantaTec — Gestión de reportes de problemas</title>
 
-   <style>
-        /* ========== ESTILOS GLOBALES PLANTA TEC ========== */
-        /* Basado en el diseño proporcionado, sin taiwanstyle y 100% CSS puro */
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700;9..40,800&display=swap" rel="stylesheet">
 
+    <!-- Alpine.js para el dropdown (solo funcionalidad) -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <style>
+        /* ========== ESTILOS GLOBALES PLANTA TEC (proporcionados por el usuario) ========== */
+        /* Se incluye el bloque completo, sin cambios, para mantener la coherencia visual */
         .pt-page {
             padding: 3.5rem 0;
         }
@@ -1616,585 +1618,257 @@
             margin-top: 0;
         }
 
-        /* Estilos específicos para la página de bienvenida (welcome) */
-        .pt-welcome-body {
-            font-family: 'DM Sans', sans-serif;
-            background: #fafaf9;
-            color: #1f2937;
-            min-height: 100vh;
-            overflow-x: hidden;
-            margin: 0;
+        /* Estilos específicos para la tabla de administración de reportes */
+        .pt-admin-card {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 1.5rem;
+            box-shadow: 0 12px 28px rgba(0, 32, 0, 0.08);
+            overflow: hidden;
+            padding: 1.5rem;
         }
 
-        .pt-welcome-body *,
-        .pt-welcome-body *::before,
-        .pt-welcome-body *::after {
-            box-sizing: border-box;
-        }
-
-        .pt-welcome-nav {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 50;
-            height: 64px;
-            padding: 0 2rem;
-            background: rgba(250, 250, 249, 0.95);
-            backdrop-filter: blur(12px);
-            border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .pt-welcome-logo {
-            display: flex;
-            align-items: center;
-            gap: 0.6rem;
-            font-size: 1.2rem;
-            font-weight: 800;
-            color: #166534;
-            text-decoration: none;
-        }
-
-        .pt-welcome-links {
-            display: flex;
-            align-items: center;
-            gap: 0.6rem;
-        }
-
-        .pt-welcome-nav-link {
-            padding: 0.5rem 1rem;
-            border-radius: 0.8rem;
-            text-decoration: none;
-            color: #374151;
-            font-weight: 700;
-            transition: 0.2s ease;
-        }
-
-        .pt-welcome-nav-link:hover {
-            background: #f3f4f6;
-        }
-
-        .pt-welcome-nav-btn {
-            padding: 0.55rem 1.2rem;
-            border-radius: 0.8rem;
-            background: #16a34a;
-            color: #ffffff;
-            text-decoration: none;
-            font-weight: 800;
-            box-shadow: 0 4px 14px rgba(22, 163, 74, 0.25);
-            transition: 0.2s ease;
-        }
-
-        .pt-welcome-nav-btn:hover {
-            background: #15803d;
-        }
-
-        .pt-welcome-hero {
-            min-height: 100vh;
-            padding: 120px 2rem 80px;
-            background:
-                radial-gradient(ellipse 70% 60% at 80% 30%, rgba(187, 247, 208, 0.45) 0%, transparent 65%),
-                radial-gradient(ellipse 50% 40% at 10% 80%, rgba(220, 252, 231, 0.35) 0%, transparent 55%),
-                #fafaf9;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-        }
-
-        .pt-welcome-hero-inner {
-            max-width: 1100px;
+        .pt-admin-table-wrapper {
             width: 100%;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            align-items: center;
-            gap: 5rem;
+            overflow-x: auto;
         }
 
-        .pt-welcome-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.45rem;
-            background: #dcfce7;
-            color: #15803d;
-            font-size: 0.75rem;
-            font-weight: 800;
-            padding: 0.35rem 0.9rem;
-            border-radius: 999px;
-            letter-spacing: 0.06em;
-            text-transform: uppercase;
-            margin-bottom: 1.25rem;
-            border: 1px solid #bbf7d0;
+        .pt-admin-table {
+            width: 100%;
+            border-collapse: collapse;
         }
 
-        .pt-welcome-badge-dot {
-            width: 7px;
-            height: 7px;
-            border-radius: 50%;
-            background: #22c55e;
+        .pt-admin-table thead tr {
+            background: linear-gradient(90deg, #f0fdf4, #ecfdf5);
         }
 
-        .pt-welcome-title {
-            font-family: 'DM Serif Display', serif;
-            font-size: clamp(2.6rem, 5vw, 3.9rem);
-            line-height: 1.08;
-            color: #111827;
-            margin: 0 0 1.25rem;
+        .pt-admin-table th {
+            padding: 1rem;
+            text-align: left;
+            font-size: 0.85rem;
+            font-weight: 900;
+            color: #374151;
+            border-bottom: 1px solid #d1fae5;
+            white-space: nowrap;
         }
 
-        .pt-welcome-title em {
-            color: #15803d;
+        .pt-admin-table td {
+            padding: 1rem;
+            font-size: 0.875rem;
+            color: #374151;
+            border-bottom: 1px solid #f3f4f6;
+            vertical-align: middle;
         }
 
-        .pt-welcome-description {
-            font-size: 1.08rem;
-            line-height: 1.7;
-            color: #4b5563;
-            margin-bottom: 2rem;
-            max-width: 44ch;
+        .pt-admin-table tbody tr {
+            transition: 0.2s ease;
         }
 
-        .pt-welcome-actions,
-        .pt-welcome-cta-actions {
+        .pt-admin-table tbody tr:hover {
+            background: #f0fdf4;
+        }
+
+        .pt-table-actions {
             display: flex;
-            gap: 0.8rem;
+            align-items: center;
+            gap: 0.5rem;
             flex-wrap: wrap;
         }
 
-        .pt-welcome-main-btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            padding: 0.85rem 1.8rem;
-            border-radius: 1rem;
-            background: #16a34a;
-            color: #ffffff;
-            text-decoration: none;
-            font-weight: 800;
-            box-shadow: 0 6px 18px rgba(22, 163, 74, 0.3);
-            transition: 0.2s ease;
-        }
-
-        .pt-welcome-main-btn:hover {
-            background: #15803d;
-            transform: translateY(-2px);
-        }
-
-        .pt-welcome-secondary-btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            padding: 0.85rem 1.8rem;
-            border-radius: 1rem;
-            background: #ffffff;
-            color: #374151;
-            text-decoration: none;
-            font-weight: 800;
-            border: 1.5px solid #e5e7eb;
-            transition: 0.2s ease;
-        }
-
-        .pt-welcome-secondary-btn:hover {
-            background: #f9fafb;
-            transform: translateY(-2px);
-        }
-
-        .pt-welcome-visual {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-        }
-
-        .pt-welcome-orb {
-            width: 380px;
-            height: 380px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #bbf7d0 0%, #86efac 45%, #4ade80 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 30px 80px rgba(22, 163, 74, 0.2);
-            animation: ptWelcomeFloat 8s ease-in-out infinite;
-        }
-
-        .pt-welcome-orb svg {
-            width: 140px;
-            height: 140px;
-            color: #15803d;
-            opacity: 0.75;
-        }
-
-        @keyframes ptWelcomeFloat {
-            0%, 100% {
-                transform: translateY(0);
-            }
-            50% {
-                transform: translateY(-12px);
-            }
-        }
-
-        .pt-welcome-float-card {
-            position: absolute;
-            background: #ffffff;
-            border-radius: 1rem;
-            padding: 0.8rem 1rem;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
-            font-size: 0.85rem;
-            font-weight: 800;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            white-space: nowrap;
-            border: 1px solid rgba(0, 0, 0, 0.05);
-        }
-
-        .pt-float-1 {
-            top: 5%;
-            left: -8%;
-        }
-
-        .pt-float-2 {
-            bottom: 10%;
-            right: -10%;
-        }
-
-        .pt-float-3 {
-            top: 45%;
-            right: -15%;
-        }
-
-        .pt-welcome-section {
-            padding: 100px 2rem;
-        }
-
-        .pt-welcome-section.white {
-            background: #ffffff;
-        }
-
-        .pt-welcome-section.soft {
-            background: #fefcf8;
-        }
-
-        .pt-welcome-section-label {
-            text-align: center;
-            font-size: 0.78rem;
-            font-weight: 900;
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-            color: #16a34a;
-            margin-bottom: 0.75rem;
-        }
-
-        .pt-welcome-section-title {
-            font-family: 'DM Serif Display', serif;
-            font-size: clamp(1.9rem, 4vw, 2.8rem);
-            color: #111827;
-            text-align: center;
-            line-height: 1.2;
-            margin: 0 0 1rem;
-        }
-
-        .pt-welcome-section-description {
-            text-align: center;
-            max-width: 55ch;
-            margin: 0 auto 4rem;
-            color: #4b5563;
-            font-size: 1.05rem;
-            line-height: 1.7;
-        }
-
-        .pt-welcome-features-grid {
-            max-width: 1100px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1.5rem;
-        }
-
-        .pt-welcome-feature-card {
-            padding: 2rem;
-            border-radius: 1.4rem;
-            border: 1.5px solid #f3f4f6;
-            background: #ffffff;
-            transition: 0.2s ease;
-        }
-
-        .pt-welcome-feature-card:hover {
-            border-color: #bbf7d0;
-            transform: translateY(-4px);
-            box-shadow: 0 12px 40px rgba(22, 163, 74, 0.08);
-        }
-
-        .pt-welcome-feature-icon {
-            width: 50px;
-            height: 50px;
-            border-radius: 1rem;
-            background: #dcfce7;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.6rem;
-            margin-bottom: 1.25rem;
-        }
-
-        .pt-welcome-feature-card h3 {
-            font-weight: 900;
-            font-size: 1.05rem;
-            color: #111827;
-            margin: 0 0 0.5rem;
-        }
-
-        .pt-welcome-feature-card p {
-            color: #4b5563;
-            line-height: 1.6;
+        .pt-table-actions form {
             margin: 0;
         }
 
-        .pt-welcome-stats {
-            padding: 80px 2rem;
-            background: linear-gradient(160deg, #14532d 0%, #15803d 100%);
-        }
-
-        .pt-welcome-stats-grid {
-            max-width: 900px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 2rem;
-            text-align: center;
-        }
-
-        .pt-welcome-stat-number {
-            font-family: 'DM Serif Display', serif;
-            font-size: 3rem;
-            color: #ffffff;
-            margin: 0 0 0.5rem;
-        }
-
-        .pt-welcome-stat-label {
-            color: rgba(255, 255, 255, 0.7);
+        .pt-action-btn {
+            border: 1px solid transparent;
+            border-radius: 0.75rem;
+            padding: 0.45rem 0.75rem;
+            font-size: 0.8rem;
             font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            font-size: 0.85rem;
-            margin: 0;
+            text-decoration: none;
+            cursor: pointer;
+            transition: 0.2s ease;
+            font-family: inherit;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .pt-welcome-plants-grid {
-            max-width: 1100px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 2rem;
+        .pt-action-btn.view {
+            background: #eff6ff;
+            color: #2563eb;
+            border-color: #bfdbfe;
         }
 
-        .pt-welcome-plant-card {
+        .pt-action-btn.view:hover {
+            background: #2563eb;
+            color: #ffffff;
+        }
+
+        .pt-action-btn.edit {
+            background: #fefce8;
+            color: #ca8a04;
+            border-color: #fde68a;
+        }
+
+        .pt-action-btn.edit:hover {
+            background: #ca8a04;
+            color: #ffffff;
+        }
+
+        .pt-action-btn.delete {
+            background: #fef2f2;
+            color: #dc2626;
+            border-color: #fecaca;
+        }
+
+        .pt-action-btn.delete:hover {
+            background: #dc2626;
+            color: #ffffff;
+        }
+
+        .pt-pagination {
+            margin-top: 1.5rem;
+            display: flex;
+            justify-content: center;
+        }
+        .pt-pagination nav {
+            display: inline-flex;
+            gap: 0.25rem;
+        }
+        .pt-pagination .page-link {
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.5rem;
             background: #ffffff;
-            border-radius: 1.5rem;
-            overflow: hidden;
             border: 1px solid #e5e7eb;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-            transition: 0.25s ease;
-        }
-
-        .pt-welcome-plant-card:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 16px 32px rgba(0, 0, 0, 0.12);
-        }
-
-        .pt-welcome-plant-card img {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-        }
-
-        .pt-welcome-plant-body {
-            padding: 1.25rem;
-        }
-
-        .pt-welcome-plant-body h3 {
-            font-family: 'DM Serif Display', serif;
-            font-size: 1.35rem;
-            color: #111827;
-            margin: 0 0 0.5rem;
-        }
-
-        .pt-welcome-plant-body span {
-            display: inline-block;
-            background: #16a34a;
-            color: #ffffff;
-            padding: 0.3rem 0.8rem;
-            border-radius: 999px;
-            font-size: 0.75rem;
-            font-weight: 800;
-            margin-bottom: 0.8rem;
-        }
-
-        .pt-welcome-plant-body p {
             color: #374151;
-            font-size: 0.9rem;
-            line-height: 1.5;
-            margin: 0 0 1rem;
-        }
-
-        .pt-welcome-outline-btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            width: 100%;
-            background: transparent;
-            border: 1.5px solid #16a34a;
-            color: #16a34a;
-            padding: 0.7rem 1rem;
-            border-radius: 999px;
-            font-weight: 800;
             text-decoration: none;
-            transition: 0.2s ease;
+            font-size: 0.875rem;
         }
-
-        .pt-welcome-outline-btn:hover {
+        .pt-pagination .active .page-link {
             background: #16a34a;
-            color: #ffffff;
+            border-color: #16a34a;
+            color: white;
         }
-
-        .pt-welcome-loading,
-        .pt-welcome-error {
-            grid-column: 1 / -1;
-            text-align: center;
-            padding: 3rem;
-        }
-
-        .pt-welcome-spinner {
-            width: 48px;
-            height: 48px;
-            border: 3px solid #dcfce7;
-            border-top-color: #16a34a;
-            border-radius: 50%;
-            margin: 0 auto 1rem;
-            animation: ptWelcomeSpin 0.8s linear infinite;
-        }
-
-        @keyframes ptWelcomeSpin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
-        .pt-welcome-error {
-            color: #b91c1c;
-            background: #fee2e2;
-            border-radius: 1rem;
-        }
-
-        .pt-welcome-center {
-            text-align: center;
-            margin-top: 3rem;
-        }
-
-        .pt-welcome-center .pt-welcome-outline-btn {
-            width: auto;
-            padding: 0.8rem 2rem;
-        }
-
-        .pt-welcome-cta {
-            padding: 100px 2rem;
-            text-align: center;
-            background: #dffbe8;
-        }
-
-        .pt-welcome-cta h2 {
-            font-family: 'DM Serif Display', serif;
-            font-size: clamp(2rem, 4vw, 3rem);
-            color: #111827;
-            margin: 0 0 1rem;
-        }
-
-        .pt-welcome-cta h2 em {
-            color: #16a34a;
-        }
-
-        .pt-welcome-cta p {
-            font-size: 1.05rem;
-            color: #4b5563;
-            margin-bottom: 2rem;
-        }
-
-        .pt-welcome-cta-actions {
-            justify-content: center;
-        }
-
-        .pt-welcome-footer {
-            padding: 2rem;
-            text-align: center;
-            color: #9ca3af;
-            background: #ffffff;
-            border-top: 1px solid #f3f4f6;
-        }
-
-        @media (max-width: 900px) {
-            .pt-welcome-features-grid,
-            .pt-welcome-plants-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
+        .pt-pagination .page-link:hover {
+            background: #f0fdf4;
+            border-color: #16a34a;
         }
 
         @media (max-width: 768px) {
-            .pt-welcome-hero-inner {
-                grid-template-columns: 1fr;
-                text-align: center;
+            .pt-admin-card {
+                padding: 1rem;
             }
-
-            .pt-welcome-description {
-                margin-left: auto;
-                margin-right: auto;
-            }
-
-            .pt-welcome-actions {
-                justify-content: center;
-            }
-
-            .pt-welcome-visual {
-                display: none;
-            }
-
-            .pt-welcome-features-grid,
-            .pt-welcome-plants-grid,
-            .pt-welcome-stats-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        @media (max-width: 600px) {
-            .pt-welcome-nav {
-                padding: 0 1rem;
-            }
-
-            .pt-welcome-nav-link,
-            .pt-welcome-nav-btn {
-                font-size: 0.8rem;
-                padding: 0.45rem 0.75rem;
-            }
-
-            .pt-welcome-logo {
-                font-size: 1rem;
-            }
-
-            .pt-welcome-section,
-            .pt-welcome-cta {
-                padding: 70px 1rem;
+            .pt-admin-table th,
+            .pt-admin-table td {
+                padding: 0.75rem;
             }
         }
     </style>
+</head>
 
+<body class="pt-app">
+
+    <!-- ========== BARRA DE NAVEGACIÓN (con Alpine.js) ========== -->
+    <nav x-data="{ open: false }" class="pt-navbar">
+        <div class="pt-nav-container">
+            <div class="pt-nav-inner">
+                <div class="pt-nav-left">
+                    <a href="{{ route('dashboard') }}" class="pt-logo">
+                        <div class="pt-logo-icon">🌿</div>
+                        <span>PlantaTec</span>
+                    </a>
+                    <div class="pt-desktop-menu">
+                        <a href="{{ route('dashboard') }}" class="pt-nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">Dashboard</a>
+                        @if(auth()->user()->rol === 'admin')
+                            <div class="pt-dropdown" x-data="{ adminOpen: false }">
+                                <button @click="adminOpen = !adminOpen" @click.away="adminOpen = false" class="pt-nav-link pt-dropdown-btn">Administración <span>⌄</span></button>
+                                <div x-show="adminOpen" x-transition class="pt-dropdown-menu" style="display:none;">
+                                    <a href="{{ route('plantas.index') }}">Plantas</a>
+                                    <a href="{{ route('adopciones.index') }}">Adopciones</a>
+                                    <a href="{{ route('ubicaciones.index') }}">Ubicaciones</a>
+                                    <a href="{{ route('cuidados.index') }}">Cuidados</a>
+                                    <a href="{{ route('planta-cuidados.index') }}">Asignar cuidados</a>
+                                    <a href="{{ route('recomendaciones-cuidado.index') }}">Recomendaciones de cuidado</a>
+                                    <a href="{{ route('recomendaciones-zona.index') }}">Recomendaciones de zona</a>
+                                    <a href="{{ route('problemas.index') }}">Problemas</a>
+                                    <a href="{{ route('tratamientos.index') }}">Tratamientos</a>
+                                    <hr>
+                                    <a href="{{ route('reporte-problemas.index') }}">Reportes de problemas</a>
+                                    <a href="{{ route('admin.usuarios.index') }}">Usuarios</a>
+                                </div>
+                            </div>
+                        @else
+                            <a href="{{ route('catalogo.plantas') }}" class="pt-nav-link {{ request()->routeIs('catalogo.plantas') ? 'active' : '' }}">Catálogo</a>
+                            <a href="{{ route('adopciones.index') }}" class="pt-nav-link {{ request()->routeIs('adopciones.*') ? 'active' : '' }}">Mis adopciones</a>
+                            @php $notificacionesNoLeidas = \App\Models\Notificacion::where('id_usuario', auth()->id())->where('leida', false)->count(); @endphp
+                            <a href="{{ route('notificaciones.index') }}" class="pt-nav-link pt-nav-notification {{ request()->routeIs('notificaciones.*') ? 'active' : '' }}">
+                                Notificaciones
+                                @if($notificacionesNoLeidas > 0)
+                                    <span class="pt-nav-badge">{{ $notificacionesNoLeidas > 9 ? '9+' : $notificacionesNoLeidas }}</span>
+                                @endif
+                            </a>
+                        @endif
+                    </div>
+                </div>
+                <div class="pt-user-menu" x-data="{ dropdownOpen: false }">
+                    <button @click="dropdownOpen = !dropdownOpen" @click.away="dropdownOpen = false" class="pt-user-btn">
+                        <div class="pt-avatar">{{ strtoupper(substr(Auth::user()->name, 0, 1)) }}</div>
+                        <div class="pt-user-text"><p>{{ Auth::user()->name }}</p><span>{{ Auth::user()->rol === 'admin' ? 'Administrador' : 'Usuario' }}</span></div>
+                        <span class="pt-user-arrow">⌄</span>
+                    </button>
+                    <div x-show="dropdownOpen" x-transition class="pt-user-dropdown" style="display:none;">
+                        <div class="pt-user-info"><p>{{ Auth::user()->name }}</p><span>{{ Auth::user()->email }}</span></div>
+                        <a href="{{ route('profile.edit') }}">Mi perfil</a>
+                        <form method="POST" action="{{ route('logout') }}">@csrf<button type="submit">Cerrar sesión</button></form>
+                    </div>
+                </div>
+                <button @click="open = !open" class="pt-mobile-btn"><span x-show="!open">☰</span><span x-show="open" style="display:none;">×</span></button>
+            </div>
+        </div>
+        <div x-show="open" x-transition class="pt-mobile-menu" style="display:none;">
+            <a href="{{ route('dashboard') }}" class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">Dashboard</a>
+            @if(auth()->user()->rol === 'admin')
+                <a href="{{ route('plantas.index') }}">Plantas</a>
+                <a href="{{ route('adopciones.index') }}">Adopciones</a>
+                <a href="{{ route('ubicaciones.index') }}">Ubicaciones</a>
+                <a href="{{ route('cuidados.index') }}">Cuidados</a>
+                <a href="{{ route('planta-cuidados.index') }}">Asignar cuidados</a>
+                <a href="{{ route('recomendaciones-cuidado.index') }}">Recomendaciones de cuidado</a>
+                <a href="{{ route('recomendaciones-zona.index') }}">Recomendaciones de zona</a>
+                <a href="{{ route('problemas.index') }}">Problemas</a>
+                <a href="{{ route('tratamientos.index') }}">Tratamientos</a>
+                <a href="{{ route('reporte-problemas.index') }}">Reportes de problemas</a>
+                <a href="{{ route('admin.usuarios.index') }}">Usuarios</a>
+            @else
+                <a href="{{ route('catalogo.plantas') }}">Catálogo</a>
+                <a href="{{ route('adopciones.index') }}">Mis adopciones</a>
+                @php $notificacionesNoLeidasMovil = \App\Models\Notificacion::where('id_usuario', auth()->id())->where('leida', false)->count(); @endphp
+                <a href="{{ route('notificaciones.index') }}">Notificaciones @if($notificacionesNoLeidasMovil > 0)<span class="pt-nav-badge">{{ $notificacionesNoLeidasMovil > 9 ? '9+' : $notificacionesNoLeidasMovil }}</span>@endif</a>
+            @endif
+            <div class="pt-mobile-user">
+                <div class="pt-avatar">{{ strtoupper(substr(Auth::user()->name, 0, 1)) }}</div>
+                <div><p>{{ Auth::user()->name }}</p><span>{{ Auth::user()->email }}</span></div>
+            </div>
+            <a href="{{ route('profile.edit') }}">Mi perfil</a>
+            <form method="POST" action="{{ route('logout') }}">@csrf<button type="submit">Cerrar sesión</button></form>
+        </div>
+    </nav>
+
+    <!-- ========== CONTENIDO PRINCIPAL ========== -->
     <div class="pt-page">
         <div class="pt-container">
+
+            <!-- Cabecera de la página -->
+            <div class="pt-header">
+                <div>
+                    <p class="pt-header-label">Reportes de problemas</p>
+                    <h2 class="pt-header-title">Gestión de reportes</h2>
+                    <p class="pt-header-subtitle">Panel de administración</p>
+                </div>
+            </div>
+
+            <!-- Tabla de reportes -->
             <div class="pt-admin-card">
                 <div class="pt-admin-table-wrapper">
                     <table class="pt-admin-table">
@@ -2240,6 +1914,9 @@
                 </div>
                 {{ $reportes->links() }}
             </div>
+
         </div>
     </div>
-</x-app-layout>
+
+</body>
+</html>
